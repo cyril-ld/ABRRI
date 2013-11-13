@@ -4,12 +4,12 @@
 package datastructure;
 
 /**
- * Classe représentant un arbre binaire de recherche. L'arbre représenté ici est un arbre binaire de recherche inversé.
+ * Classe représentant un arbre binaire de recherche inversé.
  * 
  * @author Cyril
  * 
  */
-public class BinaryTree {
+public class ReversedBinaryTree {
 
 	/**
 	 * Noeud racine de l'arbre
@@ -19,11 +19,11 @@ public class BinaryTree {
 	/**
 	 * Constructeur par défaut
 	 */
-	public BinaryTree() {
+	public ReversedBinaryTree() {
 
 	}
 
-	public BinaryTree(Node newRoot) {
+	public ReversedBinaryTree(Node newRoot) {
 		this.root = newRoot;
 	}
 
@@ -58,14 +58,10 @@ public class BinaryTree {
 		/**
 		 * Constructeur
 		 * 
-		 * @param valeur
-		 *            , valeur contenue dans le noeud
-		 * @param lSon
-		 *            , fils droit
-		 * @param rSon
-		 *            , fils gauche
-		 * @param father
-		 *            , noeud père
+		 * @param valeur, valeur contenue dans le noeud
+		 * @param lSon, fils droit
+		 * @param rSon, fils gauche
+		 * @param father, noeud père
 		 */
 		public Node(int valeur, Node lSon, Node rSon, Node father) {
 			this.valeur = valeur;
