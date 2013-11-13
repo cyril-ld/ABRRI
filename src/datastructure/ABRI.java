@@ -9,7 +9,7 @@ package datastructure;
  * @author Cyril
  * 
  */
-public class ReversedBinaryTree {
+public class ABRI {
 
 	/**
 	 * Noeud racine de l'arbre
@@ -19,11 +19,11 @@ public class ReversedBinaryTree {
 	/**
 	 * Constructeur par défaut
 	 */
-	public ReversedBinaryTree() {
+	public ABRI() {
 
 	}
 
-	public ReversedBinaryTree(Node newRoot) {
+	public ABRI(Node newRoot) {
 		this.root = newRoot;
 	}
 
