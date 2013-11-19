@@ -9,11 +9,33 @@ package datastructure;
  */
 public class TreeNode extends Node {
 
+	/**
+	 * Valeur minimale de l'intervalle couvert par l'arbre
+	 */
 	private int min;
 
+	/**
+	 * Valeur maximale de l'intervalle couvert par l'arbre
+	 */
 	private int max;
 
+	/**
+	 * Arbre binaire inversé stocké par le noeud courant
+	 */
 	private BinaryTree binaryTree;
+
+	/**
+	 * Constructeur d'un noeud d'arbre binaire d'arbres binaires inversés.
+	 * 
+	 * @param min - la valeur minimale de l'intervalle couvert
+	 * @param max - la valeur maximale de l'intervalle couvert
+	 * @param arbre - l'arbre stocké par le noeud
+	 */
+	public TreeNode(int min, int max, BinaryTree arbre) {
+		this.binaryTree = arbre;
+		this.min = min;
+		this.max = max;
+	}
 
 	/**
 	 * @return the min

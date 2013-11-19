@@ -11,6 +11,10 @@ public abstract class Node {
 
 	private Node filsGauche;
 
+	private Node filsDroit;
+
+	private Node pere;
+
 	/**
 	 * @return the filsGauche
 	 */
@@ -39,5 +43,17 @@ public abstract class Node {
 		this.filsDroit = filsDroit;
 	}
 
-	private Node filsDroit;
+	/**
+	 * @return the pere
+	 */
+	public Node getPere() {
+		return pere;
+	}
+
+	/**
+	 * @param pere the pere to set
+	 */
+	public void setPere(Node pere) {
+		this.pere = pere;
+	}
 }
