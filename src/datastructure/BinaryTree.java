@@ -51,9 +51,10 @@ public class BinaryTree {
 		else if (node.getMax() <= 0 || node.getMin() < 0 || node.getMin() >= node.getMax())
 			throw new RuntimeException("Une ou plusieurs borne(s) de l'intervalle n'est (ne sont) pas correcte(s) !");
 
-		if (this.rootNode == null)
+		if (this.rootNode == null) {
 			this.rootNode = node;
-
+			return;
+		}
 		// Recherche du noeud père
 		father = (TreeNode) this.findNode(this.rootNode, node.getMin(), node.getMax());
 
