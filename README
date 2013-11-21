@@ -1,6 +1,16 @@
 ﻿Projet "Tous aux AABBRI !"
 
 Génère des arbres à partir d'un fichier et l'inverse.
+
+Le formalisme du fichier est le suivant :
+borneMin:borneMax;noeud1:noeud2:...:noeudN
+
+avec
+- borneMin : la borne minimale d'un noeud de l'AABRI (ie chaque sous noeud de l'ABRI contenu dans ce noeud aura une valeur supérieure à cette borne)
+- borneMax : la borne maximale d'un noeud de l'AABRI (idem ci dessus par analogie...)
+- noeudN : la valeur à donner au sous noeud d'un ABRI contenu dans un noeud de l'AABRI
+
+Exemple de fichier :
 50:75;60:62:75:55
 9:22;9:14:11
 1:6;3:2:1
