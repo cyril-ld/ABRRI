@@ -20,6 +20,6 @@ public class Launcher {
 		BinaryTree AABRI;
 
 		AABRI = (args.length == 2) ? TreeUtils.initBinaryTreeFromFile(args[1]) : TreeUtils.initBinaryTreeFromFile("resources/AABRI.txt");
-
+		// TODO : tester la suppression //
 	}
 }

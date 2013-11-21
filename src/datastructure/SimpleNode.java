@@ -6,23 +6,42 @@ package datastructure;
 import interfaces.Node;
 
 /**
+ * Implémentation d'un noeud simple. Ce noeud a vocation a être utilisé dans les ABRI. Il contient donc un fils gauche, un fils droit et une valeur.
+ * 
  * @author Cyril
  * 
  */
 public class SimpleNode extends Node {
 
-	private int valeur;
+	/**
+	 * Valeur stockée par le noeud
+	 */
+	private int value;
 
-	public SimpleNode(int valeur) {
-		this.valeur = valeur;
+	/**
+	 * Constructeur.
+	 * 
+	 * @param value
+	 */
+	public SimpleNode(int value) {
+		this.value = value;
 	}
 
-	public int getValeur() {
-		return valeur;
+	/**
+	 * 
+	 * @return this.value
+	 */
+	public int getValue() {
+		return value;
 	}
 
-	public void setValeur(int valeur) {
-		this.valeur = valeur;
+	/**
+	 * Set this.value to value
+	 * 
+	 * @param value
+	 */
+	public void setValue(int value) {
+		this.value = value;
 	}
 
 }

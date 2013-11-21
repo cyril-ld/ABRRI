@@ -7,6 +7,7 @@ import interfaces.Node;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import exceptions.IntervalleChevauchantException;
 import exceptions.IntervalleInexistantException;
+import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
  * @author Cyril
@@ -56,18 +57,23 @@ public class BinaryTree {
 			this.rootNode = node;
 			return;
 		}
-		// Recherche du noeud père
-		father = (TreeNode) this.findNode(this.rootNode, node.getMin(), node.getMax());
+
+		try {
+			// Recherche du noeud père
+			father = (TreeNode) this.findTreeNode(this.rootNode, node.getMin(), node.getMax());
+		} catch (IntervalleInexistantException e) {
+			System.out.println(e.getMessage() + "\n" + e.getStackTrace());
+		}
 
 		if (father == null)
 			throw new RuntimeException("Impossible de retrouver le père du noeud à ajouter !");
 
-		node.setPere(father);
+		node.setFather(father);
 
 		if (node.getMin() > father.getMax())
-			father.setFilsDroit(node);
+			father.setRightSon(node);
 		else if (node.getMax() < father.getMin())
-			father.setFilsGauche(node);
+			father.setLeftSon(node);
 		else
 			throw new IntervalleChevauchantException("Chevauchement : \nmin : " + node.getMin() + " // max : " + node.getMax());
 	}
@@ -79,28 +85,32 @@ public class BinaryTree {
 	 * @param min - la borne minimale de l'intervalle, ne doit pas être modifiée
 	 * @param max - la borne maximale de l'intervalle, ne doit pas être modifiée
 	 * @return le noeud recherché s'il existe
+	 * @throws IntervalleInexistantException dans le cas où aucun noeud n'a pu être trouvé
 	 */
-	public TreeNode findNode(TreeNode node, final int min, final int max) {
+	public TreeNode findTreeNode(TreeNode node, final int min, final int max) throws IntervalleInexistantException {
 
 		TreeNode ret = null;
 
 		if (node == null || min > max || (min == max && max == 0)) {
 			throw new RuntimeException("Problèmes dans les paramètres de la méthode");
-		} else if (node.getMin() > max) { // Cas où le noeud courant est "plus grand" que l'intervalle donnée
 
-			if (node.getFilsGauche() == null) {
-				ret = node;
-			} else {
-				ret = findNode((TreeNode) node.getFilsGauche(), min, max);
+		} else if (node.getMin() > max) { // Cas où le noeud courant est "plus grand" que l'intervalle donné
+
+			if (node.getLeftSon() == null) {
+				throw new IntervalleInexistantException(""
+				        + "Intervalle demandé : [" + min + "; " + max + "]\n"
+				        + "Intervalle au mieux : [" + node.getMin() + "; " + node.getMax() + "]");
 			}
+			ret = findTreeNode((TreeNode) node.getLeftSon(), min, max);
 
-		} else if (node.getMax() < min) { // Cas où le noeud courant est "plus petit" que l'intervalle donnée
+		} else if (node.getMax() < min) { // Cas où le noeud courant est "plus petit" que l'intervalle donné
 
-			if (node.getFilsDroit() == null) {
-				ret = node;
-			} else {
-				ret = findNode((TreeNode) node.getFilsDroit(), min, max);
+			if (node.getRightSon() == null) {
+				throw new IntervalleInexistantException(""
+				        + "Intervalle demandé : [" + min + "; " + max + "]\n"
+				        + "Intervalle au mieux : [" + node.getMin() + "; " + node.getMax() + "]");
 			}
+			ret = findTreeNode((TreeNode) node.getRightSon(), min, max);
 
 		} else if (node.getMin() == min && node.getMax() == max) {
 			ret = node;
@@ -111,15 +121,42 @@ public class BinaryTree {
 	}
 
 	/**
-	 * Retourne un arbre binaire caractérisé par son intervalle de valeurs.
+	 * Recherche un TreeNode depuis une valeur. La recherche consiste à parcourir l'AABRI pour trouver le TreeNode dont l'intervalle contient la
+	 * valeur.
 	 * 
-	 * @param min - la valeur minimale de l'intervalle
-	 * @param max - la valeur maximale de l'intervalle
-	 * @return le noeud demandé s'il existe
-	 * @throws IntervalleInexistantException - lorsque l'intervalle demandé n'existe pas
+	 * @param node - Noeud racine de l'arbre dans lequel chercher
+	 * @param value - La valeur à partir de laquelle on cherche le TreeNode
+	 * @return
+	 * @throws IntervalleInexistantException dans le cas où aucun intervalle ne contient cette valeur
 	 */
-	public Node select(int min, int max) throws IntervalleInexistantException {
-		throw new NotImplementedException();
+	public TreeNode findTreeNodeFromValue(TreeNode node, final int value) throws IntervalleInexistantException {
+
+		TreeNode ret = null;
+
+		if (node == null || value == 0) {
+			throw new RuntimeException("Le noeud et la valeur doivent être renseignés !");
+
+		} else if (value < node.getMin()) {
+
+			if (node.getLeftSon() == null) {
+				throw new IntervalleInexistantException(""
+				        + "Valeur demandée : {" + value + "}\n"
+				        + "Intervalle au mieux : [" + node.getMin() + "; " + node.getMax() + "]");
+			}
+			ret = findTreeNodeFromValue((TreeNode) node.getLeftSon(), value);
+
+		} else if (value > node.getMax()) {
+
+			if (node.getRightSon() == null) {
+				throw new IntervalleInexistantException(""
+				        + "Valeur demandée : {" + value + "}\n"
+				        + "Intervalle au mieux : [" + node.getMin() + "; " + node.getMax() + "]");
+			}
+			ret = findTreeNodeFromValue((TreeNode) node.getRightSon(), value);
+		} else { // Si on est pas inférieur ni supérieur, c'est qu'on est dans le bon intervalle
+			ret = node;
+		}
+		return ret;
 	}
 
 	/**
@@ -139,10 +176,20 @@ public class BinaryTree {
 	 * ajouter. Si l'intervalle n'existe pas et si la valeur existe déjà dans l'ABRI, la méthode ne fait rien. Une fois l'intervalle trouvée, la
 	 * méthode fait appel à la fonction TreeNode.insert(SimpleNode).
 	 * 
-	 * @param node - Le noeud à ajouter
+	 * @param node - Le noeud d'ABRI à ajouter
+	 * @return TreeNode - le noeud d'AABRI dans lequel la valeur a été ajoutée
 	 */
-	public void addSimpleNode(SimpleNode node) {
+	public TreeNode addSimpleNode(SimpleNode node) {
 		throw new NotImplementedException();
+	}
+
+	/**
+	 * Ajoute un entier dans l'un des ABRI de l'AABRI en fonction des intervalles disponibles.
+	 * 
+	 * @param value - La valeur à ajouter
+	 */
+	public TreeNode addSimpleNode(int value) {
+		return this.addSimpleNode(new SimpleNode(value));
 	}
 
 	/**
@@ -152,9 +199,22 @@ public class BinaryTree {
 	 * 
 	 * @param simpleNodeValue - La valeur du noeud à supprimer
 	 * @return le noeud qui a été retiré, ou null si aucun noeud n'a été trouvé.
+	 * @throws IntervalleInexistantException Si la valeur n'appartient à aucun intervalle
+	 * @throws ValeurNonRepresenteeDansABRI Si la valeur est bien dans l'intervalle de l'ABRI, mais n'est pas représentée
 	 */
-	public SimpleNode removeSimpleNode(int simpleNodeValue) {
-		throw new NotImplementedException();
+	public SimpleNode removeSimpleNode(final int simpleNodeValue) throws IntervalleInexistantException, ValeurNonRepresenteeDansABRI {
+		// Penser à supprimer le TreeNode courant lorsqu'il ne contient plus aucun noeud simple (ie lorsque le root == null)
+
+		TreeNode treeNode = this.findTreeNodeFromValue(this.rootNode, simpleNodeValue);
+
+		SimpleNode removedNode = treeNode.delete(simpleNodeValue);
+
+		if (treeNode.getRoot() == null) {
+			// TODO optimisation possible en créant une méthode de suppression à partir d'un
+			// TreeNode
+			this.delete(treeNode.getMin(), treeNode.getMax());
+		}
+		return removedNode;
 	}
 
 	public void ABRtoAABRI() {

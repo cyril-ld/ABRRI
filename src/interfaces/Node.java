@@ -9,51 +9,51 @@ package interfaces;
  */
 public abstract class Node {
 
-	private Node filsGauche;
+	private Node leftSon;
 
-	private Node filsDroit;
+	private Node rightSon;
 
-	private Node pere;
+	private Node father;
 
 	/**
-	 * @return the filsGauche
+	 * @return the leftSon
 	 */
-	public Node getFilsGauche() {
-		return filsGauche;
+	public Node getLeftSon() {
+		return leftSon;
 	}
 
 	/**
-	 * @param filsGauche the filsGauche to set
+	 * @param leftSon the leftSon to set
 	 */
-	public void setFilsGauche(Node filsGauche) {
-		this.filsGauche = filsGauche;
+	public void setLeftSon(Node leftSon) {
+		this.leftSon = leftSon;
 	}
 
 	/**
-	 * @return the filsDroit
+	 * @return the rightSon
 	 */
-	public Node getFilsDroit() {
-		return filsDroit;
+	public Node getRightSon() {
+		return rightSon;
 	}
 
 	/**
-	 * @param filsDroit the filsDroit to set
+	 * @param rightSon the rightSon to set
 	 */
-	public void setFilsDroit(Node filsDroit) {
-		this.filsDroit = filsDroit;
+	public void setRightSon(Node rightSon) {
+		this.rightSon = rightSon;
 	}
 
 	/**
-	 * @return the pere
+	 * @return the father
 	 */
-	public Node getPere() {
-		return pere;
+	public Node getFather() {
+		return father;
 	}
 
 	/**
-	 * @param pere the pere to set
+	 * @param father the father to set
 	 */
-	public void setPere(Node pere) {
-		this.pere = pere;
+	public void setFather(Node father) {
+		this.father = father;
 	}
 }

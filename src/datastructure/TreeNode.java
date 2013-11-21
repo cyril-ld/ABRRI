@@ -4,9 +4,11 @@
 package datastructure;
 
 import interfaces.Node;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
+ * Implémentation d'un noeud de l'AABRI. Ce noeud contient donc un fils droit, un fils gauche, une borne minimale, une borne maximale et un ABRI.
+ * 
  * @author Cyril
  * 
  */
@@ -40,6 +42,9 @@ public class TreeNode extends Node {
 		this.max = max;
 	}
 
+	/**
+	 * Constructeur par défaut
+	 */
 	public TreeNode() {
 	}
 
@@ -93,19 +98,19 @@ public class TreeNode extends Node {
 
 		if (node == null) {
 			throw new RuntimeException("Le noeud à rechercher ne peut pas être nul !");
-		} else if (value < node.getValeur()) { // Si la valeur est inférieure à la valeur du noeud courant, on recherche dans le fils droit
+		} else if (value < node.getValue()) { // Si la valeur est inférieure à la valeur du noeud courant, on recherche dans le fils droit
 
-			if (node.getFilsDroit() == null) {
+			if (node.getRightSon() == null) {
 				ret = node;
 			} else {
-				ret = findNode((SimpleNode) node.getFilsDroit(), value);
+				ret = findNode((SimpleNode) node.getRightSon(), value);
 			}
-		} else if (value > node.getValeur()) { // Si la valeur est supérieure à la valeur du noeud courant, on recherche dans le fils gauche
+		} else if (value > node.getValue()) { // Si la valeur est supérieure à la valeur du noeud courant, on recherche dans le fils gauche
 
-			if (node.getFilsGauche() == null) {
+			if (node.getLeftSon() == null) {
 				ret = node;
 			} else {
-				ret = findNode((SimpleNode) node.getFilsGauche(), value);
+				ret = findNode((SimpleNode) node.getLeftSon(), value);
 			}
 		} else {
 			ret = node;
@@ -123,7 +128,7 @@ public class TreeNode extends Node {
 
 		SimpleNode father;
 
-		if (node.getValeur() == 0) {
+		if (node.getValue() == 0) {
 			throw new RuntimeException("La valeur du noeud est nulle !");
 		}
 
@@ -132,17 +137,131 @@ public class TreeNode extends Node {
 		} else {
 
 			// Recherche du noeud père
-			father = this.findNode(this.root, node.getValeur());
+			father = this.findNode(this.root, node.getValue());
 
-			if (father.getValeur() > node.getValeur()) {
-				father.setFilsDroit(node);
-			} else if (father.getValeur() < node.getValeur()) {
-				father.setFilsGauche(node);
+			if (father.getValue() > node.getValue()) {
+				father.setRightSon(node);
+			} else if (father.getValue() < node.getValue()) {
+				father.setLeftSon(node);
 			}
 		}
 	}
 
-	public void delete(int value) {
-		throw new NotImplementedException();
+	/**
+	 * Supprime un noeud simple dans l'un des ABRI contenu dans les noeuds de l'arbre.
+	 * 
+	 * @param value - La valeur du noeud à supprimer.
+	 * @throws ValeurNonRepresenteeDansABRI dans le cas où la valeur recherchée n'est pas représentée dans l'ABRI courant, malgré le fait que
+	 * l'intervalle encadre celle-ci.
+	 */
+	public SimpleNode delete(int value) throws ValeurNonRepresenteeDansABRI {
+
+		SimpleNode ret, node, father, replacement;
+
+		node = this.findNode(this.root, value);
+
+		if (node == null) {
+			throw new ValeurNonRepresenteeDansABRI("Impossible de retrouver le noeud contenant la valeur : " + value + "\n");
+		}
+
+		ret = null;
+		father = (SimpleNode) node.getFather();
+
+		// Dans le cas où le noeud est une feuille, il suffit de débrancher son noeud père s'il existe
+		if (node.getLeftSon() == null && node.getRightSon() == null) {
+
+			if (father != null) {
+
+				if (father.getRightSon() == node) {
+					father.setRightSon(null);
+					ret = node;
+				} else if (father.getLeftSon() == node) {
+					father.setLeftSon(null);
+					ret = node;
+				}
+			}
+
+		} else if ((node.getLeftSon() == null || node.getRightSon() == null)) { // Dans le cas où le noeud a un seul fils
+
+			if (father != null) {
+
+				if (father.getRightSon() == node) { // Noeud courant == fils droit du père
+
+					if (node.getRightSon() != null) { // Si le noeud a seulement un fils droit, on fait le branchement avec le père
+						father.setRightSon(node.getRightSon());
+						node.getRightSon().setFather(father);
+						ret = node;
+					} else {
+						father.setRightSon(node.getLeftSon());
+						node.getLeftSon().setFather(father);
+						ret = node;
+					}
+				} else if (father.getLeftSon() == node) { // Noeud courant == fils gauche du père
+
+					if (node.getLeftSon() != null) {
+						father.setLeftSon(node.getLeftSon());
+						node.getLeftSon().setFather(father);
+						ret = node;
+					} else {
+						father.setLeftSon(node.getRightSon());
+						node.getRightSon().setFather(father);
+						ret = node;
+					}
+				}
+			} else { // Lorsqu'on souhaite supprimer le noeud root
+
+				if (node.getRightSon() != null) {
+					this.root = (SimpleNode) node.getRightSon();
+					node.getRightSon().setFather(null);
+					ret = node;
+				} else {
+					this.root = (SimpleNode) node.getLeftSon();
+					node.getLeftSon().setFather(null);
+					ret = node;
+				}
+			}
+		} else { // Lorsque le noeud à supprimer a deux fils
+
+			// 1è étape : on recherche le noeud possédant la valeur immédiatement inférieure dans le sad (noeud remplaçant)
+			// 2è étape : on supprime ce noeud tout en conservant une copie
+			// 3è étape : on affecte la valeur du noeud remplaçant dans le noeud que l'on souhaite supprimer
+			replacement = this.delete(this.max((SimpleNode) node.getRightSon()).getValue());
+
+			// Mémorisation des information pour retour de fonction
+			ret = new SimpleNode(node.getValue());
+			ret.setFather(node.getFather());
+			ret.setLeftSon(node.getLeftSon());
+			ret.setRightSon(node.getRightSon());
+
+			// On affecte au noeud à supprimer la valeur du noeud remplçant (tour de passe passe ;))
+			node.setValue(replacement.getValue());
+		}
+		return ret;
+	}
+
+	/**
+	 * Recherche le noeud contenant la valeur maximale dans le sous arbre dont node est la racine.
+	 * 
+	 * @param node - Racine du sous arbre dans lequel rechercher la valeur maximale
+	 * @return le noeud contenant la valeur maximale
+	 */
+	private SimpleNode max(SimpleNode node) {
+
+		SimpleNode ret = null;
+
+		if (node.getLeftSon() == null) {
+			ret = node;
+		} else {
+			ret = max((SimpleNode) node.getLeftSon());
+		}
+
+		return ret;
+	}
+
+	/**
+	 * @return the root
+	 */
+	public SimpleNode getRoot() {
+		return root;
 	}
 }
