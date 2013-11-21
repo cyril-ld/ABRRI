@@ -1,7 +1,7 @@
 /**
  * 
  */
-package datastructure;
+package interfaces;
 
 /**
  * @author Cyril

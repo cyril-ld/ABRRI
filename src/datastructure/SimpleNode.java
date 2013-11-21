@@ -3,6 +3,8 @@
  */
 package datastructure;
 
+import interfaces.Node;
+
 /**
  * @author Cyril
  * 
@@ -10,6 +12,10 @@ package datastructure;
 public class SimpleNode extends Node {
 
 	private int valeur;
+
+	public SimpleNode(int valeur) {
+		this.valeur = valeur;
+	}
 
 	public int getValeur() {
 		return valeur;

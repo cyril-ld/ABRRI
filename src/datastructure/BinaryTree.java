@@ -3,6 +3,7 @@
  */
 package datastructure;
 
+import interfaces.Node;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import exceptions.IntervalleChevauchantException;
 import exceptions.IntervalleInexistantException;
@@ -16,7 +17,7 @@ public class BinaryTree {
 	/**
 	 * Noeud racine de l'arbre.
 	 */
-	private Node rootNode;
+	private TreeNode rootNode;
 
 	/**
 	 * Ajoute un noeud type "ABRI" dans l'arbre binaire courant. Construit un TreeNode à partir des valeurs qui sont passées en paramètre et appelle
@@ -24,13 +25,13 @@ public class BinaryTree {
 	 * 
 	 * @param min - la valeur minimale de l'intervalle
 	 * @param max - la valeur maximale de l'intervalle
-	 * @param arbre - arbre binaire stocké dans le noeud
+	 * @param rootNode - arbre binaire stocké dans le noeud
 	 * @return - true si le noeud a bien été ajouté, false sinon.
 	 * @throws IntervalleChevauchantException lors de l'ajout d'un noeud dont l'intervalle chevauche un intervalle existant
 	 * @see insert(TreeNode node)
 	 */
-	public void insert(int min, int max, BinaryTree arbre) throws IntervalleChevauchantException {
-		TreeNode node = new TreeNode(min, max, arbre);
+	public void insert(int min, int max, SimpleNode rootNode) throws IntervalleChevauchantException {
+		TreeNode node = new TreeNode(min, max, rootNode);
 		this.insert(node);
 	}
 
@@ -75,12 +76,38 @@ public class BinaryTree {
 	 * Recherche un noeud existant via les bornes de l'intervalle demandé.
 	 * 
 	 * @param node - le noeud dans lequel on recherche
-	 * @param min - la borne minimale de l'intervalle
-	 * @param max - la borne maximale de l'intervalle
+	 * @param min - la borne minimale de l'intervalle, ne doit pas être modifiée
+	 * @param max - la borne maximale de l'intervalle, ne doit pas être modifiée
 	 * @return le noeud recherché s'il existe
 	 */
-	public TreeNode findNode(Node node, int min, int max) {
-		throw new NotImplementedException();
+	public TreeNode findNode(TreeNode node, final int min, final int max) {
+
+		TreeNode ret = null;
+
+		if (node == null || min > max || (min == max && max == 0)) {
+			throw new RuntimeException("Problèmes dans les paramètres de la méthode");
+		} else if (node.getMin() > max) { // Cas où le noeud courant est "plus grand" que l'intervalle donnée
+
+			if (node.getFilsGauche() == null) {
+				ret = node;
+			} else {
+				ret = findNode((TreeNode) node.getFilsGauche(), min, max);
+			}
+
+		} else if (node.getMax() < min) { // Cas où le noeud courant est "plus petit" que l'intervalle donnée
+
+			if (node.getFilsDroit() == null) {
+				ret = node;
+			} else {
+				ret = findNode((TreeNode) node.getFilsDroit(), min, max);
+			}
+
+		} else if (node.getMin() == min && node.getMax() == max) {
+			ret = node;
+		} else {
+			return null;
+		}
+		return ret;
 	}
 
 	/**
@@ -108,17 +135,33 @@ public class BinaryTree {
 	}
 
 	/**
-	 * @return the rootNode
+	 * Méthode en charge d'ajouter un noeud simple dans l'AABRI. La méthode parcours l'AABRI à la recherche d'un intervalle qui contient la valeur à
+	 * ajouter. Si l'intervalle n'existe pas et si la valeur existe déjà dans l'ABRI, la méthode ne fait rien. Une fois l'intervalle trouvée, la
+	 * méthode fait appel à la fonction TreeNode.insert(SimpleNode).
+	 * 
+	 * @param node - Le noeud à ajouter
 	 */
-	public Node getRootNode() {
-		return rootNode;
+	public void addSimpleNode(SimpleNode node) {
+		throw new NotImplementedException();
 	}
 
 	/**
-	 * @param rootNode the rootNode to set
+	 * Supprime une noeud simple d'un ABRI. La méthode parcours l'AABRI à la recherche de l'intervalle contenant la valeur simpleNodeValue. Si
+	 * l'intervalle n'existe pas, la méthode lève une exception IntervalleInexistantException. Si la valeur est introuvable, la méthode renvoi null.
+	 * Une fois l'intervalle trouvé (et donc l'objet TreeNode), la méthode appelle la méthode TreeNode.delete(int simpleNodeValue)
+	 * 
+	 * @param simpleNodeValue - La valeur du noeud à supprimer
+	 * @return le noeud qui a été retiré, ou null si aucun noeud n'a été trouvé.
 	 */
-	public void setRootNode(Node rootNode) {
-		this.rootNode = rootNode;
+	public SimpleNode removeSimpleNode(int simpleNodeValue) {
+		throw new NotImplementedException();
 	}
 
+	public void ABRtoAABRI() {
+		throw new NotImplementedException();
+	}
+
+	public void AABRItoABR() {
+		throw new NotImplementedException();
+	}
 }
