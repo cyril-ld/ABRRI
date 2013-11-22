@@ -82,8 +82,8 @@ public class BinaryTree {
 	 * Recherche un noeud existant via les bornes de l'intervalle demandé.
 	 * 
 	 * @param node - le noeud dans lequel on recherche
-	 * @param min - la borne minimale de l'intervalle, ne doit pas être modifiée
-	 * @param max - la borne maximale de l'intervalle, ne doit pas être modifiée
+	 * @param min - la borne minimale de l'intervalle du nouveau noeud, ne doit pas être modifiée
+	 * @param max - la borne maximale de l'intervalle du nouveau noeud, ne doit pas être modifiée
 	 * @return le noeud recherché s'il existe
 	 * @throws IntervalleInexistantException dans le cas où aucun noeud n'a pu être trouvé
 	 */
@@ -94,24 +94,21 @@ public class BinaryTree {
 		if (node == null || min > max || (min == max && max == 0)) {
 			throw new RuntimeException("Problèmes dans les paramètres de la méthode");
 
-		} else if (node.getMin() > max) { // Cas où le noeud courant est "plus grand" que l'intervalle donné
+		} else if (node.getMin() > max) { // Cas où le noeud courant est "plus grand" que le max du nouveau noeud
 
 			if (node.getLeftSon() == null) {
-				throw new IntervalleInexistantException(""
-				        + "Intervalle demandé : [" + min + "; " + max + "]\n"
-				        + "Intervalle au mieux : [" + node.getMin() + "; " + node.getMax() + "]");
+				ret = node;
+			} else {
+				ret = findTreeNode((TreeNode) node.getLeftSon(), min, max);
 			}
-			ret = findTreeNode((TreeNode) node.getLeftSon(), min, max);
 
 		} else if (node.getMax() < min) { // Cas où le noeud courant est "plus petit" que l'intervalle donné
 
 			if (node.getRightSon() == null) {
-				throw new IntervalleInexistantException(""
-				        + "Intervalle demandé : [" + min + "; " + max + "]\n"
-				        + "Intervalle au mieux : [" + node.getMin() + "; " + node.getMax() + "]");
+				ret = node;
+			} else {
+				ret = findTreeNode((TreeNode) node.getRightSon(), min, max);
 			}
-			ret = findTreeNode((TreeNode) node.getRightSon(), min, max);
-
 		} else if (node.getMin() == min && node.getMax() == max) {
 			ret = node;
 		} else {
@@ -223,5 +220,12 @@ public class BinaryTree {
 
 	public void AABRItoABR() {
 		throw new NotImplementedException();
+	}
+
+	/**
+	 * @return the rootNode
+	 */
+	public TreeNode getRootNode() {
+		return rootNode;
 	}
 }
