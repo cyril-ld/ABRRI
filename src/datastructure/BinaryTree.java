@@ -175,17 +175,28 @@ public class BinaryTree {
 	 * 
 	 * @param node - Le noeud d'ABRI à ajouter
 	 * @return TreeNode - le noeud d'AABRI dans lequel la valeur a été ajoutée
+	 * @throws IntervalleInexistantException dans le cas où aucun intervalle ne contient la valeur à ajouter
 	 */
-	public TreeNode addSimpleNode(SimpleNode node) {
-		throw new NotImplementedException();
+	public SimpleNode addSimpleNode(SimpleNode node) throws IntervalleInexistantException {
+
+		TreeNode treeNode = this.findTreeNodeFromValue(this.rootNode, node.getValue());
+
+		if (treeNode == null) {
+			return null;
+		}
+
+		treeNode.insert(node);
+
+		return node;
 	}
 
 	/**
 	 * Ajoute un entier dans l'un des ABRI de l'AABRI en fonction des intervalles disponibles.
 	 * 
 	 * @param value - La valeur à ajouter
+	 * @throws IntervalleInexistantException dans le cas où aucun intervalle ne contient la valeur à ajouter
 	 */
-	public TreeNode addSimpleNode(int value) {
+	public SimpleNode addSimpleNode(int value) throws IntervalleInexistantException {
 		return this.addSimpleNode(new SimpleNode(value));
 	}
 

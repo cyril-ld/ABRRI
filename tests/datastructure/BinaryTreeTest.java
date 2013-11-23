@@ -3,23 +3,36 @@
  */
 package datastructure;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import util.TreeUtils;
+import exceptions.IntervalleInexistantException;
+
 /**
  * @author Cyril
- *
+ * 
  */
 public class BinaryTreeTest {
+
+	/**
+	 * Objet à tester
+	 */
+	private BinaryTree binaryTree;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
+		this.binaryTree = TreeUtils.initBinaryTreeFromFile("resources/AABRI.txt");
+		if (this.binaryTree == null) {
+			Assert.fail("L'initialisation de l'arbre binaire a échoué !");
+		}
 	}
 
 	/**
@@ -27,14 +40,35 @@ public class BinaryTreeTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		this.binaryTree = null;
 	}
 
 	/**
 	 * Test method for {@link datastructure.BinaryTree#insert(int, int, datastructure.SimpleNode)}.
+	 * 
+	 * On part du principe que l'ajout d'une valeur n'est réalisable que si un noeud contient un intervalle incluant la valeur.
+	 * 
+	 * @throws IntervalleInexistantException attendu
+	 */
+	@Test(expected = IntervalleInexistantException.class)
+	public void testInsertSimpleNodeFromValue() throws IntervalleInexistantException {
+		this.binaryTree.addSimpleNode(999999);
+	}
+
+	/**
+	 * Test method for {@link datastructure.BinaryTree#insert(int, int, datastructure.SimpleNode)}.
+	 * 
+	 * Ajout d'un entier (noeud simple) dans l'AABRI.
 	 */
 	@Test
-	public void testInsertIntIntSimpleNode() {
-		fail("Not yet implemented");
+	public void testInsertSimpleNodeFromValueOK() throws IntervalleInexistantException {
+		this.binaryTree.addSimpleNode(60);
+
+		TreeNode node = this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 50, 75);
+		SimpleNode simpleNode = node.findNode(node.getRoot(), 60);
+
+		Assert.assertNotNull(simpleNode);
+		Assert.assertTrue(60 == simpleNode.getValue());
 	}
 
 	/**
