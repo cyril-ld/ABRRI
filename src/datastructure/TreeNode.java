@@ -264,4 +264,39 @@ public class TreeNode extends Node {
 	public SimpleNode getRoot() {
 		return root;
 	}
+
+	/**
+	 * @param root the root to set
+	 */
+	public void setRoot(SimpleNode root) {
+		this.root = root;
+	}
+
+	/**
+	 * Créé une représentation des informations contenues dans l'ABRI contenu par le noeud. Le parcours est préfixe.
+	 * 
+	 * @param node - La racine de l'abre dont on souhaite afficher les valeurs.
+	 * @return - Une chaîne contenant l'ensemble des informations de l'arbre.
+	 */
+	public String getInfos(SimpleNode node) {
+
+		String ret, lSon, rSon;
+
+		if (node != null) {
+			lSon = this.getInfos((SimpleNode) node.getLeftSon());
+			rSon = this.getInfos((SimpleNode) node.getRightSon());
+			if ((lSon == null || lSon.equals("")) && rSon != null && !rSon.equals("")) {
+				ret = node.getValue() + ":" + rSon;
+			} else if ((lSon != null && !lSon.equals("") && (rSon == null || rSon.equals("")))) {
+				ret = node.getValue() + ":" + lSon;
+			} else if (lSon != null && !lSon.equals("") && rSon != null && !rSon.equals("")) {
+				ret = node.getValue() + ":" + lSon + ":" + rSon;
+			} else {
+				ret = Integer.toString(node.getValue());
+			}
+		} else {
+			ret = "";
+		}
+		return ret;
+	}
 }

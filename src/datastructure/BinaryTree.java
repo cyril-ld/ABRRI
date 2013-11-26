@@ -157,6 +157,13 @@ public class BinaryTree {
 	}
 
 	/**
+	 * @return the rootNode
+	 */
+	public TreeNode getRootNode() {
+		return rootNode;
+	}
+
+	/**
 	 * Supprime un ABRI selon l'intervalle spécifié
 	 * 
 	 * @param min - la valeur minimale de l'intervalle
@@ -165,7 +172,105 @@ public class BinaryTree {
 	 * @throws IntervalleInexistantException lorsque l'intervalle demandé n'existe pas
 	 */
 	public Node delete(int min, int max) throws IntervalleInexistantException {
-		throw new NotImplementedException();
+
+		// Retour
+		TreeNode ret = null;
+
+		TreeNode nodeToDelete = this.findTreeNode(this.rootNode, min, max);
+
+		// Dans le cas où le noeud est une feuille
+		if (nodeToDelete.getLeftSon() == null && nodeToDelete.getRightSon() == null) {
+
+			// Si le noeud père existe
+			if (nodeToDelete.getFather() != null) {
+
+				// On regarde quel fils est à supprimer, sans se préoccuper de rebrancher le père puisque le noeud courant n'a pas de fils
+				if (nodeToDelete.getFather().getRightSon() == nodeToDelete) {
+					nodeToDelete.getFather().setRightSon(null);
+					ret = nodeToDelete;
+				} else {
+					nodeToDelete.getFather().setLeftSon(null);
+					ret = nodeToDelete;
+				}
+
+			} else { // Dans le cas où le noeud courant est la racine de l'arbre
+				this.rootNode = null;
+			}
+		} else if (nodeToDelete.getLeftSon() == null || nodeToDelete.getRightSon() == null) { // Dans le cas où le noeud n'a qu'un seul fils
+
+			// Si le noeud à supprimer a un noeud père, il va falloir re brancher père et fils
+			if (nodeToDelete.getFather() != null) {
+
+				if (nodeToDelete.getFather().getRightSon() == nodeToDelete) {
+
+					// On rebranche le père sur l'unique fils du noeud à supprimer, et inversement
+					if (nodeToDelete.getLeftSon() != null) {
+						nodeToDelete.getFather().setRightSon(nodeToDelete.getLeftSon());
+						nodeToDelete.setFather(nodeToDelete.getFather());
+						ret = nodeToDelete;
+					} else {
+						nodeToDelete.getFather().setRightSon(nodeToDelete.getRightSon());
+						nodeToDelete.getRightSon().setFather(nodeToDelete.getFather());
+						ret = nodeToDelete;
+					}
+				} else if (nodeToDelete.getFather().getLeftSon() == nodeToDelete) {
+
+					if (nodeToDelete.getLeftSon() != null) {
+						nodeToDelete.getFather().setLeftSon(nodeToDelete.getLeftSon());
+						nodeToDelete.getLeftSon().setFather(nodeToDelete.getFather());
+						ret = nodeToDelete;
+					} else {
+						nodeToDelete.getFather().setLeftSon(nodeToDelete.getRightSon());
+						nodeToDelete.getRightSon().setFather(nodeToDelete.getFather());
+						ret = nodeToDelete;
+					}
+				}
+			}
+		} else { // Dans le cas où le noeud a deux fils
+
+			// Noeud qui va stocker le noeud le plus grand dans le sag
+			TreeNode replacement = this.max((TreeNode) nodeToDelete.getLeftSon());
+
+			// On copie les informations du noeud à supprimer dans le noeud de retour
+			ret = new TreeNode();
+
+			ret.setMax(nodeToDelete.getMax());
+			ret.setMin(nodeToDelete.getMin());
+			ret.setRoot(nodeToDelete.getRoot());
+			ret.setFather(nodeToDelete.getFather());
+			ret.setLeftSon(nodeToDelete.getLeftSon());
+			ret.setRightSon(nodeToDelete.getRightSon());
+
+			// On intervertit les valeurs des deux noeuds
+			nodeToDelete.setMin(replacement.getMin());
+			nodeToDelete.setMax(replacement.getMax());
+			nodeToDelete.setRoot(replacement.getRoot());
+			nodeToDelete.setLeftSon(replacement.getLeftSon());
+			nodeToDelete.setRightSon(replacement.getRightSon());
+			nodeToDelete.setFather(replacement.getFather());
+		}
+
+		return ret;
+	}
+
+	/**
+	 * Dans l'AABRI le noeud le plus grand est normalement celui qui se trouve tout en bas à droite de l'arbre. On cherche donc à atteindre le noeud
+	 * qui se trouve au plus profond des fils de droite.
+	 * 
+	 * @param node - L'arbre dans lequel faire la recherche
+	 * @return - Le noeud ayant le minimum (ou maximum) le plus élevé de l'AABRI
+	 */
+	private TreeNode max(TreeNode node) {
+
+		TreeNode ret = null;
+
+		if (node.getRightSon() != null) {
+			ret = this.max((TreeNode) node.getRightSon());
+		} else {
+			ret = node;
+		}
+
+		return ret;
 	}
 
 	/**
@@ -225,18 +330,34 @@ public class BinaryTree {
 		return removedNode;
 	}
 
+	/**
+	 * Affiche dans un terminal une représentation telle que définie dans le README de l'abre courant. Le parcours de l'AABRI est préfixe (On va au
+	 * bout des fils gauches, on imprime en remontant, puis on va chercher dans les fils droits).
+	 * 
+	 * @param node - le sous arbre dans lequel faire l'affichage.
+	 * @return String - les infos sur le noeud courant
+	 */
+	@SuppressWarnings("unused")
+    public String getInfos(TreeNode node) {
+
+		String infosNode, lSon, rSon, ret;
+		ret = "";
+		if (node != null) {
+			infosNode = node.getMin() + ":" + node.getMax() + ";" + node.getInfos(node.getRoot());
+			System.out.println(infosNode);
+			lSon = getInfos((TreeNode) node.getLeftSon());
+			rSon = getInfos((TreeNode) node.getRightSon());
+		} else {
+			ret = "";
+		}
+		return ret;
+	}
+
 	public void ABRtoAABRI() {
 		throw new NotImplementedException();
 	}
 
 	public void AABRItoABR() {
 		throw new NotImplementedException();
-	}
-
-	/**
-	 * @return the rootNode
-	 */
-	public TreeNode getRootNode() {
-		return rootNode;
 	}
 }
