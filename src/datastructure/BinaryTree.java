@@ -338,7 +338,7 @@ public class BinaryTree {
 	 * @return String - les infos sur le noeud courant
 	 */
 	@SuppressWarnings("unused")
-    public String getInfos(TreeNode node) {
+	public String getInfos(TreeNode node) {
 
 		String infosNode, lSon, rSon, ret;
 		ret = "";
