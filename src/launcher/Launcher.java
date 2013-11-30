@@ -5,6 +5,7 @@ package launcher;
 
 import util.TreeUtils;
 import datastructure.BinaryTree;
+import exceptions.IntervalleInexistantException;
 
 /**
  * @author Cyril
@@ -17,11 +18,19 @@ public class Launcher {
 	 */
 	public static void main(String[] args) {
 
-		BinaryTree AABRI;
-		// TreeNode node1, node2;
+		try {
+			BinaryTree AABRI;
+			// TreeNode node1, node2;
 
-		AABRI = (args.length == 2) ? TreeUtils.initBinaryTreeFromFile(args[1]) : TreeUtils.initBinaryTreeFromFile("resources/AABRI.txt");
+			AABRI = (args.length == 2) ? TreeUtils.initBinaryTreeFromFile(args[1]) : TreeUtils.initBinaryTreeFromFile("resources/AABRI.txt");
 
-		AABRI.getInfos(AABRI.getRootNode());
+			AABRI.getInfos(AABRI.getRootNode());
+			System.out.println("============================");
+			AABRI.addSimpleNode(101);
+			AABRI.delete(50, 75);
+			AABRI.getInfos(AABRI.getRootNode());
+		} catch (IntervalleInexistantException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -4,6 +4,7 @@
 package datastructure;
 
 import static org.junit.Assert.fail;
+import interfaces.Node;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -14,6 +15,8 @@ import util.TreeUtils;
 import exceptions.IntervalleInexistantException;
 
 /**
+ * Classe de test de l'AABRI. Utilise le fichier resources/AABRI.txt pour effectuer les tests.
+ * 
  * @author Cyril
  * 
  */
@@ -68,39 +71,79 @@ public class BinaryTreeTest {
 		SimpleNode simpleNode = node.findNode(node.getRoot(), 60);
 
 		Assert.assertNotNull(simpleNode);
-		Assert.assertTrue(60 == simpleNode.getValue());
+		Assert.assertTrue("On doit retrouver la valeur insérée dans l'arbre.", 60 == simpleNode.getValue());
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#insert(datastructure.TreeNode)}.
+	 * Test method for {@link datastructure.BinaryTree#insert(datastructure.TreeNode)}. On cherche à récupérer le noeud que l'on vient d'ajouter. Si
+	 * on récupère correctement le noeud c'est qu'il a été correctement inséré dans l'arbre.
 	 */
 	@Test
-	public void testInsertTreeNode() {
-		fail("Not yet implemented");
+	public void testInsertTreeNodeWithNoError() {
+		TreeNode treeNode = new TreeNode(500, 550, new SimpleNode(530));
+		try {
+			this.binaryTree.insert(treeNode);
+			Assert.assertEquals(treeNode, this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 500, 550));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 
 	/**
 	 * Test method for {@link datastructure.BinaryTree#findTreeNode(datastructure.TreeNode, int, int)}.
+	 * 
+	 * On essaie de récupérer un noeud de l'AABRI et on vérifie ses différentes valeurs.
 	 */
 	@Test
 	public void testFindTreeNode() {
-		fail("Not yet implemented");
+		TreeNode treeNode = this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 92, 110);
+
+		Assert.assertTrue("Le noeud doit être retrouvé.", treeNode != null);
+		Assert.assertTrue("Le maximum doit être égal au maximum donné dans le fichier source.", treeNode.getMax() == 110);
+		Assert.assertTrue("Le minimum doit être égal au minimum donné dans le fichier source.", treeNode.getMin() == 92);
+		Assert.assertTrue("La valeur du noeud racine doit être égale à la première valeur donnée pour ce noeud dans le fichier sources.",
+		        (treeNode.getRoot().getValue() == 100));
 	}
 
 	/**
 	 * Test method for {@link datastructure.BinaryTree#findTreeNodeFromValue(datastructure.TreeNode, int)}.
+	 * 
+	 * La méthode testée retourne a noeud d'AABRI. On teste donc ce noeud afin de savoir s'il correspond vraiment au noeud que l'on recherche.
 	 */
 	@Test
 	public void testFindTreeNodeFromValue() {
-		fail("Not yet implemented");
+		try {
+			TreeNode treeNode = this.binaryTree.findTreeNodeFromValue(this.binaryTree.getRootNode(), 32);
+			Assert.assertTrue("Le minimum doit être égal au minimum donné dans le fichier source.", treeNode.getMin() == 24);
+			Assert.assertTrue("Le maximum doit être égal au maximum donné dans le fichier source.", treeNode.getMax() == 48);
+			Assert.assertTrue("La valeur du noeud racine doit être égale à la première valeur donnée pour ce noeud dans le fichier sources.",
+			        treeNode.getRoot().getValue() == 30);
+		} catch (IntervalleInexistantException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 
 	/**
 	 * Test method for {@link datastructure.BinaryTree#delete(int, int)}.
+	 * 
+	 * Supprime un noeud d'AABRI. Le test supprime donc un noeud de l'AABRI et essaie de le retrouver. Si on le trouve dans l'AABRI c'est que la
+	 * méthode de suppression a échoué.
+	 * 
+	 * @throws IntervalleInexistantException - Exception devant être lancée car on tente de supprimer un noeud n'existant pas.
 	 */
-	@Test
+	@Test(expected = IntervalleInexistantException.class)
 	public void testDelete() {
-		fail("Not yet implemented");
+		try {
+			Node treeNode = this.binaryTree.delete(24, 48);
+			Assert.assertTrue("On doit récupérer un noeud lors de la suppression.", treeNode != null);
+			Assert.assertTrue("Le noeud recherché ne doit pas exister.",
+			        this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 24, 48) == null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 
 	/**

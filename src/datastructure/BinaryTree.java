@@ -58,12 +58,8 @@ public class BinaryTree {
 			return;
 		}
 
-		try {
-			// Recherche du noeud père
-			father = (TreeNode) this.findTreeNode(this.rootNode, node.getMin(), node.getMax());
-		} catch (IntervalleInexistantException e) {
-			System.out.println(e.getMessage() + "\n" + e.getStackTrace());
-		}
+		// Recherche du noeud père
+		father = (TreeNode) this.findFather(this.rootNode, node.getMin(), node.getMax());
 
 		if (father == null)
 			throw new RuntimeException("Impossible de retrouver le père du noeud à ajouter !");
@@ -85,10 +81,42 @@ public class BinaryTree {
 	 * @param min - la borne minimale de l'intervalle du nouveau noeud, ne doit pas être modifiée
 	 * @param max - la borne maximale de l'intervalle du nouveau noeud, ne doit pas être modifiée
 	 * @return le noeud recherché s'il existe
-	 * @throws IntervalleInexistantException dans le cas où aucun noeud n'a pu être trouvé
 	 */
-	public TreeNode findTreeNode(TreeNode node, final int min, final int max) throws IntervalleInexistantException {
+	public TreeNode findTreeNode(TreeNode node, final int min, final int max) {
 
+		TreeNode ret = null;
+
+		if (node == null || min > max || (min == max && max == 0)) {
+			throw new RuntimeException("Problèmes dans les paramètres de la méthode");
+
+		} else if (node.getMin() > max) { // Cas où le noeud courant est "plus grand" que le max du nouveau noeud
+
+			if (node.getLeftSon() != null) {
+				ret = findTreeNode((TreeNode) node.getLeftSon(), min, max);
+			}
+
+		} else if (node.getMax() < min) { // Cas où le noeud courant est "plus petit" que l'intervalle donné
+
+			if (node.getRightSon() != null) {
+				ret = findTreeNode((TreeNode) node.getRightSon(), min, max);
+			}
+		} else if (node.getMin() == min && node.getMax() == max) {
+			ret = node;
+		} else {
+			return null;
+		}
+		return ret;
+	}
+
+	/**
+	 * Permet de retrouver le père du noeud que l'on cherche, notamment lors de l'insertion.
+	 * 
+	 * @param node - Le noeud racine de l'arbre dans lequel chercher
+	 * @param min - Le minimum de l'intervalle recherché
+	 * @param max - Le maximum de l'intervalle recherché
+	 * @return le noeud recherché ou null si le noeud n'existe pas.
+	 */
+	private TreeNode findFather(TreeNode node, final int min, final int max) {
 		TreeNode ret = null;
 
 		if (node == null || min > max || (min == max && max == 0)) {
@@ -99,7 +127,7 @@ public class BinaryTree {
 			if (node.getLeftSon() == null) {
 				ret = node;
 			} else {
-				ret = findTreeNode((TreeNode) node.getLeftSon(), min, max);
+				ret = findFather((TreeNode) node.getLeftSon(), min, max);
 			}
 
 		} else if (node.getMax() < min) { // Cas où le noeud courant est "plus petit" que l'intervalle donné
@@ -107,7 +135,7 @@ public class BinaryTree {
 			if (node.getRightSon() == null) {
 				ret = node;
 			} else {
-				ret = findTreeNode((TreeNode) node.getRightSon(), min, max);
+				ret = findFather((TreeNode) node.getRightSon(), min, max);
 			}
 		} else if (node.getMin() == min && node.getMax() == max) {
 			ret = node;
@@ -171,12 +199,16 @@ public class BinaryTree {
 	 * @return le noeud supprimé
 	 * @throws IntervalleInexistantException lorsque l'intervalle demandé n'existe pas
 	 */
-	public Node delete(int min, int max) throws IntervalleInexistantException {
+	public Node delete(int min, int max) {
 
 		// Retour
 		TreeNode ret = null;
 
 		TreeNode nodeToDelete = this.findTreeNode(this.rootNode, min, max);
+
+		if (nodeToDelete == null) {
+			throw new RuntimeException("Impossible de retrouver le noeud à supprimer !");
+		}
 
 		// Dans le cas où le noeud est une feuille
 		if (nodeToDelete.getLeftSon() == null && nodeToDelete.getRightSon() == null) {
@@ -229,7 +261,10 @@ public class BinaryTree {
 		} else { // Dans le cas où le noeud a deux fils
 
 			// Noeud qui va stocker le noeud le plus grand dans le sag
-			TreeNode replacement = this.max((TreeNode) nodeToDelete.getLeftSon());
+			TreeNode replacement = this.max((TreeNode) nodeToDelete.getRightSon());
+
+			// On supprime le noeud de l'arbre
+			this.delete(replacement.getMin(), replacement.getMax());
 
 			// On copie les informations du noeud à supprimer dans le noeud de retour
 			ret = new TreeNode();
@@ -245,9 +280,6 @@ public class BinaryTree {
 			nodeToDelete.setMin(replacement.getMin());
 			nodeToDelete.setMax(replacement.getMax());
 			nodeToDelete.setRoot(replacement.getRoot());
-			nodeToDelete.setLeftSon(replacement.getLeftSon());
-			nodeToDelete.setRightSon(replacement.getRightSon());
-			nodeToDelete.setFather(replacement.getFather());
 		}
 
 		return ret;
