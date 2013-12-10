@@ -4,10 +4,15 @@
 package util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringReader;
 
 import datastructure.BinaryTree;
 import datastructure.TreeNode;
@@ -97,6 +102,69 @@ public class TreeUtils {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return null;
+		}
+
+	}
+
+	/**
+	 * Enregistre l'abre dans un fichier.
+	 * 
+	 * @param filePath - /chemin/vers/le/fichier
+	 * @param AABRI - L'arbre d'abres binaires de recherche inversés
+	 * @return true si l'enregistrement s'est bien passé.
+	 */
+	public boolean saveToFile(String filePath, BinaryTree AABRI) {
+
+		File file = new File(filePath);
+		boolean eof;
+		String infosAABRI, line;
+
+		// Récupération de la représentation de l'arbre
+		infosAABRI = AABRI.getInfos(AABRI.getRootNode());
+
+		// Création du fichier s'il n'existe pas
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+
+		// Enregistrement dans le fichier
+		try {
+
+			// Création du buffer pour écrirer dans le fichier
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter pw = new PrintWriter(bw);
+
+			// Création d'un buffer contenant les informations sur l'arbre
+			StringReader sr = new StringReader(infosAABRI);
+			BufferedReader br = new BufferedReader(sr);
+			eof = false;
+
+			while (!eof) {
+				line = br.readLine();
+
+				if (line != null) {
+					pw.write(line);
+				} else {
+					eof = true;
+				}
+			}
+
+			// Fermeture des buffers
+			fw.close();
+			bw.close();
+			pw.close();
+			sr.close();
+			br.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
 		}
 
 	}

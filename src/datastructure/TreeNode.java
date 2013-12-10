@@ -144,6 +144,8 @@ public class TreeNode extends Node {
 			} else if (father.getValue() < node.getValue()) {
 				father.setLeftSon(node);
 			}
+
+			node.setFather(father);
 		}
 	}
 
@@ -225,7 +227,7 @@ public class TreeNode extends Node {
 			// 1è étape : on recherche le noeud possédant la valeur immédiatement inférieure dans le sad (noeud remplaçant)
 			// 2è étape : on supprime ce noeud tout en conservant une copie
 			// 3è étape : on affecte la valeur du noeud remplaçant dans le noeud que l'on souhaite supprimer
-			replacement = this.delete(this.max((SimpleNode) node.getRightSon()).getValue());
+			replacement = this.delete(this.max((SimpleNode) node.getLeftSon()).getValue());
 
 			// Mémorisation des information pour retour de fonction
 			ret = new SimpleNode(node.getValue());
@@ -233,8 +235,11 @@ public class TreeNode extends Node {
 			ret.setLeftSon(node.getLeftSon());
 			ret.setRightSon(node.getRightSon());
 
-			// On affecte au noeud à supprimer la valeur du noeud remplçant (tour de passe passe ;))
+			// On affecte au noeud à supprimer la valeur du noeud remplaçant (tour de passe passe ;))
 			node.setValue(replacement.getValue());
+			node.setFather(replacement.getFather());
+			node.setRightSon(replacement.getRightSon());
+			node.setLeftSon(replacement.getLeftSon());
 		}
 		return ret;
 	}

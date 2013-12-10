@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import util.TreeUtils;
 import exceptions.IntervalleInexistantException;
+import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
  * Classe de test de l'AABRI. Utilise le fichier resources/AABRI.txt pour effectuer les tests.
@@ -130,10 +131,8 @@ public class BinaryTreeTest {
 	 * 
 	 * Supprime un noeud d'AABRI. Le test supprime donc un noeud de l'AABRI et essaie de le retrouver. Si on le trouve dans l'AABRI c'est que la
 	 * méthode de suppression a échoué.
-	 * 
-	 * @throws IntervalleInexistantException - Exception devant être lancée car on tente de supprimer un noeud n'existant pas.
 	 */
-	@Test(expected = IntervalleInexistantException.class)
+	@Test
 	public void testDelete() {
 		try {
 			Node treeNode = this.binaryTree.delete(24, 48);
@@ -167,7 +166,20 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public void testRemoveSimpleNode() {
-		fail("Not yet implemented");
+		try {
+			this.binaryTree.removeSimpleNode(60);
+
+			// Recherche de la valeur que l'on vient de supprimer
+			TreeNode node = this.binaryTree.findTreeNodeFromValue(this.binaryTree.getRootNode(), 60);
+
+			Assert.assertTrue("On ne doit pas retrouver la valeur d'un noeud que l'on vient de supprimer.", node.findNode(node.getRoot(), 60) == null);
+		} catch (IntervalleInexistantException | ValeurNonRepresenteeDansABRI e) {
+			e.printStackTrace();
+			fail("La suppression d'un valeur existante ne doit pas lever d'exception.");
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			fail("Erreur non prévue.");
+		}
 	}
 
 	/**
@@ -191,7 +203,8 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public void testGetRootNode() {
-		fail("Not yet implemented");
+		Assert.assertTrue("Le minimum du noeud racine doit être 50.", this.binaryTree.getRootNode().getMin() == 50);
+		Assert.assertTrue("Le maximum du noeud racine doit être 75.", this.binaryTree.getRootNode().getMax() == 75);
 	}
 
 }

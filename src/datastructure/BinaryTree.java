@@ -340,7 +340,9 @@ public class BinaryTree {
 	/**
 	 * Supprime une noeud simple d'un ABRI. La méthode parcours l'AABRI à la recherche de l'intervalle contenant la valeur simpleNodeValue. Si
 	 * l'intervalle n'existe pas, la méthode lève une exception IntervalleInexistantException. Si la valeur est introuvable, la méthode renvoi null.
-	 * Une fois l'intervalle trouvé (et donc l'objet TreeNode), la méthode appelle la méthode TreeNode.delete(int simpleNodeValue)
+	 * Une fois l'intervalle trouvé (et donc l'objet TreeNode), la méthode appelle la méthode TreeNode.delete(int simpleNodeValue).
+	 * 
+	 * Attention, lorsque le noeud ne contient plus aucune valeur, on supprime le noeud afin de ne pas garder de noeud vide.
 	 * 
 	 * @param simpleNodeValue - La valeur du noeud à supprimer
 	 * @return le noeud qui a été retiré, ou null si aucun noeud n'a été trouvé.
@@ -348,12 +350,13 @@ public class BinaryTree {
 	 * @throws ValeurNonRepresenteeDansABRI Si la valeur est bien dans l'intervalle de l'ABRI, mais n'est pas représentée
 	 */
 	public SimpleNode removeSimpleNode(final int simpleNodeValue) throws IntervalleInexistantException, ValeurNonRepresenteeDansABRI {
-		// Penser à supprimer le TreeNode courant lorsqu'il ne contient plus aucun noeud simple (ie lorsque le root == null)
 
+		// Penser à supprimer le TreeNode courant lorsqu'il ne contient plus aucun noeud simple (ie lorsque le root == null)
 		TreeNode treeNode = this.findTreeNodeFromValue(this.rootNode, simpleNodeValue);
 
 		SimpleNode removedNode = treeNode.delete(simpleNodeValue);
 
+		// Si le noeud ABRI ne contient plus aucune valeur, on supprime le noeud de l'AABRI le contenant
 		if (treeNode.getRoot() == null) {
 			// TODO optimisation possible en créant une méthode de suppression à partir d'un
 			// TreeNode
