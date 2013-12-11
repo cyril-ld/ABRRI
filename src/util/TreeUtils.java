@@ -11,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.StringReader;
 
 import datastructure.BinaryTree;
@@ -113,7 +112,7 @@ public class TreeUtils {
 	 * @param AABRI - L'arbre d'abres binaires de recherche inversés
 	 * @return true si l'enregistrement s'est bien passé.
 	 */
-	public boolean saveToFile(String filePath, BinaryTree AABRI) {
+	public static boolean saveToFile(String filePath, BinaryTree AABRI) {
 
 		File file = new File(filePath);
 		boolean eof;
@@ -138,7 +137,6 @@ public class TreeUtils {
 			// Création du buffer pour écrirer dans le fichier
 			FileWriter fw = new FileWriter(file);
 			BufferedWriter bw = new BufferedWriter(fw);
-			PrintWriter pw = new PrintWriter(bw);
 
 			// Création d'un buffer contenant les informations sur l'arbre
 			StringReader sr = new StringReader(infosAABRI);
@@ -147,9 +145,14 @@ public class TreeUtils {
 
 			while (!eof) {
 				line = br.readLine();
-
 				if (line != null) {
-					pw.write(line);
+
+					// Ecriture de la ligne dans le buffer
+					bw.write(line);
+					bw.newLine();
+
+					// Purge du buffer et écriture dans le fichier
+					bw.flush();
 				} else {
 					eof = true;
 				}
@@ -157,8 +160,6 @@ public class TreeUtils {
 
 			// Fermeture des buffers
 			fw.close();
-			bw.close();
-			pw.close();
 			sr.close();
 			br.close();
 			return true;
@@ -166,6 +167,35 @@ public class TreeUtils {
 			e.printStackTrace();
 			return false;
 		}
+	}
 
+	/**
+	 * Génère un AABRI A à nbreNoeuds noeuds, remplis avec des données générées aléatoirement telles que min(m) = 1 et max(M) = valeurMaxABRI. Aucun
+	 * des ABRI générés n'est vide.
+	 * 
+	 * @param nbreNoeuds - Le nombre de noeuds dans l'AABRI
+	 * @param valeurMaxABRI - Nombre maximal de noeuds dans les ABRI
+	 * @return l'AABRI construit
+	 */
+	public static BinaryTree randomAABRI(int nbreNoeuds, int valeurMaxABRI) {
+
+		BinaryTree ret = new BinaryTree();
+
+		// Variable stockant l'ABRI que l'on ajoute dans la boucle suivante
+		TreeNode treeNode = null;
+		int borneMin, borneMax, nbreNoeudsSimples;
+
+		// TODO
+		// étape 1 : Création d'un nombre aléatoire pour la borne min de l'ABRI courant (1 < borneMin < valeurMaxABRI)
+		// étape 2 : Création d'un nombre aléatoire poue la borne max de l'ABRI courant (borneMin < borneMax < valeurMaxABRI)
+		// étape 3 : Nombre de noeuds max dans ABRI = borneMax - borneMin
+		// étape 4 : On ajoute ce nombre de noeuds, stockant tous des valeurs entre borneMin et borneMax
+
+		// Création de nbreNoeuds
+		for (int i = 1; i <= nbreNoeuds; i++) {
+			borneMin = (int) (Math.random() * 100);
+		}
+
+		return ret;
 	}
 }

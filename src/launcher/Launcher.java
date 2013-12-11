@@ -20,15 +20,18 @@ public class Launcher {
 
 		try {
 			BinaryTree AABRI;
-			// TreeNode node1, node2;
 
 			AABRI = (args.length == 2) ? TreeUtils.initBinaryTreeFromFile(args[1]) : TreeUtils.initBinaryTreeFromFile("resources/AABRI.txt");
 
-			AABRI.getInfos(AABRI.getRootNode());
-			System.out.println("============================");
+			System.out.println(AABRI.getInfos(AABRI.getRootNode()));
+			System.out.println("============================\n");
 			AABRI.addSimpleNode(101);
+			System.out.println(AABRI.getInfos(AABRI.getRootNode()));
+			System.out.println("============================\n");
 			AABRI.delete(50, 75);
-			AABRI.getInfos(AABRI.getRootNode());
+			System.out.println(AABRI.getInfos(AABRI.getRootNode()));
+
+			TreeUtils.saveToFile("C:\\Users\\Cyril\\AABRI.txt", AABRI);
 		} catch (IntervalleInexistantException e) {
 			e.printStackTrace();
 		}

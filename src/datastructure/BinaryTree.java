@@ -372,18 +372,15 @@ public class BinaryTree {
 	 * @param node - le sous arbre dans lequel faire l'affichage.
 	 * @return String - les infos sur le noeud courant
 	 */
-	@SuppressWarnings("unused")
 	public String getInfos(TreeNode node) {
 
-		String infosNode, lSon, rSon, ret;
+		String infosNode, ret;
 		ret = "";
 		if (node != null) {
-			infosNode = node.getMin() + ":" + node.getMax() + ";" + node.getInfos(node.getRoot());
-			System.out.println(infosNode);
-			lSon = getInfos((TreeNode) node.getLeftSon());
-			rSon = getInfos((TreeNode) node.getRightSon());
-		} else {
-			ret = "";
+			infosNode = node.getMin() + ":" + node.getMax() + ";" + node.getInfos(node.getRoot()) + "\n";
+			ret += infosNode;
+			ret += this.getInfos((TreeNode) node.getLeftSon());
+			ret += this.getInfos((TreeNode) node.getRightSon());
 		}
 		return ret;
 	}
