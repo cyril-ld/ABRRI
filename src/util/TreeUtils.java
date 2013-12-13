@@ -185,16 +185,27 @@ public class TreeUtils {
 	 */
 	public static BinaryTree randomAABRI(int nbreNoeuds, int valeurMaxABRI) {
 
-		if (valeurMaxABRI < 2) {
-			throw new RuntimeException("La valeur max doit être au moins de 2 pour pouvoir générer un intervalle !");
+		if (valeurMaxABRI < 2 * nbreNoeuds) {
+			throw new RuntimeException("valeurMaxABRI doit être >= 2*NbreNoeuds pour pouvoir générer des intervalles non chevauchants!");
 		}
 
+		// Tableau contenant les valeurs
+		Object[] valeurs;
+
+		// Pointeur sur le noeud utilisé lors de l'ajout dans l'AABRI
+		TreeNode treeNode;
+
+		// AABRI retour de la fonction
 		BinaryTree ret = new BinaryTree();
 
 		// Variable stockant l'ABRI que l'on ajoute dans la boucle suivante
 		int rangTableauValeurs;
-		Object[] bornes = TreeUtils.getRandomIntegers(nbreNoeuds, valeurMaxABRI).toArray();
-		List<Object[]> bornesRandom = new ArrayList<Object[]>();
+
+		// Récupération d'un tableau de bornes constituant toutes les bornes des noeuds de l'AABRI
+		Object[] bornes = TreeUtils.getRandomIntegers(nbreNoeuds, valeurMaxABRI);
+
+		//
+		List<Object[]> bornesRandom = new ArrayList<Object[]>(bornes.length / 2);
 
 		// Mélange des bornes par paires qui se suivent pour que l'arbre généré ne soit pas construit avec des noeuds insérés dans l'ordre croissant
 		// (le tableau des bornes est trié dans l'ordre croissant)
@@ -202,16 +213,9 @@ public class TreeUtils {
 			Object[] tempTab = { bornes[i], bornes[i + 1] };
 			bornesRandom.add(tempTab);
 		}
+
+		// Mélange des couples de bornes
 		Collections.shuffle(bornesRandom);
-
-		for (int i = 0; i < bornesRandom.size(); i++) {
-			Object[] tempTab = bornesRandom.get(i);
-			bornes[i * 2] = tempTab[0];
-			bornes[i * 2 + 1] = tempTab[1];
-		}
-
-		Object[] valeurs;
-		TreeNode treeNode;
 
 		if (bornes.length != nbreNoeuds * 2) {
 			throw new RuntimeException("Le nombre de bornes générées n'est pas bon !");
@@ -219,9 +223,13 @@ public class TreeUtils {
 
 		// On place les bornes dans une liste permettant de les récupérer.
 		// Création des TreeNodes contenant les ABRI et ajout dans l'AABRI
-		for (int i = 0; i < bornes.length; i = i + 2) {
-			treeNode = new TreeNode((int) bornes[i], (int) bornes[i + 1], null);
-			valeurs = TreeUtils.getRandomIntegers(((int) bornes[i + 1]) - ((int) bornes[i]), (int) bornes[i], (int) bornes[i + 1]);
+		for (Object[] tab : bornesRandom) {
+
+			// Création d'un noeud d'AABRI avec les deux bornes
+			treeNode = new TreeNode((int) tab[0], (int) tab[1], null);
+
+			// Récupération d'un tableau contenant les valeurs du noeud
+			valeurs = TreeUtils.getRandomIntegers(((int) tab[1]) - ((int) tab[0]), (int) tab[0], (int) tab[1]);
 
 			rangTableauValeurs = 0;
 
@@ -246,7 +254,7 @@ public class TreeUtils {
 	 * @param borneMax - La valeur majorant le set de retour. ie Set[length-1] <= borneMax
 	 * @return une collection de bornes, triées dans l'ordre croissant, permettant d'assurer que les intervalles ne se chevauchent pas.
 	 */
-	private static Set<Integer> getRandomIntegers(int nbreNoeuds, int borneMax) {
+	private static Object[] getRandomIntegers(int nbreNoeuds, int borneMax) {
 
 		Set<Integer> bornes = new TreeSet<Integer>();
 		int borne;
@@ -255,15 +263,15 @@ public class TreeUtils {
 		for (int i = 1; i <= nbreNoeuds * 2; i++) {
 			estAjoute = false;
 			while (!estAjoute) {
-				borne = (int) (Math.random() * borneMax) + 1;
+				borne = (int) (Math.random() * (borneMax - 1)) + 1;
 				estAjoute = bornes.add(borne);
 			}
 		}
-		return bornes;
+		return bornes.toArray();
 	}
 
 	/**
-	 * Génère une collection d'entiers.
+	 * Génère une collection d'entiers aléatoires.
 	 * 
 	 * @param nbreValeurs - Le nombre de valeurs que l'on souhaite obtenir.
 	 * @param valeurMin - La valeur minimale à obtenir.
@@ -271,8 +279,14 @@ public class TreeUtils {
 	 * @return un tableau contenant les entiers
 	 */
 	private static Object[] getRandomIntegers(int nbreValeurs, int valeurMin, int valeurMax) {
-		List<Integer> valeurs = new ArrayList<Integer>();
+
+		// Liste contenant les valeurs
+		List<Integer> valeurs = new ArrayList<Integer>(nbreValeurs);
+
+		// Valeur temporaire utilisée dans la boucle
 		int randomValue;
+
+		// Marqueur d'ajout dans liste en cas de non doublon
 		boolean estAjoute = false;
 
 		for (int i = 1; i <= nbreValeurs; i++) {
