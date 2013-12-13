@@ -12,9 +12,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import datastructure.BinaryTree;
 import datastructure.TreeNode;
+import exceptions.IntervalleChevauchantException;
 
 /**
  * Classe regroupant les méthodes utilitaires pour les arbres.
@@ -179,23 +185,105 @@ public class TreeUtils {
 	 */
 	public static BinaryTree randomAABRI(int nbreNoeuds, int valeurMaxABRI) {
 
+		if (valeurMaxABRI < 2) {
+			throw new RuntimeException("La valeur max doit être au moins de 2 pour pouvoir générer un intervalle !");
+		}
+
 		BinaryTree ret = new BinaryTree();
 
 		// Variable stockant l'ABRI que l'on ajoute dans la boucle suivante
-		TreeNode treeNode = null;
-		int borneMin, borneMax, nbreNoeudsSimples;
+		int rangTableauValeurs;
+		Object[] bornes = TreeUtils.getRandomIntegers(nbreNoeuds, valeurMaxABRI).toArray();
+		List<Object[]> bornesRandom = new ArrayList<Object[]>();
 
-		// TODO
-		// étape 1 : Création d'un nombre aléatoire pour la borne min de l'ABRI courant (1 < borneMin < valeurMaxABRI)
-		// étape 2 : Création d'un nombre aléatoire poue la borne max de l'ABRI courant (borneMin < borneMax < valeurMaxABRI)
-		// étape 3 : Nombre de noeuds max dans ABRI = borneMax - borneMin
-		// étape 4 : On ajoute ce nombre de noeuds, stockant tous des valeurs entre borneMin et borneMax
+		// Mélange des bornes par paires qui se suivent pour que l'arbre généré ne soit pas construit avec des noeuds insérés dans l'ordre croissant
+		// (le tableau des bornes est trié dans l'ordre croissant)
+		for (int i = 0; i < bornes.length; i = i + 2) {
+			Object[] tempTab = { bornes[i], bornes[i + 1] };
+			bornesRandom.add(tempTab);
+		}
+		Collections.shuffle(bornesRandom);
 
-		// Création de nbreNoeuds
-		for (int i = 1; i <= nbreNoeuds; i++) {
-			borneMin = (int) (Math.random() * 100);
+		for (int i = 0; i < bornesRandom.size(); i++) {
+			Object[] tempTab = bornesRandom.get(i);
+			bornes[i * 2] = tempTab[0];
+			bornes[i * 2 + 1] = tempTab[1];
 		}
 
+		Object[] valeurs;
+		TreeNode treeNode;
+
+		if (bornes.length != nbreNoeuds * 2) {
+			throw new RuntimeException("Le nombre de bornes générées n'est pas bon !");
+		}
+
+		// On place les bornes dans une liste permettant de les récupérer.
+		// Création des TreeNodes contenant les ABRI et ajout dans l'AABRI
+		for (int i = 0; i < bornes.length; i = i + 2) {
+			treeNode = new TreeNode((int) bornes[i], (int) bornes[i + 1], null);
+			valeurs = TreeUtils.getRandomIntegers(((int) bornes[i + 1]) - ((int) bornes[i]), (int) bornes[i], (int) bornes[i + 1]);
+
+			rangTableauValeurs = 0;
+
+			// Ajout des noeuds simples dans l'ABRI
+			for (int j = 0; j < valeurs.length; j++) {
+				treeNode.insert((int) valeurs[rangTableauValeurs]);
+				rangTableauValeurs++;
+			}
+			try {
+				ret.insert(treeNode);
+			} catch (IntervalleChevauchantException e) {
+				e.printStackTrace();
+			}
+		}
 		return ret;
+	}
+
+	/**
+	 * Génère une collection d'intervalles permettant de construire un arbre de manière totalement aléatoire.
+	 * 
+	 * @param nbreNoeuds - Le nombre de noeuds de l'arb
+	 * @param borneMax - La valeur majorant le set de retour. ie Set[length-1] <= borneMax
+	 * @return une collection de bornes, triées dans l'ordre croissant, permettant d'assurer que les intervalles ne se chevauchent pas.
+	 */
+	private static Set<Integer> getRandomIntegers(int nbreNoeuds, int borneMax) {
+
+		Set<Integer> bornes = new TreeSet<Integer>();
+		int borne;
+		boolean estAjoute = false;
+
+		for (int i = 1; i <= nbreNoeuds * 2; i++) {
+			estAjoute = false;
+			while (!estAjoute) {
+				borne = (int) (Math.random() * borneMax) + 1;
+				estAjoute = bornes.add(borne);
+			}
+		}
+		return bornes;
+	}
+
+	/**
+	 * Génère une collection d'entiers.
+	 * 
+	 * @param nbreValeurs - Le nombre de valeurs que l'on souhaite obtenir.
+	 * @param valeurMin - La valeur minimale à obtenir.
+	 * @param valeurMax - La valeur maximale à obtenir.
+	 * @return un tableau contenant les entiers
+	 */
+	private static Object[] getRandomIntegers(int nbreValeurs, int valeurMin, int valeurMax) {
+		List<Integer> valeurs = new ArrayList<Integer>();
+		int randomValue;
+		boolean estAjoute = false;
+
+		for (int i = 1; i <= nbreValeurs; i++) {
+			estAjoute = false;
+			while (!estAjoute) {
+				randomValue = (int) (Math.random() * (valeurMax - valeurMin)) + valeurMin;
+				if (!valeurs.contains(new Integer(randomValue))) {
+					estAjoute = valeurs.add(randomValue);
+				}
+			}
+		}
+		return valeurs.toArray();
 	}
 }

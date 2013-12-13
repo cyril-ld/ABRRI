@@ -32,6 +32,9 @@ public class Launcher {
 			System.out.println(AABRI.getInfos(AABRI.getRootNode()));
 
 			TreeUtils.saveToFile("C:\\Users\\Cyril\\AABRI.txt", AABRI);
+			System.out.println("============================\n");
+			BinaryTree randomTree = TreeUtils.randomAABRI(10, 100);
+			System.out.println(randomTree.getInfos(randomTree.getRootNode()));
 		} catch (IntervalleInexistantException e) {
 			e.printStackTrace();
 		}
