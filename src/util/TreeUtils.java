@@ -185,8 +185,8 @@ public class TreeUtils {
 	 */
 	public static BinaryTree randomAABRI(int nbreNoeuds, int valeurMaxABRI) {
 
-		if (valeurMaxABRI < 2 * nbreNoeuds) {
-			throw new RuntimeException("valeurMaxABRI doit être >= 2*NbreNoeuds pour pouvoir générer des intervalles non chevauchants!");
+		if (valeurMaxABRI < 2 * nbreNoeuds + 1) {
+			throw new RuntimeException("valeurMaxABRI doit être >= 2 * NbreNoeuds + 1 pour pouvoir générer des intervalles non chevauchants!");
 		}
 
 		// Tableau contenant les valeurs

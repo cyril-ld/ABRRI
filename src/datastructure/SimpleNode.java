@@ -28,6 +28,12 @@ public class SimpleNode extends Node {
 	}
 
 	/**
+	 * Constructeur par défaut
+	 */
+	public SimpleNode() {
+	}
+
+	/**
 	 * 
 	 * @return this.value
 	 */
@@ -43,5 +49,4 @@ public class SimpleNode extends Node {
 	public void setValue(int value) {
 		this.value = value;
 	}
-
 }

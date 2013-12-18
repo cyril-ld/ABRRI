@@ -385,6 +385,20 @@ public class BinaryTree {
 		return ret;
 	}
 
+	/**
+	 * <pre>
+	 * Vérifie si l'arbre courant est bien formé :
+	 * - A est un ABR (sur les valeurs de m)
+	 * - Tous les intervalles [m;M] des noeuds de A sont disjoincts
+	 * - Tous les arbres A' des noeuds de A sont des ABRI contenant des éléments compris entre m et M
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	public boolean isWellFormed() {
+		throw new NotImplementedException();
+	}
+
 	public void ABRtoAABRI() {
 		throw new NotImplementedException();
 	}

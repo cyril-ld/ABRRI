@@ -304,4 +304,35 @@ public class TreeNode extends Node {
 		}
 		return ret;
 	}
+
+	/**
+	 * Vérifie si l'arbre dont le noeud passé en paramètre est la racine est bien formé.
+	 * 
+	 * @param node - La racine de l'ABRI à vérifier
+	 * @return true si le sous arbre est bien formé, false sinon
+	 */
+	public boolean isWellFormed(SimpleNode node) {
+
+		// On retourne true dans le cas où le noeud est une feuille
+		boolean ret = true;
+
+		// Si node a un fils gauche correctement positionné on descend dedans
+		if (node.getLeftSon() != null) {
+
+			// Si le fils gauche est bien > au noeud courant, c'est bon
+			if (((SimpleNode) node.getLeftSon()).getValue() > node.getValue()) {
+				ret = isWellFormed((SimpleNode) node.getLeftSon());
+			} else {
+				ret = false;
+			}
+		} else if (node.getRightSon() != null) {
+
+			if (((SimpleNode) node.getRightSon()).getValue() < node.getValue()) {
+				ret = isWellFormed((SimpleNode) node.getRightSon());
+			} else {
+				ret = false;
+			}
+		}
+		return ret;
+	}
 }
