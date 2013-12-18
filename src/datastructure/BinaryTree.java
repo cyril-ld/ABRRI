@@ -4,6 +4,10 @@
 package datastructure;
 
 import interfaces.Node;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import exceptions.IntervalleChevauchantException;
 import exceptions.IntervalleInexistantException;
@@ -395,8 +399,88 @@ public class BinaryTree {
 	 * 
 	 * @return
 	 */
-	public boolean isWellFormed() {
-		throw new NotImplementedException();
+	public boolean isWellFormed(TreeNode node) {
+
+		if (this.isABR(node) && this.containsOnlyDisjointIntervals(node)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Vérifie que l'arbre dont node est la racine est bien constitué d'intervalles disjoints
+	 * 
+	 * @param node - Racine de l'abre à vérifier
+	 * @return true si tous les intervalles sont disjoints, false sinon
+	 */
+	public boolean containsOnlyDisjointIntervals(TreeNode node) {
+
+		List<int[]> intervalles = new ArrayList<>();
+		intervalles = this.getIntervalles(this.rootNode, intervalles);
+
+		for (int i = 0; i < intervalles.size(); i++) {
+			for (int j = i + 1; j < intervalles.size() - 1; j++) {
+				if ((intervalles.get(i)[0] >= intervalles.get(j)[0] && intervalles.get(i)[0] <= intervalles.get(j)[1])
+				        || (intervalles.get(i)[1] >= intervalles.get(j)[0] && intervalles.get(i)[1] <= intervalles.get(j)[1])) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Récupère l'ensemble des intervalles des noeuds de l'AABRI
+	 * 
+	 * @param node - le noeud racine de l'ABRI
+	 * @param intervalles - la liste dans laquelle ajouter les intervalles
+	 * @return la liste des intervalles mise à jour
+	 */
+	public List<int[]> getIntervalles(TreeNode node, List<int[]> intervalles) {
+		if (node != null) {
+			int[] bornes = { node.getMin(), node.getMax() };
+			intervalles.add(bornes);
+			intervalles = this.getIntervalles((TreeNode) node.getLeftSon(), intervalles);
+			intervalles = this.getIntervalles((TreeNode) node.getRightSon(), intervalles);
+		}
+		return intervalles;
+	}
+
+	/**
+	 * Vérifie que la structure de l'arbre dont le noeud passé est la racine est correcte.
+	 * 
+	 * <pre>
+	 * Tous les éléments contenus dans les noeuds du sag de node sont < à node sur node.getMin()
+	 * --------------------------------------------- sad ------------ > ------------------------
+	 * @param node - Racine de l'abre à vérifier
+	 * @return true si l'arbre est bien un ABR
+	 */
+	public boolean isABR(TreeNode node) {
+
+		// On retourne true dans le cas où le noeud est une feuille
+		boolean ret = true;
+
+		// Si node a un fils gauche correctement positionné on descend dedans
+		if (node.getLeftSon() != null) {
+
+			// Si le fils gauche est bien > au noeud courant, on descend dedans pour vérifier
+			if (((TreeNode) node.getLeftSon()).getMin() < node.getMin()) {
+				ret = isWellFormed((TreeNode) node.getLeftSon());
+			} else {
+				ret = false;
+			}
+		}
+
+		// Si node a un fils droit on descend dedans
+		if (node.getRightSon() != null) {
+
+			if (((TreeNode) node.getRightSon()).getMin() > node.getMin()) {
+				ret = isWellFormed((TreeNode) node.getRightSon());
+			} else {
+				ret = false;
+			}
+		}
+		return ret;
 	}
 
 	public void ABRtoAABRI() {

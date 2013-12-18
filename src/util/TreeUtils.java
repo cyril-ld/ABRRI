@@ -204,7 +204,7 @@ public class TreeUtils {
 		// Récupération d'un tableau de bornes constituant toutes les bornes des noeuds de l'AABRI
 		Object[] bornes = TreeUtils.getRandomIntegers(nbreNoeuds, valeurMaxABRI);
 
-		//
+		// Liste contenant les bornes (les tableaux contenus sont donc de taille 2)
 		List<Object[]> bornesRandom = new ArrayList<Object[]>(bornes.length / 2);
 
 		// Mélange des bornes par paires qui se suivent pour que l'arbre généré ne soit pas construit avec des noeuds insérés dans l'ordre croissant

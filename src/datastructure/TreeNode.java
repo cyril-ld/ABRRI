@@ -319,7 +319,7 @@ public class TreeNode extends Node {
 		// Si node a un fils gauche correctement positionné on descend dedans
 		if (node.getLeftSon() != null) {
 
-			// Si le fils gauche est bien > au noeud courant, c'est bon
+			// Si le fils gauche est bien > au noeud courant, on descend dedans pour vérifier
 			if (((SimpleNode) node.getLeftSon()).getValue() > node.getValue()) {
 				ret = isWellFormed((SimpleNode) node.getLeftSon());
 			} else {

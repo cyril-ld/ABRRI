@@ -207,4 +207,11 @@ public class BinaryTreeTest {
 		Assert.assertTrue("Le maximum du noeud racine doit être 75.", this.binaryTree.getRootNode().getMax() == 75);
 	}
 
+	/**
+	 * Vérifie que l'arbre binaire est bien formé
+	 */
+	@Test
+	public void testIsABR() {
+		Assert.assertTrue("L'arbre binaire est bien formé !", this.binaryTree.isABR(this.binaryTree.getRootNode()));
+	}
 }
