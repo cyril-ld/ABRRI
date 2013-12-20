@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import util.TreeUtils;
+import exceptions.SimpleNodeMalPositionne;
 
 /**
  * @author Cyril
@@ -40,11 +41,11 @@ public class TreeNodeTest {
 
 	/**
 	 * Partant du principe que la méthode d'insertion fait bien son boulot, on échange le fils gauche avec le fils droit. On attend que la méthode
-	 * isWellFormed nous retourne false puisque l'arbre n'est plus bien formé.
+	 * isWellFormed nous retourne une exception puisque l'arbre n'est plus bien formé.
 	 * 
 	 * Test method for {@link datastructure.TreeNode#isWellFormed(datastructure.SimpleNode)}.
 	 */
-	@Test
+	@Test(expected = SimpleNodeMalPositionne.class)
 	public void testIsWellFormedNotWellFormed() {
 
 		while (this.nodeToTest.getRoot().getLeftSon() == null || this.nodeToTest.getRoot().getRightSon() == null) {
@@ -56,7 +57,11 @@ public class TreeNodeTest {
 		this.nodeToTest.getRoot().setLeftSon(this.nodeToTest.getRoot().getRightSon());
 		this.nodeToTest.getRoot().setRightSon(tmp);
 
-		Assert.assertEquals(this.nodeToTest.isWellFormed(this.nodeToTest.getRoot()), false);
+		try {
+			Assert.assertEquals(this.nodeToTest.isWellFormed(this.nodeToTest.getRoot()), false);
+		} catch (SimpleNodeMalPositionne e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	/**
@@ -66,6 +71,11 @@ public class TreeNodeTest {
 	 */
 	@Test
 	public void testIsWellFormedOK() {
-		Assert.assertEquals(this.nodeToTest.isWellFormed(this.nodeToTest.getRoot()), true);
+		try {
+			Assert.assertEquals(this.nodeToTest.isWellFormed(this.nodeToTest.getRoot()), true);
+		} catch (SimpleNodeMalPositionne e) {
+			System.out.println(e.getMessage());
+			Assert.fail();
+		}
 	}
 }

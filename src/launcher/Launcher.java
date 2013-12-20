@@ -21,6 +21,6 @@ public class Launcher {
 		System.out.println(randomTree.getInfos(randomTree.getRootNode()));
 		TreeUtils.saveToFile("C:\\Users\\Cyril\\AABRI.txt", randomTree);
 
-		System.out.println(randomTree.containsOnlyDisjointIntervals(randomTree.getRootNode()));
+		System.out.println(randomTree.isWellFormed(randomTree.getRootNode()));
 	}
 }

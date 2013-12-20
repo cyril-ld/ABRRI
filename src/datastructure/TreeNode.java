@@ -4,6 +4,7 @@
 package datastructure;
 
 import interfaces.Node;
+import exceptions.SimpleNodeMalPositionne;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
@@ -144,7 +145,6 @@ public class TreeNode extends Node {
 			} else if (father.getValue() < node.getValue()) {
 				father.setLeftSon(node);
 			}
-
 			node.setFather(father);
 		}
 	}
@@ -311,7 +311,7 @@ public class TreeNode extends Node {
 	 * @param node - La racine de l'ABRI à vérifier
 	 * @return true si le sous arbre est bien formé, false sinon
 	 */
-	public boolean isWellFormed(SimpleNode node) {
+	public boolean isWellFormed(SimpleNode node) throws SimpleNodeMalPositionne {
 
 		// On retourne true dans le cas où le noeud est une feuille
 		boolean ret = true;
@@ -323,14 +323,16 @@ public class TreeNode extends Node {
 			if (((SimpleNode) node.getLeftSon()).getValue() > node.getValue()) {
 				ret = isWellFormed((SimpleNode) node.getLeftSon());
 			} else {
-				ret = false;
+				throw new SimpleNodeMalPositionne("Valeur noeud courant : " + node.getValue() + ", valeur fils gauche : "
+				        + ((SimpleNode) node.getLeftSon()).getValue() + ".");
 			}
 		} else if (node.getRightSon() != null) {
 
 			if (((SimpleNode) node.getRightSon()).getValue() < node.getValue()) {
 				ret = isWellFormed((SimpleNode) node.getRightSon());
 			} else {
-				ret = false;
+				throw new SimpleNodeMalPositionne("Valeur noeud courant : " + node.getValue() + ", valeur fils gauche : "
+				        + ((SimpleNode) node.getRightSon()).getValue() + ".");
 			}
 		}
 		return ret;

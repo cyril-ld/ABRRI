@@ -11,6 +11,7 @@ import java.util.List;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import exceptions.IntervalleChevauchantException;
 import exceptions.IntervalleInexistantException;
+import exceptions.SimpleNodeMalPositionne;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
@@ -400,11 +401,46 @@ public class BinaryTree {
 	 * @return
 	 */
 	public boolean isWellFormed(TreeNode node) {
+		return this.isABR(node) && this.containsOnlyDisjointIntervals(node) && ABRIWellFormed(this.rootNode);
+	}
 
-		if (this.isABR(node) && this.containsOnlyDisjointIntervals(node)) {
-			return true;
+	/**
+	 * Vérifie que l'ABRI contenu par le noeud courant est bien formé. Via le mécanisme des exceptions, on affiche le noeud en cause si l'ABRI contenu
+	 * dans le noeud courant n'est pas bien formé.
+	 * 
+	 * <pre>
+	 * fonction ABRIBienForme (NoeudAABRI noeud) : booleen
+	 * booleen ret = true
+	 * début
+	 * 	si noeud non vide alors
+	 * 		ret = noeud.estBienForme
+	 * 		ret = ABRIBienForme (noeud.sag)
+	 * 		ret = ret ET ABRIBienForme(noeud.sad)
+	 * 	sinon
+	 * 		ret = true
+	 * 	finsi
+	 * 	ABRIBienForme = ret
+	 * fin
+	 * </pre>
+	 * 
+	 * @param node - le noeud à vérifier
+	 * @return true si l'ABRI contenu est correctement formé, false sinon.
+	 */
+	public boolean ABRIWellFormed(TreeNode node) {
+
+		boolean ret;
+		ret = true;
+		if (node != null) {
+			try {
+				ret = node.isWellFormed(node.getRoot());
+			} catch (SimpleNodeMalPositionne e) {
+				System.out.println(e.getMessage());
+				return false;
+			}
+			ret = ret && this.ABRIWellFormed((TreeNode) node.getLeftSon());
+			ret = ret && this.ABRIWellFormed((TreeNode) node.getRightSon());
 		}
-		return false;
+		return ret;
 	}
 
 	/**
