@@ -13,7 +13,7 @@ import exceptions.ValeurNonRepresenteeDansABRI;
  * @author Cyril
  * 
  */
-public class TreeNode extends Node {
+public class AABRINode extends Node {
 
 	/**
 	 * Valeur minimale de l'intervalle couvert par l'arbre
@@ -37,7 +37,7 @@ public class TreeNode extends Node {
 	 * @param max - la valeur maximale de l'intervalle couvert
 	 * @param rootNode - l'arbre stocké par le noeud
 	 */
-	public TreeNode(int min, int max, SimpleNode rootNode) {
+	public AABRINode(int min, int max, SimpleNode rootNode) {
 		this.root = rootNode;
 		this.min = min;
 		this.max = max;
@@ -46,7 +46,7 @@ public class TreeNode extends Node {
 	/**
 	 * Constructeur par défaut
 	 */
-	public TreeNode() {
+	public AABRINode() {
 	}
 
 	/**

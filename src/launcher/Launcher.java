@@ -4,7 +4,7 @@
 package launcher;
 
 import util.TreeUtils;
-import datastructure.BinaryTree;
+import datastructure.AABRI;
 
 /**
  * @author Cyril
@@ -17,7 +17,7 @@ public class Launcher {
 	 */
 	public static void main(String[] args) {
 
-		BinaryTree randomTree = TreeUtils.randomAABRI(5, 100);
+		AABRI randomTree = TreeUtils.randomAABRI(5, 100);
 		System.out.println(randomTree.getInfos(randomTree.getRootNode()));
 		TreeUtils.saveToFile("C:\\Users\\Cyril\\AABRI.txt", randomTree);
 

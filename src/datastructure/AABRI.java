@@ -18,12 +18,12 @@ import exceptions.ValeurNonRepresenteeDansABRI;
  * @author Cyril
  * 
  */
-public class BinaryTree {
+public class AABRI {
 
 	/**
 	 * Noeud racine de l'arbre.
 	 */
-	private TreeNode rootNode;
+	private AABRINode rootNode;
 
 	/**
 	 * Ajoute un noeud type "ABRI" dans l'arbre binaire courant. Construit un TreeNode à partir des valeurs qui sont passées en paramètre et appelle
@@ -37,7 +37,7 @@ public class BinaryTree {
 	 * @see insert(TreeNode node)
 	 */
 	public void insert(int min, int max, SimpleNode rootNode) throws IntervalleChevauchantException {
-		TreeNode node = new TreeNode(min, max, rootNode);
+		AABRINode node = new AABRINode(min, max, rootNode);
 		this.insert(node);
 	}
 
@@ -48,9 +48,9 @@ public class BinaryTree {
 	 * @throws IntervalleChevauchantException lors de l'ajout d'un noeud dont l'intervalle chevauche un intervalle existant
 	 */
 	@SuppressWarnings("cast")
-	public void insert(TreeNode node) throws IntervalleChevauchantException {
+	public void insert(AABRINode node) throws IntervalleChevauchantException {
 
-		TreeNode father = null;
+		AABRINode father = null;
 
 		// Fail fast
 		if (node == null)
@@ -64,7 +64,7 @@ public class BinaryTree {
 		}
 
 		// Recherche du noeud père
-		father = (TreeNode) this.findFather(this.rootNode, node.getMin(), node.getMax());
+		father = (AABRINode) this.findFather(this.rootNode, node.getMin(), node.getMax());
 
 		if (father == null)
 			throw new RuntimeException("Impossible de retrouver le père du noeud à ajouter !");
@@ -87,9 +87,9 @@ public class BinaryTree {
 	 * @param max - la borne maximale de l'intervalle du nouveau noeud, ne doit pas être modifiée
 	 * @return le noeud recherché s'il existe
 	 */
-	public TreeNode findTreeNode(TreeNode node, final int min, final int max) {
+	public AABRINode findTreeNode(AABRINode node, final int min, final int max) {
 
-		TreeNode ret = null;
+		AABRINode ret = null;
 
 		if (node == null || min > max || (min == max && max == 0)) {
 			throw new RuntimeException("Problèmes dans les paramètres de la méthode");
@@ -97,13 +97,13 @@ public class BinaryTree {
 		} else if (node.getMin() > max) { // Cas où le noeud courant est "plus grand" que le max du nouveau noeud
 
 			if (node.getLeftSon() != null) {
-				ret = findTreeNode((TreeNode) node.getLeftSon(), min, max);
+				ret = findTreeNode((AABRINode) node.getLeftSon(), min, max);
 			}
 
 		} else if (node.getMax() < min) { // Cas où le noeud courant est "plus petit" que l'intervalle donné
 
 			if (node.getRightSon() != null) {
-				ret = findTreeNode((TreeNode) node.getRightSon(), min, max);
+				ret = findTreeNode((AABRINode) node.getRightSon(), min, max);
 			}
 		} else if (node.getMin() == min && node.getMax() == max) {
 			ret = node;
@@ -121,8 +121,8 @@ public class BinaryTree {
 	 * @param max - Le maximum de l'intervalle recherché
 	 * @return le noeud recherché ou null si le noeud n'existe pas.
 	 */
-	private TreeNode findFather(TreeNode node, final int min, final int max) {
-		TreeNode ret = null;
+	private AABRINode findFather(AABRINode node, final int min, final int max) {
+		AABRINode ret = null;
 
 		if (node == null || min > max || (min == max && max == 0)) {
 			throw new RuntimeException("Problèmes dans les paramètres de la méthode");
@@ -132,7 +132,7 @@ public class BinaryTree {
 			if (node.getLeftSon() == null) {
 				ret = node;
 			} else {
-				ret = findFather((TreeNode) node.getLeftSon(), min, max);
+				ret = findFather((AABRINode) node.getLeftSon(), min, max);
 			}
 
 		} else if (node.getMax() < min) { // Cas où le noeud courant est "plus petit" que l'intervalle donné
@@ -140,7 +140,7 @@ public class BinaryTree {
 			if (node.getRightSon() == null) {
 				ret = node;
 			} else {
-				ret = findFather((TreeNode) node.getRightSon(), min, max);
+				ret = findFather((AABRINode) node.getRightSon(), min, max);
 			}
 		} else if (node.getMin() == min && node.getMax() == max) {
 			ret = node;
@@ -159,9 +159,9 @@ public class BinaryTree {
 	 * @return
 	 * @throws IntervalleInexistantException dans le cas où aucun intervalle ne contient cette valeur
 	 */
-	public TreeNode findTreeNodeFromValue(TreeNode node, final int value) throws IntervalleInexistantException {
+	public AABRINode findTreeNodeFromValue(AABRINode node, final int value) throws IntervalleInexistantException {
 
-		TreeNode ret = null;
+		AABRINode ret = null;
 
 		if (node == null || value == 0) {
 			throw new RuntimeException("Le noeud et la valeur doivent être renseignés !");
@@ -173,7 +173,7 @@ public class BinaryTree {
 				        + "Valeur demandée : {" + value + "}\n"
 				        + "Intervalle au mieux : [" + node.getMin() + "; " + node.getMax() + "]");
 			}
-			ret = findTreeNodeFromValue((TreeNode) node.getLeftSon(), value);
+			ret = findTreeNodeFromValue((AABRINode) node.getLeftSon(), value);
 
 		} else if (value > node.getMax()) {
 
@@ -182,7 +182,7 @@ public class BinaryTree {
 				        + "Valeur demandée : {" + value + "}\n"
 				        + "Intervalle au mieux : [" + node.getMin() + "; " + node.getMax() + "]");
 			}
-			ret = findTreeNodeFromValue((TreeNode) node.getRightSon(), value);
+			ret = findTreeNodeFromValue((AABRINode) node.getRightSon(), value);
 		} else { // Si on est pas inférieur ni supérieur, c'est qu'on est dans le bon intervalle
 			ret = node;
 		}
@@ -192,7 +192,7 @@ public class BinaryTree {
 	/**
 	 * @return the rootNode
 	 */
-	public TreeNode getRootNode() {
+	public AABRINode getRootNode() {
 		return rootNode;
 	}
 
@@ -207,9 +207,9 @@ public class BinaryTree {
 	public Node delete(int min, int max) {
 
 		// Retour
-		TreeNode ret = null;
+		AABRINode ret = null;
 
-		TreeNode nodeToDelete = this.findTreeNode(this.rootNode, min, max);
+		AABRINode nodeToDelete = this.findTreeNode(this.rootNode, min, max);
 
 		if (nodeToDelete == null) {
 			throw new RuntimeException("Impossible de retrouver le noeud à supprimer !");
@@ -266,13 +266,13 @@ public class BinaryTree {
 		} else { // Dans le cas où le noeud a deux fils
 
 			// Noeud qui va stocker le noeud le plus grand dans le sag
-			TreeNode replacement = this.max((TreeNode) nodeToDelete.getRightSon());
+			AABRINode replacement = this.max((AABRINode) nodeToDelete.getRightSon());
 
 			// On supprime le noeud de l'arbre
 			this.delete(replacement.getMin(), replacement.getMax());
 
 			// On copie les informations du noeud à supprimer dans le noeud de retour
-			ret = new TreeNode();
+			ret = new AABRINode();
 
 			ret.setMax(nodeToDelete.getMax());
 			ret.setMin(nodeToDelete.getMin());
@@ -297,12 +297,12 @@ public class BinaryTree {
 	 * @param node - L'arbre dans lequel faire la recherche
 	 * @return - Le noeud ayant le minimum (ou maximum) le plus élevé de l'AABRI
 	 */
-	private TreeNode max(TreeNode node) {
+	private AABRINode max(AABRINode node) {
 
-		TreeNode ret = null;
+		AABRINode ret = null;
 
 		if (node.getRightSon() != null) {
-			ret = this.max((TreeNode) node.getRightSon());
+			ret = this.max((AABRINode) node.getRightSon());
 		} else {
 			ret = node;
 		}
@@ -321,7 +321,7 @@ public class BinaryTree {
 	 */
 	public SimpleNode addSimpleNode(SimpleNode node) throws IntervalleInexistantException {
 
-		TreeNode treeNode = this.findTreeNodeFromValue(this.rootNode, node.getValue());
+		AABRINode treeNode = this.findTreeNodeFromValue(this.rootNode, node.getValue());
 
 		if (treeNode == null) {
 			return null;
@@ -357,7 +357,7 @@ public class BinaryTree {
 	public SimpleNode removeSimpleNode(final int simpleNodeValue) throws IntervalleInexistantException, ValeurNonRepresenteeDansABRI {
 
 		// Penser à supprimer le TreeNode courant lorsqu'il ne contient plus aucun noeud simple (ie lorsque le root == null)
-		TreeNode treeNode = this.findTreeNodeFromValue(this.rootNode, simpleNodeValue);
+		AABRINode treeNode = this.findTreeNodeFromValue(this.rootNode, simpleNodeValue);
 
 		SimpleNode removedNode = treeNode.delete(simpleNodeValue);
 
@@ -377,15 +377,15 @@ public class BinaryTree {
 	 * @param node - le sous arbre dans lequel faire l'affichage.
 	 * @return String - les infos sur le noeud courant
 	 */
-	public String getInfos(TreeNode node) {
+	public String getInfos(AABRINode node) {
 
 		String infosNode, ret;
 		ret = "";
 		if (node != null) {
 			infosNode = node.getMin() + ":" + node.getMax() + ";" + node.getInfos(node.getRoot()) + "\n";
 			ret += infosNode;
-			ret += this.getInfos((TreeNode) node.getLeftSon());
-			ret += this.getInfos((TreeNode) node.getRightSon());
+			ret += this.getInfos((AABRINode) node.getLeftSon());
+			ret += this.getInfos((AABRINode) node.getRightSon());
 		}
 		return ret;
 	}
@@ -400,7 +400,7 @@ public class BinaryTree {
 	 * 
 	 * @return
 	 */
-	public boolean isWellFormed(TreeNode node) {
+	public boolean isWellFormed(AABRINode node) {
 		return this.isABR(node) && this.containsOnlyDisjointIntervals(node) && ABRIWellFormed(this.rootNode);
 	}
 
@@ -426,7 +426,7 @@ public class BinaryTree {
 	 * @param node - le noeud à vérifier
 	 * @return true si l'ABRI contenu est correctement formé, false sinon.
 	 */
-	public boolean ABRIWellFormed(TreeNode node) {
+	public boolean ABRIWellFormed(AABRINode node) {
 
 		boolean ret;
 		ret = true;
@@ -437,8 +437,8 @@ public class BinaryTree {
 				System.out.println(e.getMessage());
 				return false;
 			}
-			ret = ret && this.ABRIWellFormed((TreeNode) node.getLeftSon());
-			ret = ret && this.ABRIWellFormed((TreeNode) node.getRightSon());
+			ret = ret && this.ABRIWellFormed((AABRINode) node.getLeftSon());
+			ret = ret && this.ABRIWellFormed((AABRINode) node.getRightSon());
 		}
 		return ret;
 	}
@@ -449,7 +449,7 @@ public class BinaryTree {
 	 * @param node - Racine de l'abre à vérifier
 	 * @return true si tous les intervalles sont disjoints, false sinon
 	 */
-	public boolean containsOnlyDisjointIntervals(TreeNode node) {
+	public boolean containsOnlyDisjointIntervals(AABRINode node) {
 
 		List<int[]> intervalles = new ArrayList<>();
 		intervalles = this.getIntervalles(this.rootNode, intervalles);
@@ -472,12 +472,12 @@ public class BinaryTree {
 	 * @param intervalles - la liste dans laquelle ajouter les intervalles
 	 * @return la liste des intervalles mise à jour
 	 */
-	public List<int[]> getIntervalles(TreeNode node, List<int[]> intervalles) {
+	public List<int[]> getIntervalles(AABRINode node, List<int[]> intervalles) {
 		if (node != null) {
 			int[] bornes = { node.getMin(), node.getMax() };
 			intervalles.add(bornes);
-			intervalles = this.getIntervalles((TreeNode) node.getLeftSon(), intervalles);
-			intervalles = this.getIntervalles((TreeNode) node.getRightSon(), intervalles);
+			intervalles = this.getIntervalles((AABRINode) node.getLeftSon(), intervalles);
+			intervalles = this.getIntervalles((AABRINode) node.getRightSon(), intervalles);
 		}
 		return intervalles;
 	}
@@ -491,7 +491,7 @@ public class BinaryTree {
 	 * @param node - Racine de l'abre à vérifier
 	 * @return true si l'arbre est bien un ABR
 	 */
-	public boolean isABR(TreeNode node) {
+	public boolean isABR(AABRINode node) {
 
 		// On retourne true dans le cas où le noeud est une feuille
 		boolean ret = true;
@@ -500,8 +500,8 @@ public class BinaryTree {
 		if (node.getLeftSon() != null) {
 
 			// Si le fils gauche est bien > au noeud courant, on descend dedans pour vérifier
-			if (((TreeNode) node.getLeftSon()).getMin() < node.getMin()) {
-				ret = isWellFormed((TreeNode) node.getLeftSon());
+			if (((AABRINode) node.getLeftSon()).getMin() < node.getMin()) {
+				ret = isWellFormed((AABRINode) node.getLeftSon());
 			} else {
 				ret = false;
 			}
@@ -510,8 +510,8 @@ public class BinaryTree {
 		// Si node a un fils droit on descend dedans
 		if (node.getRightSon() != null) {
 
-			if (((TreeNode) node.getRightSon()).getMin() > node.getMin()) {
-				ret = isWellFormed((TreeNode) node.getRightSon());
+			if (((AABRINode) node.getRightSon()).getMin() > node.getMin()) {
+				ret = isWellFormed((AABRINode) node.getRightSon());
 			} else {
 				ret = false;
 			}

@@ -20,7 +20,7 @@ public class TreeNodeTest {
 	/**
 	 * Le noeud à tester
 	 */
-	private TreeNode nodeToTest;
+	private AABRINode nodeToTest;
 
 	/**
 	 * @throws java.lang.Exception
@@ -43,7 +43,7 @@ public class TreeNodeTest {
 	 * Partant du principe que la méthode d'insertion fait bien son boulot, on échange le fils gauche avec le fils droit. On attend que la méthode
 	 * isWellFormed nous retourne une exception puisque l'arbre n'est plus bien formé.
 	 * 
-	 * Test method for {@link datastructure.TreeNode#isWellFormed(datastructure.SimpleNode)}.
+	 * Test method for {@link datastructure.AABRINode#isWellFormed(datastructure.SimpleNode)}.
 	 */
 	@Test(expected = SimpleNodeMalPositionne.class)
 	public void testIsWellFormedNotWellFormed() {
@@ -67,7 +67,7 @@ public class TreeNodeTest {
 	/**
 	 * Ici la méthode doit renvoyer true (partant du principe que la méthode d'insertion fait correctement son boulot).
 	 * 
-	 * Test method for {@link datastructure.TreeNode#isWellFormed(datastructure.SimpleNode)}.
+	 * Test method for {@link datastructure.AABRINode#isWellFormed(datastructure.SimpleNode)}.
 	 */
 	@Test
 	public void testIsWellFormedOK() {

@@ -26,7 +26,7 @@ public class BinaryTreeTest {
 	/**
 	 * Objet à tester
 	 */
-	private BinaryTree binaryTree;
+	private AABRI binaryTree;
 
 	/**
 	 * @throws java.lang.Exception
@@ -48,7 +48,7 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#insert(int, int, datastructure.SimpleNode)}.
+	 * Test method for {@link datastructure.AABRI#insert(int, int, datastructure.SimpleNode)}.
 	 * 
 	 * On part du principe que l'ajout d'une valeur n'est réalisable que si un noeud contient un intervalle incluant la valeur.
 	 * 
@@ -60,7 +60,7 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#insert(int, int, datastructure.SimpleNode)}.
+	 * Test method for {@link datastructure.AABRI#insert(int, int, datastructure.SimpleNode)}.
 	 * 
 	 * Ajout d'un entier (noeud simple) dans l'AABRI.
 	 */
@@ -68,7 +68,7 @@ public class BinaryTreeTest {
 	public void testInsertSimpleNodeFromValueOK() throws IntervalleInexistantException {
 		this.binaryTree.addSimpleNode(60);
 
-		TreeNode node = this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 50, 75);
+		AABRINode node = this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 50, 75);
 		SimpleNode simpleNode = node.findNode(node.getRoot(), 60);
 
 		Assert.assertNotNull(simpleNode);
@@ -76,12 +76,12 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#insert(datastructure.TreeNode)}. On cherche à récupérer le noeud que l'on vient d'ajouter. Si
+	 * Test method for {@link datastructure.AABRI#insert(datastructure.AABRINode)}. On cherche à récupérer le noeud que l'on vient d'ajouter. Si
 	 * on récupère correctement le noeud c'est qu'il a été correctement inséré dans l'arbre.
 	 */
 	@Test
 	public void testInsertTreeNodeWithNoError() {
-		TreeNode treeNode = new TreeNode(500, 550, new SimpleNode(530));
+		AABRINode treeNode = new AABRINode(500, 550, new SimpleNode(530));
 		try {
 			this.binaryTree.insert(treeNode);
 			Assert.assertEquals(treeNode, this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 500, 550));
@@ -92,13 +92,13 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#findTreeNode(datastructure.TreeNode, int, int)}.
+	 * Test method for {@link datastructure.AABRI#findTreeNode(datastructure.AABRINode, int, int)}.
 	 * 
 	 * On essaie de récupérer un noeud de l'AABRI et on vérifie ses différentes valeurs.
 	 */
 	@Test
 	public void testFindTreeNode() {
-		TreeNode treeNode = this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 92, 110);
+		AABRINode treeNode = this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 92, 110);
 
 		Assert.assertTrue("Le noeud doit être retrouvé.", treeNode != null);
 		Assert.assertTrue("Le maximum doit être égal au maximum donné dans le fichier source.", treeNode.getMax() == 110);
@@ -108,14 +108,14 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#findTreeNodeFromValue(datastructure.TreeNode, int)}.
+	 * Test method for {@link datastructure.AABRI#findTreeNodeFromValue(datastructure.AABRINode, int)}.
 	 * 
 	 * La méthode testée retourne a noeud d'AABRI. On teste donc ce noeud afin de savoir s'il correspond vraiment au noeud que l'on recherche.
 	 */
 	@Test
 	public void testFindTreeNodeFromValue() {
 		try {
-			TreeNode treeNode = this.binaryTree.findTreeNodeFromValue(this.binaryTree.getRootNode(), 32);
+			AABRINode treeNode = this.binaryTree.findTreeNodeFromValue(this.binaryTree.getRootNode(), 32);
 			Assert.assertTrue("Le minimum doit être égal au minimum donné dans le fichier source.", treeNode.getMin() == 24);
 			Assert.assertTrue("Le maximum doit être égal au maximum donné dans le fichier source.", treeNode.getMax() == 48);
 			Assert.assertTrue("La valeur du noeud racine doit être égale à la première valeur donnée pour ce noeud dans le fichier sources.",
@@ -127,7 +127,7 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#delete(int, int)}.
+	 * Test method for {@link datastructure.AABRI#delete(int, int)}.
 	 * 
 	 * Supprime un noeud d'AABRI. Le test supprime donc un noeud de l'AABRI et essaie de le retrouver. Si on le trouve dans l'AABRI c'est que la
 	 * méthode de suppression a échoué.
@@ -146,7 +146,7 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#addSimpleNode(datastructure.SimpleNode)}.
+	 * Test method for {@link datastructure.AABRI#addSimpleNode(datastructure.SimpleNode)}.
 	 */
 	@Test
 	public void testAddSimpleNodeSimpleNode() {
@@ -154,7 +154,7 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#addSimpleNode(int)}.
+	 * Test method for {@link datastructure.AABRI#addSimpleNode(int)}.
 	 */
 	@Test
 	public void testAddSimpleNodeInt() {
@@ -162,7 +162,7 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#removeSimpleNode(int)}.
+	 * Test method for {@link datastructure.AABRI#removeSimpleNode(int)}.
 	 */
 	@Test
 	public void testRemoveSimpleNode() {
@@ -170,7 +170,7 @@ public class BinaryTreeTest {
 			this.binaryTree.removeSimpleNode(60);
 
 			// Recherche de la valeur que l'on vient de supprimer
-			TreeNode node = this.binaryTree.findTreeNodeFromValue(this.binaryTree.getRootNode(), 60);
+			AABRINode node = this.binaryTree.findTreeNodeFromValue(this.binaryTree.getRootNode(), 60);
 
 			Assert.assertTrue("On ne doit pas retrouver la valeur d'un noeud que l'on vient de supprimer.", node.findNode(node.getRoot(), 60) == null);
 		} catch (IntervalleInexistantException | ValeurNonRepresenteeDansABRI e) {
@@ -183,7 +183,7 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#ABRtoAABRI()}.
+	 * Test method for {@link datastructure.AABRI#ABRtoAABRI()}.
 	 */
 	@Test
 	public void testABRtoAABRI() {
@@ -191,7 +191,7 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#AABRItoABR()}.
+	 * Test method for {@link datastructure.AABRI#AABRItoABR()}.
 	 */
 	@Test
 	public void testAABRItoABR() {
@@ -199,7 +199,7 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.BinaryTree#getRootNode()}.
+	 * Test method for {@link datastructure.AABRI#getRootNode()}.
 	 */
 	@Test
 	public void testGetRootNode() {

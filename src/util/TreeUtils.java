@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import datastructure.BinaryTree;
-import datastructure.TreeNode;
+import datastructure.AABRI;
+import datastructure.AABRINode;
 import exceptions.IntervalleChevauchantException;
 
 /**
@@ -53,13 +53,13 @@ public class TreeUtils {
 	 * 
 	 * @param pathToFile - Chemin vers le fichier
 	 */
-	public static BinaryTree initBinaryTreeFromFile(String pathToFile) {
+	public static AABRI initBinaryTreeFromFile(String pathToFile) {
 
 		// Fail fast
 		if (pathToFile == null || pathToFile.equals(""))
 			throw new RuntimeException("Le chemin du fichier ne dois pas être vide !");
 
-		BinaryTree AABRI = new BinaryTree();
+		AABRI AABRI = new AABRI();
 
 		// Tableau qui va contenir en position 0 les bornes de l'intervalle du treeNode, et en position 1 les noeud de l'ABRI
 		String parametres[];
@@ -71,7 +71,7 @@ public class TreeUtils {
 		String ABRINodes[];
 
 		// TreeNode utilisé pour stocker temporairement le noeud en cours de création
-		TreeNode treeNode;
+		AABRINode treeNode;
 
 		File file = new File(pathToFile);
 		try {
@@ -84,7 +84,7 @@ public class TreeUtils {
 			while ((ligne = br.readLine()) != null) {
 
 				// A chaque ligne un nouveau noeud !
-				treeNode = new TreeNode();
+				treeNode = new AABRINode();
 
 				parametres = ligne.split(";");
 				if (parametres.length == 2) {
@@ -118,7 +118,7 @@ public class TreeUtils {
 	 * @param AABRI - L'arbre d'abres binaires de recherche inversés
 	 * @return true si l'enregistrement s'est bien passé.
 	 */
-	public static boolean saveToFile(String filePath, BinaryTree AABRI) {
+	public static boolean saveToFile(String filePath, AABRI AABRI) {
 
 		File file = new File(filePath);
 		boolean eof;
@@ -183,7 +183,7 @@ public class TreeUtils {
 	 * @param valeurMaxABRI - Nombre maximal de noeuds dans les ABRI
 	 * @return l'AABRI construit
 	 */
-	public static BinaryTree randomAABRI(int nbreNoeuds, int valeurMaxABRI) {
+	public static AABRI randomAABRI(int nbreNoeuds, int valeurMaxABRI) {
 
 		if (valeurMaxABRI < 2 * nbreNoeuds + 1) {
 			throw new RuntimeException("valeurMaxABRI doit être >= 2 * NbreNoeuds + 1 pour pouvoir générer des intervalles non chevauchants!");
@@ -193,10 +193,10 @@ public class TreeUtils {
 		Object[] valeurs;
 
 		// Pointeur sur le noeud utilisé lors de l'ajout dans l'AABRI
-		TreeNode treeNode;
+		AABRINode treeNode;
 
 		// AABRI retour de la fonction
-		BinaryTree ret = new BinaryTree();
+		AABRI ret = new AABRI();
 
 		// Variable stockant l'ABRI que l'on ajoute dans la boucle suivante
 		int rangTableauValeurs;
@@ -226,7 +226,7 @@ public class TreeUtils {
 		for (Object[] tab : bornesRandom) {
 
 			// Création d'un noeud d'AABRI avec les deux bornes
-			treeNode = new TreeNode((int) tab[0], (int) tab[1], null);
+			treeNode = new AABRINode((int) tab[0], (int) tab[1], null);
 
 			// Récupération d'un tableau contenant les valeurs du noeud
 			valeurs = TreeUtils.getRandomIntegers(((int) tab[1]) - ((int) tab[0]), (int) tab[0], (int) tab[1]);
