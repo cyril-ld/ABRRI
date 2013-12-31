@@ -4,11 +4,14 @@
 package datastructure;
 
 import interfaces.Node;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import exceptions.SimpleNodeMalPositionne;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
  * Implémentation d'un noeud de l'AABRI. Ce noeud contient donc un fils droit, un fils gauche, une borne minimale, une borne maximale et un ABRI.
+ * 
+ * Ce noeud peut donc être également assimilé à une arbre binaire.
  * 
  * @author Cyril
  * 
@@ -31,16 +34,23 @@ public class AABRINode extends Node {
 	private SimpleNode root;
 
 	/**
+	 * Type de l'arbre stocké par le noeud
+	 */
+	private TypeABR type;
+
+	/**
 	 * Constructeur d'un noeud d'arbre binaire d'arbres binaires inversés.
 	 * 
 	 * @param min - la valeur minimale de l'intervalle couvert
 	 * @param max - la valeur maximale de l'intervalle couvert
 	 * @param rootNode - l'arbre stocké par le noeud
+	 * @param type - le type de l'abre binaire, Cf. enum datastructure.TypeABR pour les types disponibles
 	 */
-	public AABRINode(int min, int max, SimpleNode rootNode) {
+	public AABRINode(int min, int max, SimpleNode rootNode, TypeABR type) {
 		this.root = rootNode;
 		this.min = min;
 		this.max = max;
+		this.type = type;
 	}
 
 	/**
@@ -126,26 +136,14 @@ public class AABRINode extends Node {
 	 * @param node - le noeud à ajouter
 	 */
 	public void insert(SimpleNode node) {
-
-		SimpleNode father;
-
-		if (node.getValue() == 0) {
-			throw new RuntimeException("La valeur du noeud est nulle !");
+		if (node == null) {
+			throw new RuntimeException("Le noeud à insérer ne doit pas être nul!");
 		}
 
-		if (this.root == null) {
-			this.root = node;
-		} else {
-
-			// Recherche du noeud père
-			father = this.findNode(this.root, node.getValue());
-
-			if (father.getValue() > node.getValue()) {
-				father.setRightSon(node);
-			} else if (father.getValue() < node.getValue()) {
-				father.setLeftSon(node);
-			}
-			node.setFather(father);
+		if (this.type == TypeABR.ARBRE_BINAIRE_RECHERCHE) {
+			this.insertInABR(node);
+		} else if (this.type == TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE) {
+			this.insertInABRI(node);
 		}
 	}
 
@@ -245,19 +243,88 @@ public class AABRINode extends Node {
 	}
 
 	/**
+	 * Insert un noeud dans un abre binaire de recherche inversé.
+	 * 
+	 * @param node - Le noeud à insérer
+	 */
+	private void insertInABRI(SimpleNode node) {
+
+		SimpleNode father;
+
+		if (node.getValue() == 0) {
+			throw new RuntimeException("La valeur du noeud est nulle !");
+		}
+
+		if (this.root == null) {
+			this.root = node;
+		} else {
+
+			// Recherche du noeud père
+			father = this.findNode(this.root, node.getValue());
+
+			if (father.getValue() > node.getValue()) {
+				father.setRightSon(node);
+			} else if (father.getValue() < node.getValue()) {
+				father.setLeftSon(node);
+			}
+			node.setFather(father);
+		}
+	}
+
+	/**
+	 * Insert un noeud dans un abre binaire de recherche
+	 * 
+	 * @param node - Le noeud à insérer
+	 */
+	private void insertInABR(SimpleNode node) {
+		throw new NotImplementedException();
+	}
+
+	/**
+	 * Retourne la valeur maximale de l'arbre courant.
+	 * 
+	 * @param node - Le noeud racine de l'arbre dans lequel rechercher
+	 * @return le noeud portant la valeur maximale
+	 */
+	private SimpleNode max(SimpleNode node) {
+		if (this.type == TypeABR.ARBRE_BINAIRE_RECHERCHE) {
+			return this.maxABR(node);
+		}
+		return this.maxABRI(node);
+	}
+
+	/**
 	 * Recherche le noeud contenant la valeur maximale dans le sous arbre dont node est la racine.
 	 * 
 	 * @param node - Racine du sous arbre dans lequel rechercher la valeur maximale
 	 * @return le noeud contenant la valeur maximale
 	 */
-	private SimpleNode max(SimpleNode node) {
+	private SimpleNode maxABRI(SimpleNode node) {
 
 		SimpleNode ret = null;
 
 		if (node.getLeftSon() == null) {
 			ret = node;
 		} else {
-			ret = max((SimpleNode) node.getLeftSon());
+			ret = maxABRI((SimpleNode) node.getLeftSon());
+		}
+
+		return ret;
+	}
+
+	/**
+	 * Retourne le fils portant la valeur maximale dans un ABR
+	 * 
+	 * @param node - Le noeud racine de l'arbre dans lequel rechercher
+	 * @return le noeud portant la valeur maximale
+	 */
+	private SimpleNode maxABR(SimpleNode node) {
+		SimpleNode ret = null;
+
+		if (node.getRightSon() == null) {
+			ret = node;
+		} else {
+			ret = maxABR((SimpleNode) node.getRightSon());
 		}
 
 		return ret;
@@ -336,5 +403,12 @@ public class AABRINode extends Node {
 			}
 		}
 		return ret;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public TypeABR getType() {
+		return type;
 	}
 }

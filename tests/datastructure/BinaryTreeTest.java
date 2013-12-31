@@ -76,12 +76,12 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link datastructure.AABRI#insert(datastructure.AABRINode)}. On cherche à récupérer le noeud que l'on vient d'ajouter. Si
-	 * on récupère correctement le noeud c'est qu'il a été correctement inséré dans l'arbre.
+	 * Test method for {@link datastructure.AABRI#insert(datastructure.AABRINode)}. On cherche à récupérer le noeud que l'on vient d'ajouter. Si on
+	 * récupère correctement le noeud c'est qu'il a été correctement inséré dans l'arbre.
 	 */
 	@Test
 	public void testInsertTreeNodeWithNoError() {
-		AABRINode treeNode = new AABRINode(500, 550, new SimpleNode(530));
+		AABRINode treeNode = new AABRINode(500, 550, new SimpleNode(530), TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE);
 		try {
 			this.binaryTree.insert(treeNode);
 			Assert.assertEquals(treeNode, this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 500, 550));

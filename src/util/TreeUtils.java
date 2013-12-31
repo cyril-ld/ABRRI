@@ -20,6 +20,7 @@ import java.util.TreeSet;
 
 import datastructure.AABRI;
 import datastructure.AABRINode;
+import datastructure.TypeABR;
 import exceptions.IntervalleChevauchantException;
 
 /**
@@ -226,7 +227,7 @@ public class TreeUtils {
 		for (Object[] tab : bornesRandom) {
 
 			// Création d'un noeud d'AABRI avec les deux bornes
-			treeNode = new AABRINode((int) tab[0], (int) tab[1], null);
+			treeNode = new AABRINode((int) tab[0], (int) tab[1], null, TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE);
 
 			// Récupération d'un tableau contenant les valeurs du noeud
 			valeurs = TreeUtils.getRandomIntegers(((int) tab[1]) - ((int) tab[0]), (int) tab[0], (int) tab[1]);

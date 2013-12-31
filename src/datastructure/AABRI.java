@@ -32,12 +32,13 @@ public class AABRI {
 	 * @param min - la valeur minimale de l'intervalle
 	 * @param max - la valeur maximale de l'intervalle
 	 * @param rootNode - arbre binaire stocké dans le noeud
+	 * @param typeNode - Le type d'arbre stocké dans le noeud
 	 * @return - true si le noeud a bien été ajouté, false sinon.
 	 * @throws IntervalleChevauchantException lors de l'ajout d'un noeud dont l'intervalle chevauche un intervalle existant
 	 * @see insert(TreeNode node)
 	 */
-	public void insert(int min, int max, SimpleNode rootNode) throws IntervalleChevauchantException {
-		AABRINode node = new AABRINode(min, max, rootNode);
+	public void insert(int min, int max, SimpleNode rootNode, TypeABR typeNode) throws IntervalleChevauchantException {
+		AABRINode node = new AABRINode(min, max, rootNode, typeNode);
 		this.insert(node);
 	}
 
