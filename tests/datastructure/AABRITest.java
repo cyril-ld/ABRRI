@@ -21,7 +21,7 @@ import exceptions.ValeurNonRepresenteeDansABRI;
  * @author Cyril
  * 
  */
-public class BinaryTreeTest {
+public class AABRITest {
 
 	/**
 	 * Objet à tester
@@ -69,7 +69,7 @@ public class BinaryTreeTest {
 		this.binaryTree.addSimpleNode(60);
 
 		AABRINode node = this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 50, 75);
-		SimpleNode simpleNode = node.findNode(node.getRoot(), 60);
+		SimpleNode simpleNode = node.findFather(node.getRoot(), 60);
 
 		Assert.assertNotNull(simpleNode);
 		Assert.assertTrue("On doit retrouver la valeur insérée dans l'arbre.", 60 == simpleNode.getValue());
@@ -172,7 +172,7 @@ public class BinaryTreeTest {
 			// Recherche de la valeur que l'on vient de supprimer
 			AABRINode node = this.binaryTree.findTreeNodeFromValue(this.binaryTree.getRootNode(), 60);
 
-			Assert.assertTrue("On ne doit pas retrouver la valeur d'un noeud que l'on vient de supprimer.", node.findNode(node.getRoot(), 60) == null);
+			Assert.assertTrue("On ne doit pas retrouver la valeur d'un noeud que l'on vient de supprimer.", node.findFather(node.getRoot(), 60) == null);
 		} catch (IntervalleInexistantException | ValeurNonRepresenteeDansABRI e) {
 			e.printStackTrace();
 			fail("La suppression d'un valeur existante ne doit pas lever d'exception.");

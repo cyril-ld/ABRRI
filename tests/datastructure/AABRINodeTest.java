@@ -15,7 +15,7 @@ import exceptions.SimpleNodeMalPositionne;
  * @author Cyril
  * 
  */
-public class TreeNodeTest {
+public class AABRINodeTest {
 
 	/**
 	 * Le noeud à tester
@@ -46,7 +46,7 @@ public class TreeNodeTest {
 	 * Test method for {@link datastructure.AABRINode#isWellFormed(datastructure.SimpleNode)}.
 	 */
 	@Test(expected = SimpleNodeMalPositionne.class)
-	public void testIsWellFormedNotWellFormed() {
+	public void testIsWellFormedNotWellFormed() throws SimpleNodeMalPositionne {
 
 		while (this.nodeToTest.getRoot().getLeftSon() == null || this.nodeToTest.getRoot().getRightSon() == null) {
 			this.nodeToTest = TreeUtils.randomAABRI(5, 15).getRootNode();
@@ -57,11 +57,7 @@ public class TreeNodeTest {
 		this.nodeToTest.getRoot().setLeftSon(this.nodeToTest.getRoot().getRightSon());
 		this.nodeToTest.getRoot().setRightSon(tmp);
 
-		try {
-			Assert.assertEquals(this.nodeToTest.isWellFormed(this.nodeToTest.getRoot()), false);
-		} catch (SimpleNodeMalPositionne e) {
-			System.out.println(e.getMessage());
-		}
+		Assert.assertEquals(this.nodeToTest.isWellFormed(this.nodeToTest.getRoot()), false);
 	}
 
 	/**

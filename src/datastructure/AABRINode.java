@@ -4,7 +4,6 @@
 package datastructure;
 
 import interfaces.Node;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import exceptions.SimpleNodeMalPositionne;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
@@ -54,9 +53,10 @@ public class AABRINode extends Node {
 	}
 
 	/**
-	 * Constructeur par défaut
+	 * Constructeur par défaut. Par défaut, le type d'arbre binaire stocké est ABRI (cadre du projet).
 	 */
 	public AABRINode() {
+		this.type = TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE;
 	}
 
 	/**
@@ -97,13 +97,61 @@ public class AABRINode extends Node {
 	}
 
 	/**
-	 * Recherche un noeud dans l'ABRI courant.
+	 * Recherche le noeud père du noeud contenant value.
 	 * 
 	 * @param node - Le noeud dans lequel on va chercher parmis ses fils
 	 * @param value - La valeur caractérisant le noeud
 	 * @return le noeud que l'on recherche, ou null si aucun noeud ne stocke la valeur recherchée
 	 */
-	public SimpleNode findNode(SimpleNode node, final int value) {
+	public SimpleNode findFather(SimpleNode node, final int value) {
+
+		if (this.type == TypeABR.ARBRE_BINAIRE_RECHERCHE) {
+			return this.findFatherInABR(node, value);
+		}
+		return this.findFatherInABRI(node, value);
+	}
+
+	/**
+	 * Recherche le noeud père du noeud contenant value dans un ABR dont la racine est node.
+	 * 
+	 * @param node - Le noeud racine de l'arbre dans lequel rechercher
+	 * @param value - La valeur dont on souhaite trouver le noeud père
+	 * @return le noeud père
+	 */
+	private SimpleNode findFatherInABR(SimpleNode node, final int value) {
+
+		SimpleNode ret = null;
+
+		if (node == null) {
+			throw new RuntimeException("Le noeud à rechercher ne peut pas être nul !");
+		} else if (value > node.getValue()) { // Si la valeur est supérieure à la valeur du noeud courant, on recherche dans le fils droit
+
+			if (node.getRightSon() == null) {
+				ret = node;
+			} else {
+				ret = findFather((SimpleNode) node.getRightSon(), value);
+			}
+		} else if (value < node.getValue()) { // Si la valeur est inférieure à la valeur du noeud courant, on recherche dans le fils gauche
+
+			if (node.getLeftSon() == null) {
+				ret = node;
+			} else {
+				ret = findFather((SimpleNode) node.getLeftSon(), value);
+			}
+		} else {
+			ret = node;
+		}
+		return ret;
+	}
+
+	/**
+	 * Recherche le noeud père du noeud contenant value dans un ABRI dont la racine est node.
+	 * 
+	 * @param node - Le noeud racine de l'arbre dans lequel rechercher
+	 * @param value - La valeur dont on souhaite trouver le père.
+	 * @return le noeud père du noeud contenant la valeur.
+	 */
+	private SimpleNode findFatherInABRI(SimpleNode node, final int value) {
 
 		SimpleNode ret = null;
 
@@ -114,19 +162,18 @@ public class AABRINode extends Node {
 			if (node.getRightSon() == null) {
 				ret = node;
 			} else {
-				ret = findNode((SimpleNode) node.getRightSon(), value);
+				ret = findFather((SimpleNode) node.getRightSon(), value);
 			}
 		} else if (value > node.getValue()) { // Si la valeur est supérieure à la valeur du noeud courant, on recherche dans le fils gauche
 
 			if (node.getLeftSon() == null) {
 				ret = node;
 			} else {
-				ret = findNode((SimpleNode) node.getLeftSon(), value);
+				ret = findFather((SimpleNode) node.getLeftSon(), value);
 			}
 		} else {
 			ret = node;
 		}
-
 		return ret;
 	}
 
@@ -138,6 +185,8 @@ public class AABRINode extends Node {
 	public void insert(SimpleNode node) {
 		if (node == null) {
 			throw new RuntimeException("Le noeud à insérer ne doit pas être nul!");
+		} else if (this.type == null) {
+			throw new RuntimeException("Un type d'arbre doit être donné pour que l'insertion soit possible !");
 		}
 
 		if (this.type == TypeABR.ARBRE_BINAIRE_RECHERCHE) {
@@ -158,7 +207,7 @@ public class AABRINode extends Node {
 
 		SimpleNode ret, node, father, replacement;
 
-		node = this.findNode(this.root, value);
+		node = this.findFather(this.root, value);
 
 		if (node == null) {
 			throw new ValeurNonRepresenteeDansABRI("Impossible de retrouver le noeud contenant la valeur : " + value + "\n");
@@ -260,11 +309,11 @@ public class AABRINode extends Node {
 		} else {
 
 			// Recherche du noeud père
-			father = this.findNode(this.root, node.getValue());
+			father = this.findFather(this.root, node.getValue());
 
 			if (father.getValue() > node.getValue()) {
 				father.setRightSon(node);
-			} else if (father.getValue() < node.getValue()) {
+			} else {
 				father.setLeftSon(node);
 			}
 			node.setFather(father);
@@ -277,7 +326,25 @@ public class AABRINode extends Node {
 	 * @param node - Le noeud à insérer
 	 */
 	private void insertInABR(SimpleNode node) {
-		throw new NotImplementedException();
+
+		SimpleNode father;
+
+		if (node == null) {
+			throw new RuntimeException("Le noeud passé en paramètre doit être différent de null !");
+		}
+
+		if (this.root == null) {
+			this.root = node;
+		} else {
+			father = this.findFather(this.root, node.getValue());
+
+			if (father.getValue() > node.getValue()) {
+				father.setLeftSon(node);
+			} else {
+				father.setRightSon(node);
+			}
+			node.setFather(father);
+		}
 	}
 
 	/**
