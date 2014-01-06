@@ -382,10 +382,11 @@ public class AABRINode extends Node {
 
 			if (father.getValue() > node.getValue()) {
 				father.setRightSon(node);
-			} else {
+				node.setFather(father);
+			} else if (father.getValue() < node.getValue()) {
 				father.setLeftSon(node);
+				node.setFather(father);
 			}
-			node.setFather(father);
 		}
 	}
 
@@ -553,24 +554,29 @@ public class AABRINode extends Node {
 		// On retourne true dans le cas où le noeud est une feuille
 		boolean ret = true;
 
-		// Si node a un fils gauche correctement positionné on descend dedans
-		if (node.getLeftSon() != null) {
+		if (node != null) {
 
-			// Si le fils gauche est bien > au noeud courant, on descend dedans pour vérifier
-			if (((SimpleNode) node.getLeftSon()).getValue() > node.getValue()) {
-				ret = isWellFormed((SimpleNode) node.getLeftSon());
-			} else {
-				throw new SimpleNodeMalPositionne("Valeur noeud courant : " + node.getValue() + ", valeur fils gauche : "
-				        + ((SimpleNode) node.getLeftSon()).getValue() + ".");
-			}
-		} else if (node.getRightSon() != null) {
+			// Si node a un fils gauche correctement positionné on descend dedans
+			if (node.getLeftSon() != null) {
 
-			if (((SimpleNode) node.getRightSon()).getValue() < node.getValue()) {
-				ret = isWellFormed((SimpleNode) node.getRightSon());
-			} else {
-				throw new SimpleNodeMalPositionne("Valeur noeud courant : " + node.getValue() + ", valeur fils gauche : "
-				        + ((SimpleNode) node.getRightSon()).getValue() + ".");
+				// Si le fils gauche est bien > au noeud courant, on descend dedans pour vérifier
+				if (((SimpleNode) node.getLeftSon()).getValue() > node.getValue()) {
+					ret = isWellFormed((SimpleNode) node.getLeftSon());
+				} else {
+					throw new SimpleNodeMalPositionne("Valeur noeud courant : " + node.getValue() + ", valeur fils gauche : "
+					        + ((SimpleNode) node.getLeftSon()).getValue() + ".");
+				}
+			} else if (node.getRightSon() != null) {
+
+				if (((SimpleNode) node.getRightSon()).getValue() < node.getValue()) {
+					ret = isWellFormed((SimpleNode) node.getRightSon());
+				} else {
+					throw new SimpleNodeMalPositionne("Valeur noeud courant : " + node.getValue() + ", valeur fils gauche : "
+					        + ((SimpleNode) node.getRightSon()).getValue() + ".");
+				}
 			}
+		} else {
+			ret = true;
 		}
 		return ret;
 	}

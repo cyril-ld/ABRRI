@@ -88,7 +88,7 @@ public class TreeUtils {
 				treeNode = new AABRINode();
 
 				parametres = ligne.split(";");
-				if (parametres.length == 2) {
+				if (parametres.length == 2 || parametres[0] != null) {
 
 					// Récupération des bornes contenues dans la ligne
 					bornes = parametres[0].split(":");
@@ -96,9 +96,11 @@ public class TreeUtils {
 					treeNode.setMax(Integer.parseInt(bornes[1]));
 
 					// Récupération des noeuds simples (ie des entiers) et ajouts
-					ABRINodes = parametres[1].split(":");
-					for (int i = 0; i < ABRINodes.length; i++) {
-						treeNode.insert(Integer.parseInt(ABRINodes[i]));
+					if (parametres.length == 2) {
+						ABRINodes = parametres[1].split(":");
+						for (int i = 0; i < ABRINodes.length; i++) {
+							treeNode.insert(Integer.parseInt(ABRINodes[i]));
+						}
 					}
 					try {
 						AABRI.insert(treeNode);

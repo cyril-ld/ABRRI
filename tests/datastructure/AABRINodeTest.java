@@ -48,7 +48,7 @@ public class AABRINodeTest {
 	@Test(expected = SimpleNodeMalPositionne.class)
 	public void testIsWellFormedNotWellFormed() throws SimpleNodeMalPositionne {
 
-		while (this.nodeToTest.getRoot().getLeftSon() == null || this.nodeToTest.getRoot().getRightSon() == null) {
+		while (this.nodeToTest.getRoot() == null || this.nodeToTest.getRoot().getLeftSon() == null || this.nodeToTest.getRoot().getRightSon() == null) {
 			this.nodeToTest = TreeUtils.randomAABRI(5, 15).getRootNode();
 		}
 

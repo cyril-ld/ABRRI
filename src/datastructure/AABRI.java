@@ -121,8 +121,9 @@ public class AABRI {
 	 * @param min - Le minimum de l'intervalle recherché
 	 * @param max - Le maximum de l'intervalle recherché
 	 * @return le noeud recherché ou null si le noeud n'existe pas.
+	 * @throws IntervalleChevauchantException dans le cas où l'intervalle existe déjà !
 	 */
-	private AABRINode findFather(AABRINode node, final int min, final int max) {
+	private AABRINode findFather(AABRINode node, final int min, final int max) throws IntervalleChevauchantException {
 		AABRINode ret = null;
 
 		if (node == null || min > max || (min == max && max == 0) || min == max) {
@@ -144,7 +145,7 @@ public class AABRI {
 				ret = findFather((AABRINode) node.getRightSon(), min, max);
 			}
 		} else if (node.getMin() == min && node.getMax() == max) {
-			ret = node;
+			throw new IntervalleChevauchantException("L'intervalle existe déjà !");
 		} else {
 			return null;
 		}

@@ -3,6 +3,7 @@
  */
 package ihm.gui;
 
+import ihm.controler.InsertValueButtonListener;
 import ihm.controler.LoadItemListener;
 import ihm.controler.RandomAABRIButtonListener;
 import ihm.controler.SaveItemListener;
@@ -25,6 +26,7 @@ import javax.swing.JTextArea;
 import util.TreeUtils;
 import datastructure.AABRI;
 import datastructure.AABRINode;
+import exceptions.IntervalleInexistantException;
 
 /**
  * 
@@ -135,6 +137,7 @@ public class MainFrame extends JFrame {
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
+		this.setSize(650, 600);
 
 		this.createMenu();
 		this.createPanels();
@@ -211,6 +214,7 @@ public class MainFrame extends JFrame {
 		this.randomAABRIButton.addActionListener(new RandomAABRIButtonListener(this));
 		this.saveItem.addActionListener(new SaveItemListener(this));
 		this.loadItem.addActionListener(new LoadItemListener(this));
+		this.insertValueButton.addActionListener(new InsertValueButtonListener(this));
 	}
 
 	/**
@@ -502,5 +506,25 @@ public class MainFrame extends JFrame {
 	 */
 	public void showModal(Window owner, String message, int typeMessage) {
 		JOptionPane.showMessageDialog(owner, message, "Information", typeMessage);
+	}
+
+	/**
+	 * Insère une valeur dans l'abre binaire en cours d'affichage dans la fenêtre.
+	 * 
+	 * @param valeur
+	 */
+	public void insertValue(int valeur) {
+		if (this.abr != null) {
+			abr.insert(valeur);
+			this.aeraAABRI.setText(this.abr.getInfos(this.abr.getRoot()));
+		} else if (this.aabri != null) {
+			try {
+				this.aabri.addSimpleNode(valeur);
+				this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
+			} catch (IntervalleInexistantException e) {
+				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		this.repaint();
 	}
 }

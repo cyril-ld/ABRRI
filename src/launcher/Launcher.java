@@ -33,7 +33,6 @@ public class Launcher {
 		// System.out.println(abr.getInfos(abr.getRoot()));
 
 		MainFrame frame = new MainFrame("Tous aux AABRIs !");
-		frame.setSize(500, 600);
 		frame.setVisible(true);
 	}
 }
