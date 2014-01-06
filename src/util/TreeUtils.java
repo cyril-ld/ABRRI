@@ -103,7 +103,7 @@ public class TreeUtils {
 					try {
 						AABRI.insert(treeNode);
 					} catch (Exception e) {
-						System.out.println(e.getMessage());
+						e.printStackTrace();
 					}
 				}
 			}
@@ -190,7 +190,7 @@ public class TreeUtils {
 	 */
 	public static AABRI randomAABRI(int nbreNoeuds, int valeurMaxABRI) {
 
-		if (valeurMaxABRI < 2 * nbreNoeuds + 1) {
+		if (valeurMaxABRI < 2 * nbreNoeuds) {
 			throw new RuntimeException("valeurMaxABRI doit être >= 2 * NbreNoeuds + 1 pour pouvoir générer des intervalles non chevauchants!");
 		}
 
@@ -212,7 +212,7 @@ public class TreeUtils {
 		// Liste contenant les bornes (les tableaux contenus sont donc de taille 2)
 		List<Object[]> bornesRandom = new ArrayList<Object[]>(bornes.length / 2);
 
-		// Mélange des bornes par paires qui se suivent pour que l'arbre généré ne soit pas construit avec des noeuds insérés dans l'ordre croissant
+		// Mélange des couples de bornes qui se suivent pour que l'arbre généré ne soit pas construit avec des noeuds insérés dans l'ordre croissant
 		// (le tableau des bornes est trié dans l'ordre croissant)
 		for (int i = 0; i < bornes.length; i = i + 2) {
 			Object[] tempTab = { bornes[i], bornes[i + 1] };
@@ -234,7 +234,7 @@ public class TreeUtils {
 			treeNode = new AABRINode((int) tab[0], (int) tab[1], null, TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE);
 
 			// Récupération d'un tableau contenant les valeurs du noeud
-			valeurs = TreeUtils.getRandomIntegers(((int) tab[1]) - ((int) tab[0]), (int) tab[0], (int) tab[1]);
+			valeurs = TreeUtils.getIntegers((int) tab[0], (int) tab[1]);
 
 			rangTableauValeurs = 0;
 
@@ -268,7 +268,7 @@ public class TreeUtils {
 		for (int i = 1; i <= nbreNoeuds * 2; i++) {
 			estAjoute = false;
 			while (!estAjoute) {
-				borne = (int) (Math.random() * (borneMax - 1)) + 1;
+				borne = (int) (Math.random() * (borneMax)) + 1;
 				estAjoute = bornes.add(borne);
 			}
 		}
@@ -283,7 +283,11 @@ public class TreeUtils {
 	 * @param valeurMax - La valeur maximale à obtenir.
 	 * @return un tableau contenant les entiers
 	 */
-	private static Object[] getRandomIntegers(int nbreValeurs, int valeurMin, int valeurMax) {
+	private static Object[] getIntegers(int valeurMin, int valeurMax) {
+
+		// Génération du nombre de valeurs que l'on va ajouter dans le noeud
+		// On cherche à obtenir un nombre entre 0 et valeurMax - valeurMin
+		int nbreValeurs = (int) Math.round((Math.random() * (valeurMax - valeurMin + 1)));
 
 		// Liste contenant les valeurs
 		List<Integer> valeurs = new ArrayList<Integer>(nbreValeurs);
@@ -297,7 +301,7 @@ public class TreeUtils {
 		for (int i = 1; i <= nbreValeurs; i++) {
 			estAjoute = false;
 			while (!estAjoute) {
-				randomValue = (int) (Math.random() * (valeurMax - valeurMin)) + valeurMin;
+				randomValue = (int) (Math.random() * (valeurMax - valeurMin + 1)) + valeurMin;
 				if (!valeurs.contains(new Integer(randomValue))) {
 					estAjoute = valeurs.add(randomValue);
 				}

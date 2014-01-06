@@ -18,7 +18,7 @@ import exceptions.ValeurNonRepresenteeDansABRI;
 /**
  * Implémentation d'un noeud de l'AABRI. Ce noeud contient donc un fils droit, un fils gauche, une borne minimale, une borne maximale et un ABRI.
  * 
- * Ce noeud peut donc être également assimilé à une arbre binaire.
+ * Par manque de temps pour le moment, la rustine du typeABR est utilisée au lieu d'un héritage propre. TODO
  * 
  * @author Cyril
  * 
@@ -508,7 +508,14 @@ public class AABRINode extends Node {
 		return this.isWellFormedABR(node);
 	}
 
-	public boolean isWellFormedABR(SimpleNode node) throws SimpleNodeMalPositionne {
+	/**
+	 * Vérifie si l'arbre dont le noeud passé en paramètre est la racine est bien formé.
+	 * 
+	 * @param node - La racine de l'ABRI à vérifier
+	 * @return true si le sous arbre est bien formé, false sinon
+	 * @throws SimpleNodeMalPositionne lorsqu'un noeud est mal positionné dans l'arbre
+	 */
+	private boolean isWellFormedABR(SimpleNode node) throws SimpleNodeMalPositionne {
 		// On retourne true dans le cas où le noeud est une feuille
 		boolean ret = true;
 
@@ -541,7 +548,7 @@ public class AABRINode extends Node {
 	 * @return true si le sous arbre est bien formé, false sinon
 	 * @throws SimpleNodeMalPositionne lorsqu'un noeud est mal positionné dans l'arbre
 	 */
-	public boolean isWellFormedABRI(SimpleNode node) throws SimpleNodeMalPositionne {
+	private boolean isWellFormedABRI(SimpleNode node) throws SimpleNodeMalPositionne {
 
 		// On retourne true dans le cas où le noeud est une feuille
 		boolean ret = true;

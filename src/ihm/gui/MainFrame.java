@@ -3,23 +3,28 @@
  */
 package ihm.gui;
 
+import ihm.controler.LoadItemListener;
 import ihm.controler.RandomAABRIButtonListener;
 import ihm.controler.SaveItemListener;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Window;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import util.TreeUtils;
 import datastructure.AABRI;
+import datastructure.AABRINode;
 
 /**
  * 
@@ -41,9 +46,19 @@ public class MainFrame extends JFrame {
 	private AABRI aabri;
 
 	/**
+	 * ABR obtenu par conversion de l'AABRI
+	 */
+	private AABRINode abr;
+
+	/**
 	 * Menu de la fenêtre
 	 */
 	private JMenu menu;
+
+	/**
+	 * A propos
+	 */
+	private JMenu autresMenu;
 
 	/**
 	 * Barre de menus
@@ -59,6 +74,11 @@ public class MainFrame extends JFrame {
 	 * Sous menu d'enregistrement
 	 */
 	private JMenuItem saveItem;
+
+	/**
+	 * Sous menu à propos
+	 */
+	private JMenuItem aProposItem;
 
 	/**
 	 * Panel contenant les différents boutons d'action
@@ -127,13 +147,21 @@ public class MainFrame extends JFrame {
 	private void createMenu() {
 
 		this.menu = new JMenu("Menu");
-		this.menuBar = new JMenuBar();
+		this.autresMenu = new JMenu("Autres");
+
 		this.loadItem = new JMenuItem("Charger...");
 		this.saveItem = new JMenuItem("Sauvegarder...");
+		this.aProposItem = new JMenuItem("A propos...");
 
 		this.menu.add(this.loadItem);
 		this.menu.add(this.saveItem);
+
+		this.autresMenu.add(this.aProposItem);
+
+		this.menuBar = new JMenuBar();
 		this.menuBar.add(this.menu);
+		this.menuBar.add(this.autresMenu);
+
 		this.setJMenuBar(this.menuBar);
 	}
 
@@ -169,9 +197,10 @@ public class MainFrame extends JFrame {
 		this.actionsPanel.add(this.toABRButon);
 		this.actionsPanel.add(this.toAABRIButton);
 
+		JScrollPane scrollPane = new JScrollPane(this.displayPanel);
 		this.displayPanel.add(this.aeraAABRI);
 
-		this.add(this.displayPanel);
+		this.add(scrollPane);
 		this.add(this.actionsPanel, BorderLayout.SOUTH);
 	}
 
@@ -181,6 +210,7 @@ public class MainFrame extends JFrame {
 	private void addActionListeners() {
 		this.randomAABRIButton.addActionListener(new RandomAABRIButtonListener(this));
 		this.saveItem.addActionListener(new SaveItemListener(this));
+		this.loadItem.addActionListener(new LoadItemListener(this));
 	}
 
 	/**
@@ -395,5 +425,82 @@ public class MainFrame extends JFrame {
 		} else {
 			TreeUtils.saveToFile(pathToFile, new AABRI());
 		}
+	}
+
+	/**
+	 * @return the abr
+	 */
+	public AABRINode getAbr() {
+		return abr;
+	}
+
+	/**
+	 * @param abr the abr to set
+	 */
+	public void setAbr(AABRINode abr) {
+		this.abr = abr;
+	}
+
+	/**
+	 * Charge un arbre binaire depuis un fichier
+	 * 
+	 * @param absolutePath - le chemin complet vers le fichier, nom du fichier inclus
+	 */
+	public void loadFromFile(String pathToFile) {
+		this.aabri = TreeUtils.initBinaryTreeFromFile(pathToFile);
+		this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
+		this.repaint();
+	}
+
+	/**
+	 * @return the aproposMenu
+	 */
+	public JMenu getAproposMenu() {
+		return autresMenu;
+	}
+
+	/**
+	 * @param aproposMenu the aproposMenu to set
+	 */
+	public void setAproposMenu(JMenu aproposMenu) {
+		this.autresMenu = aproposMenu;
+	}
+
+	/**
+	 * @return the aeraAABRI
+	 */
+	public JTextArea getAeraAABRI() {
+		return aeraAABRI;
+	}
+
+	/**
+	 * @param aeraAABRI the aeraAABRI to set
+	 */
+	public void setAeraAABRI(JTextArea aeraAABRI) {
+		this.aeraAABRI = aeraAABRI;
+	}
+
+	/**
+	 * @return the aProposItem
+	 */
+	public JMenuItem getaProposItem() {
+		return aProposItem;
+	}
+
+	/**
+	 * @param aProposItem the aProposItem to set
+	 */
+	public void setaProposItem(JMenuItem aProposItem) {
+		this.aProposItem = aProposItem;
+	}
+
+	/**
+	 * Permet d'afficher des messages d'information dans l'application
+	 * 
+	 * @param message - Le message à afficher
+	 * @param typeMessage - le type du message, exemple : JOptionPane.WARNING_MESSAGE
+	 */
+	public void showModal(Window owner, String message, int typeMessage) {
+		JOptionPane.showMessageDialog(owner, message, "Information", typeMessage);
 	}
 }
