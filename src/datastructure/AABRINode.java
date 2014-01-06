@@ -4,6 +4,12 @@
 package datastructure;
 
 import interfaces.Node;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import exceptions.SimpleNodeMalPositionne;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
@@ -477,5 +483,80 @@ public class AABRINode extends Node {
 	 */
 	public TypeABR getType() {
 		return type;
+	}
+
+	/**
+	 * <pre>
+	 * 	Soit A un ABR dont les éléments sont compris entre Min et Max et soit un entier k. La méthode découpe l'intervalle
+	 * 	[Min; Max] en k intervalles de sensiblement la même taille [a1; b1], [a2; b2] ... [an; bn].
+	 * 	Ces intervalles sont tq : a1 = Min et b1 = Max pour 1 <= i <= k-1.
+	 * 	Chaque noeud de l'AABRI sera tg a(i+1) = b(i) + 1.
+	 * </pre>
+	 * 
+	 * Renvoie un AABRI à partir des données contenues dans le noeud courant
+	 * 
+	 * @param nbreIntervalles - le nombre d'intervalles (ie le nombre de noeuds dans l'AABRI créé)
+	 * @return l'AABRI créé
+	 */
+	public AABRI toAABRI(int nbreIntervalles) {
+
+		// Abre binaire retourné par la méthode
+		AABRI ret = new AABRI();
+
+		// Tableau contenant les noeuds sous forme de cdc
+		String[] noeudsAsString;
+
+		// Set permettant de trier les valeurs afin qu'il n'y ait pas de chevauchement
+		Set<Integer> noeudsAsInteger;
+
+		// Liste des noeuds (noeuds sous représentation de listes)
+		List<List<Integer>> noeuds = new ArrayList<List<Integer>>();
+
+		// Liste de stockage temporaire d'un noeud [Min; Max]
+		List<Integer> valeursNoeud = new ArrayList<Integer>();
+
+		// Rang de parcours dans l'affectation des valeurs de noeuds
+		int i = 0;
+
+		// Récupération des valeurs de l'arbre par un parcours préfixe
+		noeudsAsString = this.getInfos(this.root).split(":");
+
+		if (noeudsAsString.length < nbreIntervalles * 2) {
+			throw new RuntimeException("Le nombre de valeurs dans l'arbre binaire courant (" + noeudsAsString.length
+			        + ") ne permet pas de construire un AABRI avec "
+			        + nbreIntervalles + " noeuds !");
+		}
+
+		// Ajout des valeurs dans un tableau de type ordered set
+		noeudsAsInteger = new TreeSet<>();
+
+		for (String noeud : noeudsAsString) {
+			noeudsAsInteger.add(Integer.parseInt(noeud));
+		}
+
+		// On découpe ce set en "nbreIntervalles" sous tableaux correspondant aux noeuds
+		for (Integer valeur : noeudsAsInteger) {
+
+			if (valeursNoeud.size() == noeudsAsString.length / nbreIntervalles) {
+				noeuds.add(valeursNoeud);
+				valeursNoeud = new ArrayList<Integer>();
+				valeursNoeud.add(valeur);
+			} else if (i + 1 == noeudsAsInteger.size()) {
+				valeursNoeud.add(valeur);
+				noeuds.add(valeursNoeud);
+			} else {
+				valeursNoeud.add(valeur);
+			}
+
+			i++;
+		}
+
+		// Dans chaque tableau, on enlève (on ne prend pas en compte) la première
+		// et la dernière valeur (Min et Max) afin de les affecter aux bornes min et max
+
+		// Parcours de chaque liste pour faire des AABRI.add, la méthode se chargeant de retrouver le bon intervalle
+
+		// Bingo c'est fini (naïf^^)
+		return ret;
 	}
 }

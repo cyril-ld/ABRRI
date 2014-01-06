@@ -17,10 +17,11 @@ public class Launcher {
 	 */
 	public static void main(String[] args) {
 
-		AABRI randomTree = TreeUtils.randomAABRI(5, 100);
+		AABRI randomTree = TreeUtils.initBinaryTreeFromFile("resources/AABRI.txt");
+
 		System.out.println(randomTree.getInfos(randomTree.getRootNode()));
 		TreeUtils.saveToFile("C:\\Users\\Cyril\\AABRI.txt", randomTree);
 
-		System.out.println(randomTree.isWellFormed(randomTree.getRootNode()));
+		randomTree.getRootNode().toAABRI(2);
 	}
 }

@@ -489,6 +489,8 @@ public class AABRI {
 	 * <pre>
 	 * Tous les éléments contenus dans les noeuds du sag de node sont < à node sur node.getMin()
 	 * --------------------------------------------- sad ------------ > ------------------------
+	 * </pre>
+	 * 
 	 * @param node - Racine de l'abre à vérifier
 	 * @return true si l'arbre est bien un ABR
 	 */
