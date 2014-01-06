@@ -100,7 +100,11 @@ public class TreeUtils {
 					for (int i = 0; i < ABRINodes.length; i++) {
 						treeNode.insert(Integer.parseInt(ABRINodes[i]));
 					}
-					AABRI.insert(treeNode);
+					try {
+						AABRI.insert(treeNode);
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
+					}
 				}
 			}
 

@@ -3,7 +3,6 @@
  */
 package datastructure;
 
-import static org.junit.Assert.fail;
 import interfaces.Node;
 
 import org.junit.After;
@@ -13,6 +12,7 @@ import org.junit.Test;
 
 import util.TreeUtils;
 import exceptions.IntervalleInexistantException;
+import exceptions.SimpleNodeMalPositionne;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
@@ -150,7 +150,25 @@ public class AABRITest {
 	 */
 	@Test
 	public void testAddSimpleNodeSimpleNode() {
-		fail("Not yet implemented");
+
+		// On réinitialise l'AABRI pour pouvoir travailler sur un seul noeud
+		this.binaryTree = new AABRI();
+
+		try {
+			this.binaryTree.insert(0, 10, null, TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE);
+
+			this.binaryTree.addSimpleNode(new SimpleNode(2));
+			this.binaryTree.addSimpleNode(new SimpleNode(9));
+			this.binaryTree.addSimpleNode(new SimpleNode(1));
+		} catch (Exception e) {
+			Assert.fail(e.getMessage());
+		}
+
+		AABRINode root = this.binaryTree.getRootNode();
+
+		Assert.assertTrue("Le noeud racine doit être 2.", root.getRoot().getValue() == 2);
+		Assert.assertTrue("Le fils gauche doit être supérieur à la racine.", ((SimpleNode) root.getRoot().getLeftSon()).getValue() == 9);
+		Assert.assertTrue("Le fils droit droit être inférieur à la racine.", ((SimpleNode) root.getRoot().getRightSon()).getValue() == 1);
 	}
 
 	/**
@@ -158,7 +176,26 @@ public class AABRITest {
 	 */
 	@Test
 	public void testAddSimpleNodeInt() {
-		fail("Not yet implemented");
+
+		// On réinitialise l'AABRI pour pouvoir travailler sur un seul noeud
+		this.binaryTree = new AABRI();
+
+		try {
+			this.binaryTree.insert(0, 10, null, TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE);
+
+			this.binaryTree.addSimpleNode(2);
+			this.binaryTree.addSimpleNode(9);
+			this.binaryTree.addSimpleNode(1);
+		} catch (Exception e) {
+			Assert.fail(e.getMessage());
+		}
+
+		AABRINode root = this.binaryTree.getRootNode();
+
+		Assert.assertTrue("Le noeud racine doit être 2.", root.getRoot().getValue() == 2);
+		Assert.assertTrue("Le fils gauche doit être supérieur à la racine.", ((SimpleNode) root.getRoot().getLeftSon()).getValue() == 9);
+		Assert.assertTrue("Le fils droit droit être inférieur à la racine.", ((SimpleNode) root.getRoot().getRightSon()).getValue() == 1);
+
 	}
 
 	/**
@@ -172,22 +209,15 @@ public class AABRITest {
 			// Recherche de la valeur que l'on vient de supprimer
 			AABRINode node = this.binaryTree.findTreeNodeFromValue(this.binaryTree.getRootNode(), 60);
 
-			Assert.assertTrue("On ne doit pas retrouver la valeur d'un noeud que l'on vient de supprimer.", node.findFather(node.getRoot(), 60) == null);
+			Assert.assertTrue("On ne doit pas retrouver la valeur d'un noeud que l'on vient de supprimer.",
+			        node.findNode(node.getRoot(), 60) == null);
 		} catch (IntervalleInexistantException | ValeurNonRepresenteeDansABRI e) {
 			e.printStackTrace();
-			fail("La suppression d'un valeur existante ne doit pas lever d'exception.");
+			Assert.fail("La suppression d'un valeur existante ne doit pas lever d'exception.");
 		} catch (NullPointerException e) {
 			e.printStackTrace();
-			fail("Erreur non prévue.");
+			Assert.fail("Erreur non prévue.");
 		}
-	}
-
-	/**
-	 * Test method for {@link datastructure.AABRI#ABRtoAABRI()}.
-	 */
-	@Test
-	public void testABRtoAABRI() {
-		fail("Not yet implemented");
 	}
 
 	/**
@@ -195,7 +225,12 @@ public class AABRITest {
 	 */
 	@Test
 	public void testAABRItoABR() {
-		fail("Not yet implemented");
+		AABRINode ABR = this.binaryTree.toABR();
+		try {
+			Assert.assertTrue("L'ABR doit être bien formé !", ABR.isWellFormed(ABR.getRoot()));
+		} catch (SimpleNodeMalPositionne e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 
 	/**
@@ -213,5 +248,45 @@ public class AABRITest {
 	@Test
 	public void testIsABR() {
 		Assert.assertTrue("L'arbre binaire est bien formé !", this.binaryTree.isABR(this.binaryTree.getRootNode()));
+	}
+
+	@SuppressWarnings("cast")
+	@Test
+	public void testIsABR_notAnABR() {
+
+		// Echange des deux fils du root pour faire planter le test directement
+		AABRINode tmp = (AABRINode) this.binaryTree.getRootNode().getLeftSon();
+		this.binaryTree.getRootNode().setLeftSon(((AABRINode) this.binaryTree.getRootNode().getRightSon()));
+		this.binaryTree.getRootNode().setRightSon(tmp);
+
+		Assert.assertFalse("L'arbre binaire est mal formé !", this.binaryTree.isABR(this.binaryTree.getRootNode()));
+	}
+
+	/**
+	 * Test permettant de voir si le programme se comporte bien lorsqu'on essaie d'insérer un noeud dont l'intervalle chevauche un autre.
+	 * 
+	 * Pour ce faire, on utilise l'arbre suivant :
+	 * 
+	 * <pre>
+	 * 50:75;60:62:75:55
+	 * 40:55;40:51:53
+	 * 5:20;7:12:8:6:19
+	 * </pre>
+	 * 
+	 * En sortie d'insertion on doit avoir un AABRI contenant deux noeuds : le premier et le dernier. Le second est ignoré.
+	 */
+	@Test
+	public void testIsABR_intervallesChevauchant() {
+
+		// Création d'un nouvel arbre depuis un fichier de test possédant des intervalles se chevauchant
+		this.binaryTree = TreeUtils.initBinaryTreeFromFile("resources/AABRI_Intervalles_chevauchants.txt");
+
+		// L'arbre binaire doit être correct (c'est l'insertion qui ne fait rien)
+
+		// On ne doit pas avoir de sag
+		boolean result = (this.binaryTree.getRootNode().getLeftSon() != null) && this.binaryTree.isABR(this.binaryTree.getRootNode())
+		        && (this.binaryTree.getRootNode().getRightSon() == null);
+
+		Assert.assertTrue("L'arbre binaire est bien formé !", result);
 	}
 }

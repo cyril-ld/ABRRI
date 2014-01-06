@@ -125,7 +125,7 @@ public class AABRI {
 	private AABRINode findFather(AABRINode node, final int min, final int max) {
 		AABRINode ret = null;
 
-		if (node == null || min > max || (min == max && max == 0)) {
+		if (node == null || min > max || (min == max && max == 0) || min == max) {
 			throw new RuntimeException("Problèmes dans les paramètres de la méthode");
 
 		} else if (node.getMin() > max) { // Cas où le noeud courant est "plus grand" que le max du nouveau noeud
@@ -421,8 +421,8 @@ public class AABRI {
 	 * 
 	 * @return
 	 */
-	public boolean isWellFormed(AABRINode node) {
-		return this.isABR(node) && this.containsOnlyDisjointIntervals(node) && ABRIWellFormed(this.rootNode);
+	public boolean isWellFormed() {
+		return this.isABR(this.rootNode) && this.containsOnlyDisjointIntervals(this.rootNode) && ABRIWellFormed(this.rootNode);
 	}
 
 	/**
@@ -524,7 +524,7 @@ public class AABRI {
 
 			// Si le fils gauche est bien > au noeud courant, on descend dedans pour vérifier
 			if (((AABRINode) node.getLeftSon()).getMin() < node.getMin()) {
-				ret = isWellFormed((AABRINode) node.getLeftSon());
+				ret = isABR((AABRINode) node.getLeftSon());
 			} else {
 				ret = false;
 			}
@@ -534,7 +534,7 @@ public class AABRI {
 		if (node.getRightSon() != null) {
 
 			if (((AABRINode) node.getRightSon()).getMin() > node.getMin()) {
-				ret = isWellFormed((AABRINode) node.getRightSon());
+				ret = isABR((AABRINode) node.getRightSon());
 			} else {
 				ret = false;
 			}

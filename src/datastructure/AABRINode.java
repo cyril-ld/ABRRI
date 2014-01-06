@@ -216,6 +216,37 @@ public class AABRINode extends Node {
 	}
 
 	/**
+	 * Retourne le noeud recherché et représenté par value dans l'arbre dont node est la racine.
+	 * 
+	 * @param node - La racine de l'arbre dans lequel rechercher
+	 * @param value - La valeur que l'on recherche
+	 * @return le noeud recherché ou null s'il n'existe pas
+	 */
+	public SimpleNode findNode(SimpleNode node, final int value) {
+
+		SimpleNode ret = null;
+
+		if (node == null) {
+			throw new RuntimeException("Le noeud à rechercher ne peut pas être nul !");
+		} else if (value < node.getValue()) { // Si la valeur est inférieure à la valeur du noeud courant, on recherche dans le fils droit
+
+			if (node.getRightSon() != null) {
+				ret = findFather((SimpleNode) node.getRightSon(), value);
+			}
+
+		} else if (value > node.getValue()) { // Si la valeur est supérieure à la valeur du noeud courant, on recherche dans le fils gauche
+
+			if (node.getLeftSon() != null) {
+				ret = findFather((SimpleNode) node.getLeftSon(), value);
+			}
+
+		} else if (value == node.getValue()) {
+			ret = node;
+		}
+		return ret;
+	}
+
+	/**
 	 * Insert un nouveau noeud dans l'ABRI courant.
 	 * 
 	 * @param node - le noeud à ajouter
@@ -468,8 +499,49 @@ public class AABRINode extends Node {
 	 * 
 	 * @param node - La racine de l'ABRI à vérifier
 	 * @return true si le sous arbre est bien formé, false sinon
+	 * @throws SimpleNodeMalPositionne lorsqu'un noeud est mal positionné dans l'arbre
 	 */
 	public boolean isWellFormed(SimpleNode node) throws SimpleNodeMalPositionne {
+		if (this.type == TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE) {
+			return this.isWellFormedABRI(node);
+		}
+		return this.isWellFormedABR(node);
+	}
+
+	public boolean isWellFormedABR(SimpleNode node) throws SimpleNodeMalPositionne {
+		// On retourne true dans le cas où le noeud est une feuille
+		boolean ret = true;
+
+		// Si node a un fils gauche correctement positionné on descend dedans
+		if (node.getLeftSon() != null) {
+
+			// Si le fils gauche est bien > au noeud courant, on descend dedans pour vérifier
+			if (((SimpleNode) node.getLeftSon()).getValue() < node.getValue()) {
+				ret = isWellFormed((SimpleNode) node.getLeftSon());
+			} else {
+				throw new SimpleNodeMalPositionne("Valeur noeud courant : " + node.getValue() + ", valeur fils gauche : "
+				        + ((SimpleNode) node.getLeftSon()).getValue() + ".");
+			}
+		} else if (node.getRightSon() != null) {
+
+			if (((SimpleNode) node.getRightSon()).getValue() > node.getValue()) {
+				ret = isWellFormed((SimpleNode) node.getRightSon());
+			} else {
+				throw new SimpleNodeMalPositionne("Valeur noeud courant : " + node.getValue() + ", valeur fils gauche : "
+				        + ((SimpleNode) node.getRightSon()).getValue() + ".");
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * Vérifie si l'arbre dont le noeud passé en paramètre est la racine est bien formé.
+	 * 
+	 * @param node - La racine de l'ABRI à vérifier
+	 * @return true si le sous arbre est bien formé, false sinon
+	 * @throws SimpleNodeMalPositionne lorsqu'un noeud est mal positionné dans l'arbre
+	 */
+	public boolean isWellFormedABRI(SimpleNode node) throws SimpleNodeMalPositionne {
 
 		// On retourne true dans le cas où le noeud est une feuille
 		boolean ret = true;
