@@ -490,7 +490,7 @@ public class AABRINode extends Node {
 	 * 	Soit A un ABR dont les éléments sont compris entre Min et Max et soit un entier k. La méthode découpe l'intervalle
 	 * 	[Min; Max] en k intervalles de sensiblement la même taille [a1; b1], [a2; b2] ... [an; bn].
 	 * 	Ces intervalles sont tq : a1 = Min et b1 = Max pour 1 <= i <= k-1.
-	 * 	Chaque noeud de l'AABRI sera tg a(i+1) = b(i) + 1.
+	 * 	Chaque noeud de l'AABRI sera tq a(i+1) = b(i) + 1.
 	 * </pre>
 	 * 
 	 * Renvoie un AABRI à partir des données contenues dans le noeud courant
@@ -537,11 +537,12 @@ public class AABRINode extends Node {
 		// On découpe ce set en "nbreIntervalles" sous tableaux correspondant aux noeuds
 		for (Integer valeur : noeudsAsInteger) {
 
+			// Si le noeud courant possède le nombre de valeurs désiré
 			if (valeursNoeud.size() == noeudsAsString.length / nbreIntervalles) {
 				noeuds.add(valeursNoeud);
 				valeursNoeud = new ArrayList<Integer>();
 				valeursNoeud.add(valeur);
-			} else if (i + 1 == noeudsAsInteger.size()) {
+			} else if (i + 1 == noeudsAsInteger.size()) { // Si noeud est incomplet (dernier noeud)
 				valeursNoeud.add(valeur);
 				noeuds.add(valeursNoeud);
 			} else {
