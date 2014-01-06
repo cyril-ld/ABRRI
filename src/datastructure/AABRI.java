@@ -7,8 +7,8 @@ import interfaces.Node;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import exceptions.IntervalleChevauchantException;
 import exceptions.IntervalleInexistantException;
 import exceptions.SimpleNodeMalPositionne;
@@ -392,6 +392,26 @@ public class AABRI {
 	}
 
 	/**
+	 * Renvoie un String contenant toutes les valeurs de l'AABRI, et aucune autre :)
+	 * 
+	 * @param node - La racine de l'arbre dans lequel on souhaite relever les valeurs
+	 * @return le tableau de valeurs
+	 */
+	public String getValues(AABRINode node) {
+
+		String infosNode, ret;
+		ret = "";
+
+		if (node != null) {
+			infosNode = node.getInfos(node.getRoot()) + "\n";
+			ret += infosNode;
+			ret += this.getValues((AABRINode) node.getLeftSon());
+			ret += this.getValues((AABRINode) node.getRightSon());
+		}
+		return ret;
+	}
+
+	/**
 	 * <pre>
 	 * Vérifie si l'arbre courant est bien formé :
 	 * - A est un ABR (sur les valeurs de m)
@@ -415,8 +435,8 @@ public class AABRI {
 	 * début
 	 * 	si noeud non vide alors
 	 * 		ret = noeud.estBienForme
-	 * 		ret = ABRIBienForme (noeud.sag)
-	 * 		ret = ret ET ABRIBienForme(noeud.sad)
+	 * 		ret = ret ET ABRIBienForme (noeud.sag)
+	 * 		ret = ret ET ABRIBienForme (noeud.sad)
 	 * 	sinon
 	 * 		ret = true
 	 * 	finsi
@@ -522,11 +542,34 @@ public class AABRI {
 		return ret;
 	}
 
-	public void ABRtoAABRI() {
-		throw new NotImplementedException();
-	}
+	/**
+	 * Construit un ABR à partir de l'AABRI courant.
+	 * 
+	 * @return l'arbre binaire créé
+	 */
+	public AABRINode toABR() {
 
-	public void AABRItoABR() {
-		throw new NotImplementedException();
+		// Retour de la méthode
+		AABRINode ret = new AABRINode(TypeABR.ARBRE_BINAIRE_RECHERCHE);
+
+		// Représentation de l'arbre
+		String AABRI = this.getValues(this.rootNode);
+
+		// Les sauts de ligne sont remplacés par les délimiteurs de valeurs
+		AABRI = AABRI.replace("\n", ":");
+
+		// Objet de parcours de la représentation de l'abre binaire
+		StringTokenizer st = new StringTokenizer(AABRI, ":");
+
+		// Variable de parcours
+		String tmp;
+
+		while (st.hasMoreTokens()) {
+			tmp = st.nextToken();
+			tmp = tmp.trim();
+			ret.insert(Integer.parseInt(tmp));
+		}
+
+		return ret;
 	}
 }

@@ -301,8 +301,4 @@ public class TreeUtils {
 		}
 		return valeurs.toArray();
 	}
-
-	public static AABRI ABRToAABRI() {
-		return null;
-	}
 }

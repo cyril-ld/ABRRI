@@ -6,10 +6,12 @@ package datastructure;
 import interfaces.Node;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import exceptions.IntervalleChevauchantException;
 import exceptions.SimpleNodeMalPositionne;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
@@ -66,6 +68,15 @@ public class AABRINode extends Node {
 	}
 
 	/**
+	 * Constructeur permettant d'affecter le type de l'arbre, aucun autre traitement
+	 * 
+	 * @param type - Le type de l'arbre
+	 */
+	public AABRINode(TypeABR type) {
+		this.type = type;
+	}
+
+	/**
 	 * @return the min
 	 */
 	public int getMin() {
@@ -100,6 +111,27 @@ public class AABRINode extends Node {
 	 */
 	public void insert(final int nodeValue) {
 		this.insert(new SimpleNode(nodeValue));
+	}
+
+	/**
+	 * @return the root
+	 */
+	public SimpleNode getRoot() {
+		return root;
+	}
+
+	/**
+	 * @param root the root to set
+	 */
+	public void setRoot(SimpleNode root) {
+		this.root = root;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public TypeABR getType() {
+		return type;
 	}
 
 	/**
@@ -404,20 +436,6 @@ public class AABRINode extends Node {
 	}
 
 	/**
-	 * @return the root
-	 */
-	public SimpleNode getRoot() {
-		return root;
-	}
-
-	/**
-	 * @param root the root to set
-	 */
-	public void setRoot(SimpleNode root) {
-		this.root = root;
-	}
-
-	/**
 	 * Créé une représentation des informations contenues dans l'ABRI contenu par le noeud. Le parcours est préfixe.
 	 * 
 	 * @param node - La racine de l'abre dont on souhaite afficher les valeurs.
@@ -479,13 +497,6 @@ public class AABRINode extends Node {
 	}
 
 	/**
-	 * @return the type
-	 */
-	public TypeABR getType() {
-		return type;
-	}
-
-	/**
 	 * <pre>
 	 * 	Soit A un ABR dont les éléments sont compris entre Min et Max et soit un entier k. La méthode découpe l'intervalle
 	 * 	[Min; Max] en k intervalles de sensiblement la même taille [a1; b1], [a2; b2] ... [an; bn].
@@ -493,7 +504,10 @@ public class AABRINode extends Node {
 	 * 	Chaque noeud de l'AABRI sera tq a(i+1) = b(i) + 1.
 	 * </pre>
 	 * 
-	 * Renvoie un AABRI à partir des données contenues dans le noeud courant
+	 * Renvoie un AABRI à partir des données contenues dans le noeud courant.
+	 * 
+	 * La fonction ne se trouve pas dans la classe utils car on ne souhaite pas qu'une classe fille de AABRINode puisse l'utiliser (on imagine que si
+	 * la méthode était dans la classe utils, elle prendrait en paramètre un AABRINode).
 	 * 
 	 * @param nbreIntervalles - le nombre d'intervalles (ie le nombre de noeuds dans l'AABRI créé)
 	 * @return l'AABRI créé
@@ -502,6 +516,9 @@ public class AABRINode extends Node {
 
 		// Abre binaire retourné par la méthode
 		AABRI ret = new AABRI();
+
+		// Variable d'insertion dans l'AABRI
+		AABRINode tempNode;
 
 		// Tableau contenant les noeuds sous forme de cdc
 		String[] noeudsAsString;
@@ -554,8 +571,33 @@ public class AABRINode extends Node {
 
 		// Dans chaque tableau, on enlève (on ne prend pas en compte) la première
 		// et la dernière valeur (Min et Max) afin de les affecter aux bornes min et max
+		for (List<Integer> noeud : noeuds) {
 
-		// Parcours de chaque liste pour faire des AABRI.add, la méthode se chargeant de retrouver le bon intervalle
+			i = 0;
+
+			tempNode = new AABRINode();
+
+			// Pour éviter l'arbre filiforme, il faut re mélanger la collection après avoir récupérer le premier et le dernier élément
+			tempNode.setMin(noeud.get(0));
+			tempNode.setMax(noeud.get(noeud.size() - 1));
+
+			Collections.shuffle(noeud);
+
+			for (Integer valeur : noeud) {
+
+				// Partant du principe qu'il ne peut y avoir deux fois la même valeur dans l'arbre
+				if (valeur != tempNode.getMin() && valeur != tempNode.getMax()) {
+					tempNode.insert(valeur);
+				}
+			}
+
+			// Insertion du noeud dans l'arbre d'arbres
+			try {
+				ret.insert(tempNode);
+			} catch (IntervalleChevauchantException e) {
+				System.out.println(e.getMessage());
+			}
+		}
 
 		// Bingo c'est fini (naïf^^)
 		return ret;
