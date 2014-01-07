@@ -3,13 +3,13 @@
  */
 package ihm.gui;
 
+import ihm.controler.DeleteValueButtonListener;
 import ihm.controler.InsertValueButtonListener;
 import ihm.controler.LoadItemListener;
 import ihm.controler.RandomAABRIButtonListener;
 import ihm.controler.SaveItemListener;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Window;
 
@@ -27,6 +27,7 @@ import util.TreeUtils;
 import datastructure.AABRI;
 import datastructure.AABRINode;
 import exceptions.IntervalleInexistantException;
+import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
  * 
@@ -133,11 +134,12 @@ public class MainFrame extends JFrame {
 	 * @param title - Le titre à donner à la fenêtre
 	 */
 	public MainFrame(String title) {
-		super(title);
 
+		super(title);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		this.setSize(650, 600);
+		this.setLocationRelativeTo(null);
 
 		this.createMenu();
 		this.createPanels();
@@ -149,7 +151,7 @@ public class MainFrame extends JFrame {
 	 */
 	private void createMenu() {
 
-		this.menu = new JMenu("Menu");
+		this.menu = new JMenu("Fichier");
 		this.autresMenu = new JMenu("Autres");
 
 		this.loadItem = new JMenuItem("Charger...");
@@ -178,17 +180,11 @@ public class MainFrame extends JFrame {
 		this.displayPanel = new JPanel(new GridLayout());
 
 		this.randomAABRIButton = new JButton("Générer un arbre");
-		this.randomAABRIButton.setBackground(Color.BLUE);
 		this.checkButton = new JButton("Vérifier l'arbre");
-		this.checkButton.setBackground(Color.CYAN);
 		this.insertValueButton = new JButton("Insérer une valeur");
-		this.insertValueButton.setBackground(Color.RED);
 		this.deleteValueButton = new JButton("Supprimer une valeur");
-		this.deleteValueButton.setBackground(Color.YELLOW);
 		this.toABRButon = new JButton("Convertir en ABR");
-		this.toABRButon.setBackground(Color.DARK_GRAY);
 		this.toAABRIButton = new JButton("Convertir en AABRI");
-		this.toAABRIButton.setBackground(Color.PINK);
 
 		this.aeraAABRI = new JTextArea("Rien à afficher pour l'instant...");
 		this.aeraAABRI.setEditable(false);
@@ -215,6 +211,7 @@ public class MainFrame extends JFrame {
 		this.saveItem.addActionListener(new SaveItemListener(this));
 		this.loadItem.addActionListener(new LoadItemListener(this));
 		this.insertValueButton.addActionListener(new InsertValueButtonListener(this));
+		this.deleteValueButton.addActionListener(new DeleteValueButtonListener(this));
 	}
 
 	/**
@@ -522,6 +519,30 @@ public class MainFrame extends JFrame {
 				this.aabri.addSimpleNode(valeur);
 				this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
 			} catch (IntervalleInexistantException e) {
+				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		this.repaint();
+	}
+
+	/**
+	 * Supprimer une valeur dans l'arbre en cours d'affichage
+	 * 
+	 * @param valeur
+	 */
+	public void deleteValue(int valeur) {
+		if (this.abr != null) {
+			try {
+				abr.delete(valeur);
+				this.aeraAABRI.setText(this.abr.getInfos(this.abr.getRoot()));
+			} catch (ValeurNonRepresenteeDansABRI e) {
+				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
+			}
+		} else if (this.aabri != null) {
+			try {
+				this.aabri.delete(valeur);
+				this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
+			} catch (Exception e) {
 				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
 			}
 		}

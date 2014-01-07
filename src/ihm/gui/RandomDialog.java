@@ -63,20 +63,24 @@ public class RandomDialog extends JDialog implements ActionListener {
 	/**
 	 * Initialise le contenu de la fenêtre
 	 */
+	@SuppressWarnings("static-access")
 	private void initLayout() {
 
 		// Options générales
 		this.setLocationRelativeTo(null);
-		this.setSize(400, 400);
+		this.setSize(350, 300);
+		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
 
 		donnees = new JPanel(new GridLayout(6, 1));
 
 		nbreNoeuds = new JLabel("Nombre de noeuds dans l'arbre généré :");
 		fieldNoeuds = new JTextField();
+		fieldNoeuds.setHorizontalAlignment(JTextField.CENTER);
 
 		valeurMax = new JLabel("Valeur maximale de l'arbre (doit être >= 2 * NbreNoeuds) :");
 		fieldValeurMax = new JTextField();
+		fieldValeurMax.setHorizontalAlignment(JTextField.CENTER);
 
 		donnees.add(nbreNoeuds);
 		donnees.add(fieldNoeuds);

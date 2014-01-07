@@ -43,6 +43,19 @@ public class AABRI {
 	}
 
 	/**
+	 * Supprime une valeur dans l'un des noeuds de l'AABRI
+	 * 
+	 * @param value - La valeur à supprimer
+	 * @return true si la valeur a bien été supprimée, false sinon
+	 * @throws IntervalleInexistantException dans le cas où l'intervalle n'existe pas.
+	 * @throws ValeurNonRepresenteeDansABRI Dans le cas où la valeur n'existe pas dans l'ABRI trouvé.
+	 */
+	public boolean delete(int value) throws IntervalleInexistantException, ValeurNonRepresenteeDansABRI {
+		AABRINode owner = this.findTreeNodeFromValue(this.rootNode, value);
+		return owner.delete(value) != null ? true : false;
+	}
+
+	/**
 	 * Ajoute un noeud type "ABRI" dans l'arbre binaire courant
 	 * 
 	 * @param node - le noeud à ajouter.
@@ -171,7 +184,7 @@ public class AABRI {
 		} else if (value < node.getMin()) {
 
 			if (node.getLeftSon() == null) {
-				throw new IntervalleInexistantException(""
+				throw new IntervalleInexistantException("Impossible de trouver le noeud correspondant !\n"
 				        + "Valeur demandée : {" + value + "}\n"
 				        + "Intervalle au mieux : [" + node.getMin() + "; " + node.getMax() + "]");
 			}
@@ -180,7 +193,7 @@ public class AABRI {
 		} else if (value > node.getMax()) {
 
 			if (node.getRightSon() == null) {
-				throw new IntervalleInexistantException(""
+				throw new IntervalleInexistantException("Impossible de trouver le noeud correspondant !\n"
 				        + "Valeur demandée : {" + value + "}\n"
 				        + "Intervalle au mieux : [" + node.getMin() + "; " + node.getMax() + "]");
 			}

@@ -20,12 +20,12 @@ import javax.swing.JTextField;
  * @author Cyril
  * 
  */
-public class InsertValueDialog extends JDialog implements ActionListener {
+public class DeleteValueDialog extends JDialog implements ActionListener {
 
 	/**
 	 * auto generated
 	 */
-	private static final long serialVersionUID = -1270304426323164159L;
+	private static final long serialVersionUID = 4907778273136812742L;
 
 	/**
 	 * Bouton valider
@@ -52,7 +52,7 @@ public class InsertValueDialog extends JDialog implements ActionListener {
 	 * 
 	 * @param owner - La fenêtre mère de la modale
 	 */
-	public InsertValueDialog(MainFrame owner) {
+	public DeleteValueDialog(MainFrame owner) {
 		super(owner, "Paramètres AABRI aléatoire", Dialog.ModalityType.APPLICATION_MODAL);
 		this.initLayout();
 		this.addActionListener();
@@ -61,13 +61,13 @@ public class InsertValueDialog extends JDialog implements ActionListener {
 	private void initLayout() {
 
 		// Options générales
-		this.setSize(400, 400);
+		this.setSize(350, 200);
 		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
 
 		donnees = new JPanel(new GridLayout(3, 1));
 
-		valueLabel = new JLabel("Valeur à insérer (doit être supérieure à 0) :");
+		valueLabel = new JLabel("Valeur à supprimer (doit être supérieure à 0) :");
 		fieldValue = new JTextField();
 
 		donnees.add(valueLabel);
@@ -75,7 +75,7 @@ public class InsertValueDialog extends JDialog implements ActionListener {
 
 		boutons = new JPanel(new BorderLayout());
 
-		this.valider = new JButton("Insérer");
+		this.valider = new JButton("Supprimer");
 
 		boutons.add(valider, BorderLayout.CENTER);
 
@@ -93,12 +93,13 @@ public class InsertValueDialog extends JDialog implements ActionListener {
 
 			int valeur = Integer.parseInt(this.fieldValue.getText());
 
-			if (valeur >= 0) {
-				((MainFrame) this.getOwner()).insertValue(valeur);
+			if (valeur >= 0 && (this.fieldValue.getText() != null || this.fieldValue.getText().equals(""))) {
+				((MainFrame) this.getOwner()).deleteValue(valeur);
 				this.setVisible(false);
 			} else {
-				((MainFrame) this.getOwner()).showModal(this, "La valeur à insérer doit être supérieure ou égale à 0.", JOptionPane.ERROR_MESSAGE);
+				((MainFrame) this.getOwner()).showModal(this, "La valeur à supprimer doit être supérieure ou égale à 0.", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
+
 }

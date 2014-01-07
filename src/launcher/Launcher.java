@@ -4,6 +4,7 @@
 package launcher;
 
 import ihm.gui.MainFrame;
+import ihm.gui.Splash;
 
 /**
  * @author Cyril
@@ -31,6 +32,8 @@ public class Launcher {
 
 		// AABRINode abr = randomTree.toABR();
 		// System.out.println(abr.getInfos(abr.getRoot()));
+		@SuppressWarnings("unused")
+		Splash test = new Splash(3000);
 
 		MainFrame frame = new MainFrame("Tous aux AABRIs !");
 		frame.setVisible(true);

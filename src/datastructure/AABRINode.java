@@ -226,18 +226,21 @@ public class AABRINode extends Node {
 
 		SimpleNode ret = null;
 
+		if (this.root == null) {
+			throw new RuntimeException("Le noeud [" + this.min + "; " + this.max + "] est vide et ne contient dont pas " + value + " !");
+		}
 		if (node == null) {
 			throw new RuntimeException("Le noeud à rechercher ne peut pas être nul !");
 		} else if (value < node.getValue()) { // Si la valeur est inférieure à la valeur du noeud courant, on recherche dans le fils droit
 
 			if (node.getRightSon() != null) {
-				ret = findFather((SimpleNode) node.getRightSon(), value);
+				ret = findNode((SimpleNode) node.getRightSon(), value);
 			}
 
 		} else if (value > node.getValue()) { // Si la valeur est supérieure à la valeur du noeud courant, on recherche dans le fils gauche
 
 			if (node.getLeftSon() != null) {
-				ret = findFather((SimpleNode) node.getLeftSon(), value);
+				ret = findNode((SimpleNode) node.getLeftSon(), value);
 			}
 
 		} else if (value == node.getValue()) {
@@ -276,7 +279,7 @@ public class AABRINode extends Node {
 
 		SimpleNode ret, node, father, replacement;
 
-		node = this.findFather(this.root, value);
+		node = this.findNode(this.root, value);
 
 		if (node == null) {
 			throw new ValeurNonRepresenteeDansABRI("Impossible de retrouver le noeud contenant la valeur : " + value + "\n");
@@ -297,6 +300,9 @@ public class AABRINode extends Node {
 					father.setLeftSon(null);
 					ret = node;
 				}
+			} else { // Lorsqu'on souhaite supprimer le noeud root
+				ret = this.root;
+				this.root = null;
 			}
 
 		} else if ((node.getLeftSon() == null || node.getRightSon() == null)) { // Dans le cas où le noeud a un seul fils
@@ -353,12 +359,52 @@ public class AABRINode extends Node {
 
 			// On affecte au noeud à supprimer la valeur du noeud remplaçant (tour de passe passe ;))
 			node.setValue(replacement.getValue());
-			node.setFather(replacement.getFather());
-			node.setRightSon(replacement.getRightSon());
-			node.setLeftSon(replacement.getLeftSon());
 		}
 		return ret;
 	}
+
+	// public SimpleNode delete(SimpleNode node, final int value) throws ValeurNonRepresenteeDansABRI {
+	// if (this.type == TypeABR.ARBRE_BINAIRE_RECHERCHE) {
+	// return this.deleteABR(node, value);
+	// }
+	// return this.deleteABRI(node, value);
+	// }
+	//
+	// private SimpleNode deleteABRI(SimpleNode node, int value) {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// private SimpleNode deleteABR(SimpleNode node, int value) {
+	// SimpleNode ret, replacement;
+	//
+	// if (node != null) {
+	// if (value < node.getValue()) {
+	// this.deleteABR((SimpleNode) node.getLeftSon(), value);
+	// } else {
+	// if (value > node.getValue()) {
+	// this.deleteABR((SimpleNode) node.getRightSon(), value);
+	// } else {
+	// if (node.getLeftSon() == null) {
+	//
+	// // Sauvegarde des caractéristiques du noeud dans la variable de retour
+	// ret = new SimpleNode();
+	// ret.setFather(node.getFather());
+	// ret.setLeftSon(node.getLeftSon());
+	// ret.setRightSon(node.getRightSon());
+	// ret.setValue(node.getValue());
+	//
+	// // Permutation
+	// node = (SimpleNode) node.getRightSon();
+	// } else {
+	// replacement = this.max(node);
+	//
+	// }
+	// }
+	// }
+	// }
+	// return ret;
+	// }
 
 	/**
 	 * Insert un noeud dans un abre binaire de recherche inversé.

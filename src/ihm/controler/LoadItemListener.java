@@ -51,7 +51,7 @@ public class LoadItemListener implements ActionListener {
 				jfc = new JFileChooser();
 			}
 
-			userAnswer = jfc.showDialog(this.frame, "Enregistrer");
+			userAnswer = jfc.showDialog(this.frame, "Charger");
 
 			if (userAnswer == JFileChooser.APPROVE_OPTION) {
 				this.frame.loadFromFile(jfc.getSelectedFile().getAbsolutePath());
