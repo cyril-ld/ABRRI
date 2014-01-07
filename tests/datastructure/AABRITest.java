@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import util.TreeUtils;
+import exceptions.AABRINodeMalPositionne;
 import exceptions.IntervalleInexistantException;
 import exceptions.SimpleNodeMalPositionne;
 import exceptions.ValeurNonRepresenteeDansABRI;
@@ -247,19 +248,23 @@ public class AABRITest {
 	 */
 	@Test
 	public void testIsABR() {
-		Assert.assertTrue("L'arbre binaire est bien formé !", this.binaryTree.isABR(this.binaryTree.getRootNode()));
+		try {
+			Assert.assertTrue("L'arbre binaire est bien formé !", this.binaryTree.isABR(this.binaryTree.getRootNode()));
+		} catch (AABRINodeMalPositionne e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 
 	@SuppressWarnings("cast")
-	@Test
-	public void testIsABR_notAnABR() {
+	@Test(expected = AABRINodeMalPositionne.class)
+	public void testIsABR_notAnABR() throws AABRINodeMalPositionne {
 
 		// Echange des deux fils du root pour faire planter le test directement
 		AABRINode tmp = (AABRINode) this.binaryTree.getRootNode().getLeftSon();
 		this.binaryTree.getRootNode().setLeftSon(((AABRINode) this.binaryTree.getRootNode().getRightSon()));
 		this.binaryTree.getRootNode().setRightSon(tmp);
 
-		Assert.assertFalse("L'arbre binaire est mal formé !", this.binaryTree.isABR(this.binaryTree.getRootNode()));
+		this.binaryTree.isABR(this.binaryTree.getRootNode());
 	}
 
 	/**
@@ -284,8 +289,13 @@ public class AABRITest {
 		// L'arbre binaire doit être correct (c'est l'insertion qui ne fait rien)
 
 		// On ne doit pas avoir de sag
-		boolean result = (this.binaryTree.getRootNode().getLeftSon() != null) && this.binaryTree.isABR(this.binaryTree.getRootNode())
-		        && (this.binaryTree.getRootNode().getRightSon() == null);
+		boolean result = false;
+		try {
+			result = (this.binaryTree.getRootNode().getLeftSon() != null) && this.binaryTree.isABR(this.binaryTree.getRootNode())
+			        && (this.binaryTree.getRootNode().getRightSon() == null);
+		} catch (AABRINodeMalPositionne e) {
+			Assert.fail(e.getMessage());
+		}
 
 		Assert.assertTrue("L'arbre binaire est bien formé !", result);
 	}

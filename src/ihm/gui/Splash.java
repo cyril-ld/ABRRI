@@ -45,6 +45,7 @@ public class Splash extends JWindow {
 	 * 
 	 * @param delay the delay in milliseconds
 	 */
+	@SuppressWarnings("static-access")
 	public Splash(int delay) {
 
 		getContentPane().setLayout(new BorderLayout());

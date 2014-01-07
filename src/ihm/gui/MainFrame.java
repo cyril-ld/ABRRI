@@ -3,6 +3,7 @@
  */
 package ihm.gui;
 
+import ihm.controler.CheckButtonListener;
 import ihm.controler.DeleteValueButtonListener;
 import ihm.controler.InsertValueButtonListener;
 import ihm.controler.LoadItemListener;
@@ -212,6 +213,7 @@ public class MainFrame extends JFrame {
 		this.loadItem.addActionListener(new LoadItemListener(this));
 		this.insertValueButton.addActionListener(new InsertValueButtonListener(this));
 		this.deleteValueButton.addActionListener(new DeleteValueButtonListener(this));
+		this.checkButton.addActionListener(new CheckButtonListener(this));
 	}
 
 	/**
@@ -547,5 +549,20 @@ public class MainFrame extends JFrame {
 			}
 		}
 		this.repaint();
+	}
+
+	/**
+	 * Vérifie l'arbre courant
+	 */
+	public void checkABR() {
+
+		if (this.aabri != null) {
+			try {
+				this.aabri.isWellFormed();
+				this.showModal(this, "Arbre correctement formé.", JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e) {
+				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 }

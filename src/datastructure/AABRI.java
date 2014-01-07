@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import exceptions.AABRINodeMalPositionne;
 import exceptions.IntervalleChevauchantException;
 import exceptions.IntervalleInexistantException;
 import exceptions.SimpleNodeMalPositionne;
@@ -434,8 +435,11 @@ public class AABRI {
 	 * </pre>
 	 * 
 	 * @return
+	 * @throws IntervalleChevauchantException si des intervalles se chevauchent
+	 * @throws AABRINodeMalPositionne si l'un des noeuds de l'AABRI est mal positionné
+	 * @throws SimpleNodeMalPositionne si l'ABRI contenu par le noeud est mal formé
 	 */
-	public boolean isWellFormed() {
+	public boolean isWellFormed() throws IntervalleChevauchantException, AABRINodeMalPositionne, SimpleNodeMalPositionne {
 		return this.isABR(this.rootNode) && this.containsOnlyDisjointIntervals(this.rootNode) && ABRIWellFormed(this.rootNode);
 	}
 
@@ -460,18 +464,14 @@ public class AABRI {
 	 * 
 	 * @param node - le noeud à vérifier
 	 * @return true si l'ABRI contenu est correctement formé, false sinon.
+	 * @throws SimpleNodeMalPositionne si le SimpleNode est mal positionné
 	 */
-	public boolean ABRIWellFormed(AABRINode node) {
+	private boolean ABRIWellFormed(AABRINode node) throws SimpleNodeMalPositionne {
 
 		boolean ret;
 		ret = true;
 		if (node != null) {
-			try {
-				ret = node.isWellFormed(node.getRoot());
-			} catch (SimpleNodeMalPositionne e) {
-				System.out.println(e.getMessage());
-				return false;
-			}
+			ret = node.isWellFormed(node.getRoot());
 			ret = ret && this.ABRIWellFormed((AABRINode) node.getLeftSon());
 			ret = ret && this.ABRIWellFormed((AABRINode) node.getRightSon());
 		}
@@ -483,8 +483,9 @@ public class AABRI {
 	 * 
 	 * @param node - Racine de l'abre à vérifier
 	 * @return true si tous les intervalles sont disjoints, false sinon
+	 * @throws IntervalleChevauchantException dans le cas où des intervalles se chevauchent
 	 */
-	public boolean containsOnlyDisjointIntervals(AABRINode node) {
+	private boolean containsOnlyDisjointIntervals(AABRINode node) throws IntervalleChevauchantException {
 
 		List<int[]> intervalles = new ArrayList<>();
 		intervalles = this.getIntervalles(this.rootNode, intervalles);
@@ -493,7 +494,8 @@ public class AABRI {
 			for (int j = i + 1; j < intervalles.size() - 1; j++) {
 				if ((intervalles.get(i)[0] >= intervalles.get(j)[0] && intervalles.get(i)[0] <= intervalles.get(j)[1])
 				        || (intervalles.get(i)[1] >= intervalles.get(j)[0] && intervalles.get(i)[1] <= intervalles.get(j)[1])) {
-					return false;
+					throw new IntervalleChevauchantException("Intervalles chevauchants : [" + intervalles.get(i)[0] + ";" + intervalles.get(i)[1]
+					        + " ] et [" + intervalles.get(j)[0] + "; " + intervalles.get(j)[1] + "]");
 				}
 			}
 		}
@@ -527,8 +529,9 @@ public class AABRI {
 	 * 
 	 * @param node - Racine de l'abre à vérifier
 	 * @return true si l'arbre est bien un ABR
+	 * @throws AABRINodeMalPositionne si le noeud est mal positionné
 	 */
-	public boolean isABR(AABRINode node) {
+	protected boolean isABR(AABRINode node) throws AABRINodeMalPositionne {
 
 		// On retourne true dans le cas où le noeud est une feuille
 		boolean ret = true;
@@ -540,7 +543,8 @@ public class AABRI {
 			if (((AABRINode) node.getLeftSon()).getMin() < node.getMin()) {
 				ret = isABR((AABRINode) node.getLeftSon());
 			} else {
-				ret = false;
+				throw new AABRINodeMalPositionne("Noeud mal positionné : [" + node.getMin() + "; " + node.getMax() + "] // fils gauche : ["
+				        + ((AABRINode) node.getLeftSon()).getMin() + "; " + ((AABRINode) node.getLeftSon()).getMax() + "]");
 			}
 		}
 
@@ -550,7 +554,8 @@ public class AABRI {
 			if (((AABRINode) node.getRightSon()).getMin() > node.getMin()) {
 				ret = isABR((AABRINode) node.getRightSon());
 			} else {
-				ret = false;
+				throw new AABRINodeMalPositionne("Noeud mal positionné : [" + node.getMin() + "; " + node.getMax() + "] // fils gauche : ["
+				        + ((AABRINode) node.getRightSon()).getMin() + "; " + ((AABRINode) node.getRightSon()).getMax() + "]");
 			}
 		}
 		return ret;
