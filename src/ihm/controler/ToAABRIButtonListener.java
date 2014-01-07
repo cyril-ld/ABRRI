@@ -14,11 +14,11 @@ import javax.swing.JOptionPane;
  * @author Cyril
  * 
  */
-public class CheckButtonListener implements ActionListener {
+public class ToAABRIButtonListener implements ActionListener {
 
 	private MainFrame frame;
 
-	public CheckButtonListener(MainFrame frame) {
+	public ToAABRIButtonListener(MainFrame frame) {
 		this.frame = frame;
 	}
 
@@ -29,11 +29,11 @@ public class CheckButtonListener implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == this.frame.getCheckButton()) {
-			if (this.frame.getAbr() != null || this.frame.getAabri() != null) {
-				this.frame.checkArbre();
+		if (e.getSource() == this.frame.getToAABRIButton()) {
+			if (this.frame.getAbr() != null) {
+				this.frame.toAABRI();
 			} else {
-				this.frame.showModal(this.frame, "Aucun arbre binaire n'existe pour le moment !", JOptionPane.WARNING_MESSAGE);
+				this.frame.showModal(this.frame, "Aucun ABR n'existe pour le moment !", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}

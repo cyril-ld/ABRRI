@@ -9,6 +9,8 @@ import ihm.controler.InsertValueButtonListener;
 import ihm.controler.LoadItemListener;
 import ihm.controler.RandomAABRIButtonListener;
 import ihm.controler.SaveItemListener;
+import ihm.controler.ToAABRIButtonListener;
+import ihm.controler.ToABRButtonListener;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -28,6 +30,7 @@ import util.TreeUtils;
 import datastructure.AABRI;
 import datastructure.AABRINode;
 import exceptions.IntervalleInexistantException;
+import exceptions.SimpleNodeMalPositionne;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
@@ -186,6 +189,7 @@ public class MainFrame extends JFrame {
 		this.deleteValueButton = new JButton("Supprimer une valeur");
 		this.toABRButon = new JButton("Convertir en ABR");
 		this.toAABRIButton = new JButton("Convertir en AABRI");
+		this.toAABRIButton.setEnabled(false);
 
 		this.aeraAABRI = new JTextArea("Rien à afficher pour l'instant...");
 		this.aeraAABRI.setEditable(false);
@@ -214,6 +218,8 @@ public class MainFrame extends JFrame {
 		this.insertValueButton.addActionListener(new InsertValueButtonListener(this));
 		this.deleteValueButton.addActionListener(new DeleteValueButtonListener(this));
 		this.checkButton.addActionListener(new CheckButtonListener(this));
+		this.toAABRIButton.addActionListener(new ToAABRIButtonListener(this));
+		this.toABRButon.addActionListener(new ToABRButtonListener(this));
 	}
 
 	/**
@@ -329,7 +335,10 @@ public class MainFrame extends JFrame {
 	 */
 	public void generateRandomAABRI(int nbreNoeuds, int valeurMaxABRI) {
 		this.aabri = TreeUtils.randomAABRI(nbreNoeuds, valeurMaxABRI);
+		this.abr = null;
 		this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
+		this.toAABRIButton.setEnabled(false);
+		this.toABRButon.setEnabled(true);
 		this.repaint();
 	}
 
@@ -451,7 +460,10 @@ public class MainFrame extends JFrame {
 	 */
 	public void loadFromFile(String pathToFile) {
 		this.aabri = TreeUtils.initBinaryTreeFromFile(pathToFile);
+		this.abr = null;
 		this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
+		this.toAABRIButton.setEnabled(false);
+		this.toABRButon.setEnabled(true);
 		this.repaint();
 	}
 
@@ -554,7 +566,7 @@ public class MainFrame extends JFrame {
 	/**
 	 * Vérifie l'arbre courant
 	 */
-	public void checkABR() {
+	public void checkArbre() {
 
 		if (this.aabri != null) {
 			try {
@@ -563,6 +575,68 @@ public class MainFrame extends JFrame {
 			} catch (Exception e) {
 				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
 			}
+		} else if (this.abr != null) {
+			try {
+				this.abr.isWellFormed(this.abr.getRoot());
+				this.showModal(this, "Arbre correctement formé.", JOptionPane.INFORMATION_MESSAGE);
+			} catch (SimpleNodeMalPositionne e) {
+				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	/**
+	 * Permet de transformer l'arbre binaire courant en AABRI à condition qu'il ne le soit pas déjà.
+	 */
+	public void toAABRI() {
+		if (this.aabri == null) {
+
+			String nbreIntervalles;
+			int nbreIntervallesAsInt;
+
+			// Gestion du grisage des boutons
+			this.toAABRIButton.setEnabled(false);
+			this.toABRButon.setEnabled(true);
+
+			// Récupération du nombre d'intervalles désiré auprès de l'utilisateur
+			nbreIntervalles = JOptionPane.showInputDialog(this, "Nombre d'intervalles de l'AABRI :", "Veuillez répondre",
+			        JOptionPane.QUESTION_MESSAGE);
+
+			if (nbreIntervalles != null && !nbreIntervalles.equals("")) {
+				nbreIntervallesAsInt = Integer.parseInt(nbreIntervalles);
+
+				// Tranformation
+				try {
+					this.aabri = this.abr.toAABRI(nbreIntervallesAsInt);
+				} catch (Exception e) {
+					this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
+				}
+				this.abr = null;
+
+				// Actualisation de l'interface
+				this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
+				this.repaint();
+			}
+		}
+	}
+
+	/**
+	 * Permet de transformer l'arbre binaire courant en ABR à condition qu'il ne le soit pas déjà
+	 */
+	public void toABR() {
+		if (this.abr == null) {
+
+			// Gestion du grisage des boutons
+			this.toABRButon.setEnabled(false);
+			this.toAABRIButton.setEnabled(true);
+
+			// Tranformation
+			this.abr = this.aabri.toABR();
+			this.aabri = null;
+
+			// Actualisation de l'interface
+			this.aeraAABRI.setText(this.abr.getInfos(this.abr.getRoot()));
+			this.repaint();
 		}
 	}
 }

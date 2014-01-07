@@ -342,8 +342,6 @@ public class AABRINode extends Node {
 					replacement = this.delete(this.maxABRI((SimpleNode) node.getRightSon()).getValue());
 					node.setValue(replacement.getValue());
 				} else {
-					// replacement = this.delete(new SimpleNode(), this.maxABR((SimpleNode) node.getLeftSon()).getValue());
-					// node.setValue(replacement.getValue());
 					this.root = (SimpleNode) node.getLeftSon();
 					this.root.setFather(null);
 				}
@@ -353,7 +351,7 @@ public class AABRINode extends Node {
 			// 1è étape : on recherche le noeud possédant la valeur immédiatement inférieure dans le sad (noeud remplaçant)
 			// 2è étape : on supprime ce noeud tout en conservant une copie
 			// 3è étape : on affecte la valeur du noeud remplaçant dans le noeud que l'on souhaite supprimer
-			replacement = this.delete(this.maxABR((SimpleNode) node.getRightSon()).getValue());
+			replacement = this.delete(this.maxABRI((SimpleNode) node.getRightSon()).getValue());
 
 			// Mémorisation des information pour retour de fonction
 			ret.setValue(node.getValue());
@@ -438,24 +436,6 @@ public class AABRINode extends Node {
 			ret = node;
 		} else {
 			ret = maxABRI((SimpleNode) node.getLeftSon());
-		}
-
-		return ret;
-	}
-
-	/**
-	 * Retourne le fils portant la valeur maximale dans un ABR
-	 * 
-	 * @param node - Le noeud racine de l'arbre dans lequel rechercher
-	 * @return le noeud portant la valeur maximale
-	 */
-	private SimpleNode maxABR(SimpleNode node) {
-		SimpleNode ret = null;
-
-		if (node.getRightSon() == null) {
-			ret = node;
-		} else {
-			ret = maxABR((SimpleNode) node.getRightSon());
 		}
 
 		return ret;
@@ -595,7 +575,7 @@ public class AABRINode extends Node {
 	 * @param nbreIntervalles - le nombre d'intervalles (ie le nombre de noeuds dans l'AABRI créé)
 	 * @return l'AABRI créé
 	 */
-	public AABRI toAABRI(int nbreIntervalles) {
+	public AABRI toAABRI(int nbreIntervalles) throws RuntimeException {
 
 		// Abre binaire retourné par la méthode
 		AABRI ret = new AABRI();
@@ -637,7 +617,7 @@ public class AABRINode extends Node {
 		// On découpe ce set en "nbreIntervalles" sous tableaux correspondant aux noeuds
 		for (Integer valeur : noeudsAsInteger) {
 
-			// Si le noeud courant possède le nombre de valeurs désiré
+			// Si le noeud courant possède le nombre maximal de valeurs possibles
 			if (valeursNoeud.size() == noeudsAsString.length / nbreIntervalles) {
 				noeuds.add(valeursNoeud);
 				valeursNoeud = new ArrayList<Integer>();

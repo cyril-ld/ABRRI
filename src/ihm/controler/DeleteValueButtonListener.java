@@ -39,7 +39,7 @@ public class DeleteValueButtonListener implements ActionListener {
 				DeleteValueDialog dialog = new DeleteValueDialog(this.frame);
 				dialog.setVisible(true);
 			} else {
-				this.frame.showModal(this.frame, "Aucun arbre n'est initialisé pour le moment !", JOptionPane.INFORMATION_MESSAGE);
+				this.frame.showModal(this.frame, "Aucun arbre binaire n'existe pour le moment !", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}
