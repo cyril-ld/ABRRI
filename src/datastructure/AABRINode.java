@@ -13,6 +13,7 @@ import java.util.TreeSet;
 
 import exceptions.IntervalleChevauchantException;
 import exceptions.SimpleNodeMalPositionne;
+import exceptions.ValeurDejaPresenteException;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
@@ -108,8 +109,9 @@ public class AABRINode extends Node {
 	 * Ajoute un nouveau SimpleNode dans l'ABRI contenu par le noeud courant.
 	 * 
 	 * @param nodeValue - La valeur stockée par le noeud simple, finale pour éviter toute modification.
+	 * @throws ValeurDejaPresenteException Si la valeur à insérer est déjà présente dans l'arbre.
 	 */
-	public void insert(final int nodeValue) {
+	public void insert(final int nodeValue) throws ValeurDejaPresenteException {
 		this.insert(new SimpleNode(nodeValue));
 	}
 
@@ -253,8 +255,9 @@ public class AABRINode extends Node {
 	 * Insert un nouveau noeud dans l'ABRI courant.
 	 * 
 	 * @param node - le noeud à ajouter
+	 * @throws ValeurDejaPresenteException Si la valeur à insérer est déjà présente dans l'arbre.
 	 */
-	public void insert(SimpleNode node) {
+	public void insert(SimpleNode node) throws ValeurDejaPresenteException {
 		if (node == null) {
 			throw new RuntimeException("Le noeud à insérer ne doit pas être nul!");
 		} else if (this.type == null) {
@@ -399,8 +402,9 @@ public class AABRINode extends Node {
 	 * Insert un noeud dans un abre binaire de recherche
 	 * 
 	 * @param node - Le noeud à insérer
+	 * @throws ValeurDejaPresenteException Si la valeur à insérer est déjà présente dans l'arbre.
 	 */
-	private void insertInABR(SimpleNode node) {
+	private void insertInABR(SimpleNode node) throws ValeurDejaPresenteException {
 
 		SimpleNode father;
 
@@ -413,9 +417,13 @@ public class AABRINode extends Node {
 		} else {
 			father = this.findFather(this.root, node.getValue());
 
+			if (father.getValue() == node.getValue()) {
+				throw new ValeurDejaPresenteException("La valeur " + node.getValue() + " est déjà présente dans l'arbre, insertion impossible !");
+			}
+
 			if (father.getValue() > node.getValue()) {
 				father.setLeftSon(node);
-			} else {
+			} else if (father.getValue() < node.getValue()) {
 				father.setRightSon(node);
 			}
 			node.setFather(father);
@@ -574,8 +582,9 @@ public class AABRINode extends Node {
 	 * 
 	 * @param nbreIntervalles - le nombre d'intervalles (ie le nombre de noeuds dans l'AABRI créé)
 	 * @return l'AABRI créé
+	 * @throws ValeurDejaPresenteException Si la valeur à insérer est déjà présente dans l'arbre.
 	 */
-	public AABRI toAABRI(int nbreIntervalles) throws RuntimeException {
+	public AABRI toAABRI(int nbreIntervalles) throws RuntimeException, ValeurDejaPresenteException {
 
 		// Abre binaire retourné par la méthode
 		AABRI ret = new AABRI();
@@ -598,11 +607,25 @@ public class AABRINode extends Node {
 		// Rang de parcours dans l'affectation des valeurs de noeuds
 		int i = 0;
 
+		// Véritable nombre de noeuds (noeudsAsString étant initialisé par String.split, sa taille est de 1 même s'il ne contient aucune valeur de
+		// noeud)
+		int nbreNoeuds;
+
+		int tailleIntervallesEntiere;
+
+		float tailleIntervallesReelle;
+
 		// Récupération des valeurs de l'arbre par un parcours préfixe
 		noeudsAsString = this.getInfos(this.root).split(":");
 
-		if (noeudsAsString.length < nbreIntervalles * 2) {
-			throw new RuntimeException("Le nombre de valeurs dans l'arbre binaire courant (" + noeudsAsString.length
+		if (noeudsAsString.length == 1 && noeudsAsString[0].equals("")) {
+			nbreNoeuds = 0;
+		} else {
+			nbreNoeuds = noeudsAsString.length;
+		}
+
+		if (nbreNoeuds < nbreIntervalles * 2) {
+			throw new RuntimeException("Le nombre de valeurs dans l'arbre binaire courant (" + nbreNoeuds
 			        + ") ne permet pas de construire un AABRI avec "
 			        + nbreIntervalles + " noeuds !");
 		}
@@ -614,11 +637,18 @@ public class AABRINode extends Node {
 			noeudsAsInteger.add(Integer.parseInt(noeud));
 		}
 
+		tailleIntervallesEntiere = noeudsAsString.length / nbreIntervalles;
+		tailleIntervallesReelle = (float) noeudsAsString.length / nbreIntervalles;
+
+		if (tailleIntervallesReelle - tailleIntervallesEntiere > 0.5) {
+			tailleIntervallesEntiere++;
+		}
+
 		// On découpe ce set en "nbreIntervalles" sous tableaux correspondant aux noeuds
 		for (Integer valeur : noeudsAsInteger) {
 
 			// Si le noeud courant possède le nombre maximal de valeurs possibles
-			if (valeursNoeud.size() == noeudsAsString.length / nbreIntervalles) {
+			if (valeursNoeud.size() == tailleIntervallesEntiere) {
 				noeuds.add(valeursNoeud);
 				valeursNoeud = new ArrayList<Integer>();
 				valeursNoeud.add(valeur);

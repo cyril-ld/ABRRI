@@ -13,7 +13,7 @@ import org.junit.Test;
 import util.TreeUtils;
 import exceptions.AABRINodeMalPositionne;
 import exceptions.IntervalleInexistantException;
-import exceptions.SimpleNodeMalPositionne;
+import exceptions.ValeurDejaPresenteException;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
@@ -57,7 +57,11 @@ public class AABRITest {
 	 */
 	@Test(expected = IntervalleInexistantException.class)
 	public void testInsertSimpleNodeFromValue() throws IntervalleInexistantException {
-		this.binaryTree.addSimpleNode(999999);
+		try {
+			this.binaryTree.addSimpleNode(999999);
+		} catch (ValeurDejaPresenteException e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 
 	/**
@@ -67,7 +71,11 @@ public class AABRITest {
 	 */
 	@Test
 	public void testInsertSimpleNodeFromValueOK() throws IntervalleInexistantException {
-		this.binaryTree.addSimpleNode(60);
+		try {
+			this.binaryTree.addSimpleNode(60);
+		} catch (ValeurDejaPresenteException e) {
+			Assert.fail(e.getMessage());
+		}
 
 		AABRINode node = this.binaryTree.findTreeNode(this.binaryTree.getRootNode(), 50, 75);
 		SimpleNode simpleNode = node.findFather(node.getRoot(), 60);
@@ -226,10 +234,10 @@ public class AABRITest {
 	 */
 	@Test
 	public void testAABRItoABR() {
-		AABRINode ABR = this.binaryTree.toABR();
 		try {
+			AABRINode ABR = this.binaryTree.toABR();
 			Assert.assertTrue("L'ABR doit être bien formé !", ABR.isWellFormed(ABR.getRoot()));
-		} catch (SimpleNodeMalPositionne e) {
+		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
 	}

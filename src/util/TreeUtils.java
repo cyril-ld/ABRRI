@@ -22,6 +22,7 @@ import datastructure.AABRI;
 import datastructure.AABRINode;
 import datastructure.TypeABR;
 import exceptions.IntervalleChevauchantException;
+import exceptions.ValeurDejaPresenteException;
 
 /**
  * Classe regroupant les méthodes utilitaires pour les arbres.
@@ -242,7 +243,11 @@ public class TreeUtils {
 
 			// Ajout des noeuds simples dans l'ABRI
 			for (int j = 0; j < valeurs.length; j++) {
-				treeNode.insert((int) valeurs[rangTableauValeurs]);
+				try {
+					treeNode.insert((int) valeurs[rangTableauValeurs]);
+				} catch (ValeurDejaPresenteException e) {
+					e.printStackTrace();
+				}
 				rangTableauValeurs++;
 			}
 			try {

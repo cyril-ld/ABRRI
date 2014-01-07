@@ -29,8 +29,8 @@ import javax.swing.JTextArea;
 import util.TreeUtils;
 import datastructure.AABRI;
 import datastructure.AABRINode;
-import exceptions.IntervalleInexistantException;
 import exceptions.SimpleNodeMalPositionne;
+import exceptions.ValeurDejaPresenteException;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
@@ -526,13 +526,17 @@ public class MainFrame extends JFrame {
 	 */
 	public void insertValue(int valeur) {
 		if (this.abr != null) {
-			abr.insert(valeur);
+			try {
+				abr.insert(valeur);
+			} catch (ValeurDejaPresenteException e) {
+				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
+			}
 			this.aeraAABRI.setText(this.abr.getInfos(this.abr.getRoot()));
 		} else if (this.aabri != null) {
 			try {
 				this.aabri.addSimpleNode(valeur);
 				this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
-			} catch (IntervalleInexistantException e) {
+			} catch (Exception e) {
 				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -594,10 +598,6 @@ public class MainFrame extends JFrame {
 			String nbreIntervalles;
 			int nbreIntervallesAsInt;
 
-			// Gestion du grisage des boutons
-			this.toAABRIButton.setEnabled(false);
-			this.toABRButon.setEnabled(true);
-
 			// Récupération du nombre d'intervalles désiré auprès de l'utilisateur
 			nbreIntervalles = JOptionPane.showInputDialog(this, "Nombre d'intervalles de l'AABRI :", "Veuillez répondre",
 			        JOptionPane.QUESTION_MESSAGE);
@@ -608,14 +608,30 @@ public class MainFrame extends JFrame {
 				// Tranformation
 				try {
 					this.aabri = this.abr.toAABRI(nbreIntervallesAsInt);
-				} catch (Exception e) {
-					this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
-				}
-				this.abr = null;
 
-				// Actualisation de l'interface
-				this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
-				this.repaint();
+					this.abr = null;
+
+					// Gestion du grisage des boutons
+					this.toAABRIButton.setEnabled(false);
+					this.toABRButon.setEnabled(true);
+
+				} catch (Exception e) {
+
+					this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
+					this.aabri = null;
+
+				} finally {
+
+					if (this.aabri != null) {
+						// Actualisation de l'interface
+						this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
+					} else if (this.abr != null) {
+						this.aeraAABRI.setText(this.abr.getInfos(this.abr.getRoot()));
+					} else {
+						this.aeraAABRI.setText("Rien à afficher pour l'instant...");
+					}
+					this.repaint();
+				}
 			}
 		}
 	}
@@ -624,19 +640,32 @@ public class MainFrame extends JFrame {
 	 * Permet de transformer l'arbre binaire courant en ABR à condition qu'il ne le soit pas déjà
 	 */
 	public void toABR() {
+
 		if (this.abr == null) {
 
-			// Gestion du grisage des boutons
-			this.toABRButon.setEnabled(false);
-			this.toAABRIButton.setEnabled(true);
-
 			// Tranformation
-			this.abr = this.aabri.toABR();
-			this.aabri = null;
+			try {
+				this.abr = this.aabri.toABR();
 
-			// Actualisation de l'interface
-			this.aeraAABRI.setText(this.abr.getInfos(this.abr.getRoot()));
-			this.repaint();
+				// Gestion du grisage des boutons
+				this.toABRButon.setEnabled(false);
+				this.toAABRIButton.setEnabled(true);
+
+				this.aabri = null;
+			} catch (Exception e) {
+				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
+				this.abr = null;
+			} finally {
+				if (this.aabri != null) {
+					// Actualisation de l'interface
+					this.aeraAABRI.setText(this.aabri.getInfos(this.aabri.getRootNode()));
+				} else if (this.abr != null) {
+					this.aeraAABRI.setText(this.abr.getInfos(this.abr.getRoot()));
+				} else {
+					this.aeraAABRI.setText("Rien à afficher pour l'instant...");
+				}
+				this.repaint();
+			}
 		}
 	}
 }

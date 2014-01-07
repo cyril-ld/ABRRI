@@ -13,6 +13,7 @@ import exceptions.AABRINodeMalPositionne;
 import exceptions.IntervalleChevauchantException;
 import exceptions.IntervalleInexistantException;
 import exceptions.SimpleNodeMalPositionne;
+import exceptions.ValeurDejaPresenteException;
 import exceptions.ValeurNonRepresenteeDansABRI;
 
 /**
@@ -334,8 +335,9 @@ public class AABRI {
 	 * @param node - Le noeud d'ABRI à ajouter
 	 * @return TreeNode - le noeud d'AABRI dans lequel la valeur a été ajoutée
 	 * @throws IntervalleInexistantException dans le cas où aucun intervalle ne contient la valeur à ajouter
+	 * @throws ValeurDejaPresenteException Si la valeur à insérer est déjà présente dans l'arbre.
 	 */
-	public SimpleNode addSimpleNode(SimpleNode node) throws IntervalleInexistantException {
+	public SimpleNode addSimpleNode(SimpleNode node) throws IntervalleInexistantException, ValeurDejaPresenteException {
 
 		AABRINode treeNode = this.findTreeNodeFromValue(this.rootNode, node.getValue());
 
@@ -353,8 +355,9 @@ public class AABRI {
 	 * 
 	 * @param value - La valeur à ajouter
 	 * @throws IntervalleInexistantException dans le cas où aucun intervalle ne contient la valeur à ajouter
+	 * @throws ValeurDejaPresenteException Si la valeur à insérer est déjà présente dans l'arbre.
 	 */
-	public SimpleNode addSimpleNode(int value) throws IntervalleInexistantException {
+	public SimpleNode addSimpleNode(int value) throws IntervalleInexistantException, ValeurDejaPresenteException {
 		return this.addSimpleNode(new SimpleNode(value));
 	}
 
@@ -565,8 +568,10 @@ public class AABRI {
 	 * Construit un ABR à partir de l'AABRI courant.
 	 * 
 	 * @return l'arbre binaire créé
+	 * @throws ValeurDejaPresenteException Si la valeur à insérer est déjà présente dans l'arbre.
+	 * @throws NumberFormatException si le format de l'une des valeurs n'est pas correct
 	 */
-	public AABRINode toABR() {
+	public AABRINode toABR() throws NumberFormatException, ValeurDejaPresenteException {
 
 		// Retour de la méthode
 		AABRINode ret = new AABRINode(TypeABR.ARBRE_BINAIRE_RECHERCHE);
