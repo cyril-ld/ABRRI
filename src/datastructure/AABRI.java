@@ -490,7 +490,7 @@ public class AABRI {
 	 */
 	private boolean containsOnlyDisjointIntervals(AABRINode node) throws IntervalleChevauchantException {
 
-		List<int[]> intervalles = new ArrayList<>();
+		List<int[]> intervalles = new ArrayList<int[]>();
 		intervalles = this.getIntervalles(this.rootNode, intervalles);
 
 		for (int i = 0; i < intervalles.size(); i++) {

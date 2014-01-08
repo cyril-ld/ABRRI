@@ -198,7 +198,7 @@ public class TreeUtils {
 		}
 
 		// Tableau contenant les valeurs
-		Object[] valeurs;
+		Integer[] valeurs;
 
 		// Pointeur sur le noeud utilisé lors de l'ajout dans l'AABRI
 		AABRINode treeNode;
@@ -210,15 +210,15 @@ public class TreeUtils {
 		int rangTableauValeurs;
 
 		// Récupération d'un tableau de bornes constituant toutes les bornes des noeuds de l'AABRI
-		Object[] bornes = TreeUtils.getRandomIntegers(nbreNoeuds, valeurMaxABRI);
+		Integer[] bornes = TreeUtils.getRandomIntegers(nbreNoeuds, valeurMaxABRI);
 
 		// Liste contenant les bornes (les tableaux contenus sont donc de taille 2)
-		List<Object[]> bornesRandom = new ArrayList<Object[]>(bornes.length / 2);
+		List<Integer[]> bornesRandom = new ArrayList<Integer[]>(bornes.length / 2);
 
 		// Mélange des couples de bornes qui se suivent pour que l'arbre généré ne soit pas construit avec des noeuds insérés dans l'ordre croissant
 		// (le tableau des bornes est trié dans l'ordre croissant)
 		for (int i = 0; i < bornes.length; i = i + 2) {
-			Object[] tempTab = { bornes[i], bornes[i + 1] };
+			Integer[] tempTab = { bornes[i], bornes[i + 1] };
 			bornesRandom.add(tempTab);
 		}
 
@@ -244,7 +244,7 @@ public class TreeUtils {
 			// Ajout des noeuds simples dans l'ABRI
 			for (int j = 0; j < valeurs.length; j++) {
 				try {
-					treeNode.insert((int) valeurs[rangTableauValeurs]);
+					treeNode.insert(valeurs[rangTableauValeurs]);
 				} catch (ValeurDejaPresenteException e) {
 					e.printStackTrace();
 				}
@@ -266,7 +266,7 @@ public class TreeUtils {
 	 * @param borneMax - La valeur majorant le set de retour. ie Set[length-1] <= borneMax
 	 * @return une collection de bornes, triées dans l'ordre croissant, permettant d'assurer que les intervalles ne se chevauchent pas.
 	 */
-	private static Object[] getRandomIntegers(int nbreNoeuds, int borneMax) {
+	private static Integer[] getRandomIntegers(int nbreNoeuds, int borneMax) {
 
 		Set<Integer> bornes = new TreeSet<Integer>();
 		int borne;
@@ -279,7 +279,7 @@ public class TreeUtils {
 				estAjoute = bornes.add(borne);
 			}
 		}
-		return bornes.toArray();
+		return bornes.toArray(new Integer[bornes.size()]);
 	}
 
 	/**
@@ -290,7 +290,7 @@ public class TreeUtils {
 	 * @param valeurMax - La valeur maximale à obtenir.
 	 * @return un tableau contenant les entiers
 	 */
-	private static Object[] getIntegers(int valeurMin, int valeurMax) {
+	private static Integer[] getIntegers(int valeurMin, int valeurMax) {
 
 		// Génération du nombre de valeurs que l'on va ajouter dans le noeud
 		// On cherche à obtenir un nombre entre 0 et valeurMax - valeurMin
@@ -314,6 +314,6 @@ public class TreeUtils {
 				}
 			}
 		}
-		return valeurs.toArray();
+		return valeurs.toArray(new Integer[valeurs.size()]);
 	}
 }
