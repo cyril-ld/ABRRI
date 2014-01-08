@@ -17,10 +17,10 @@ public class Launcher {
 	 */
 	public static void main(String[] args) {
 
-		@SuppressWarnings("unused")
 		Splash test = new Splash(3000);
-
 		MainFrame frame = new MainFrame("Tous aux AABRIs !");
+
+		test.setVisible(false);
 		frame.setVisible(true);
 	}
 }
