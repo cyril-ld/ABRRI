@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  * @author Cyril
@@ -46,18 +47,22 @@ public class SaveItemListener implements ActionListener {
 
 		if (e.getSource() == this.frame.getSaveItem()) {
 
-			homeDir = System.getProperty("user.home");
+			if (this.frame.getAabri() != null) {
+				homeDir = System.getProperty("user.home");
 
-			if (homeDir != null && !homeDir.equals("")) {
-				jfc = new JFileChooser(homeDir);
+				if (homeDir != null && !homeDir.equals("")) {
+					jfc = new JFileChooser(homeDir);
+				} else {
+					jfc = new JFileChooser();
+				}
+
+				userAnswer = jfc.showDialog(this.frame, "Enregistrer");
+
+				if (userAnswer == JFileChooser.APPROVE_OPTION) {
+					this.frame.saveToFile(jfc.getSelectedFile().getAbsolutePath());
+				}
 			} else {
-				jfc = new JFileChooser();
-			}
-
-			userAnswer = jfc.showDialog(this.frame, "Enregistrer");
-
-			if (userAnswer == JFileChooser.APPROVE_OPTION) {
-				this.frame.saveToFile(jfc.getSelectedFile().getAbsolutePath());
+				this.frame.showModal(this.frame, "Aucun AABRI n'existe pour le moment !", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}

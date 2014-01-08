@@ -34,7 +34,6 @@ public class SplashPicture extends JPanel {
 			bimg = ImageIO.read(new File(pathToFile));
 			img = new ImageIcon(bimg).getImage();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 		if (img == null || bimg == null) {
@@ -42,7 +41,6 @@ public class SplashPicture extends JPanel {
 				bimg = ImageIO.read(new File("/splash.png"));
 				img = new ImageIcon(bimg).getImage();
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 
@@ -50,7 +48,6 @@ public class SplashPicture extends JPanel {
 			try {
 				img = new ImageIcon(getClass().getResource("/splash.png")).getImage();
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 

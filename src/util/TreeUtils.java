@@ -75,13 +75,15 @@ public class TreeUtils {
 		// TreeNode utilisé pour stocker temporairement le noeud en cours de création
 		AABRINode treeNode;
 
+		// Ligne lue dans le fichier
+		String ligne;
+
 		File file = new File(pathToFile);
 		try {
 			InputStream is = new FileInputStream(file);
 			InputStreamReader isr = new InputStreamReader(is);
 			@SuppressWarnings("resource")
 			BufferedReader br = new BufferedReader(isr);
-			String ligne;
 
 			while ((ligne = br.readLine()) != null) {
 
@@ -125,8 +127,9 @@ public class TreeUtils {
 	 * @param filePath - /chemin/vers/le/fichier
 	 * @param AABRI - L'arbre d'abres binaires de recherche inversés
 	 * @return true si l'enregistrement s'est bien passé.
+	 * @throws IOException si problème d'enregistrement
 	 */
-	public static boolean saveToFile(String filePath, AABRI AABRI) {
+	public static boolean saveToFile(String filePath, AABRI AABRI) throws IOException {
 
 		File file = new File(filePath);
 		boolean eof;
@@ -137,12 +140,7 @@ public class TreeUtils {
 
 		// Création du fichier s'il n'existe pas
 		if (!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
+			file.createNewFile();
 		}
 
 		// Enregistrement dans le fichier

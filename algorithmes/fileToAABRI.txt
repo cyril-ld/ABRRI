@@ -1,0 +1,35 @@
+
+// l = nombre de lignes dans le fichier
+// c = nombre de caractères dans la ligne courante du fichier
+// p = profondeur de l'AABRI
+// q = profondeur de l'ABRI
+fonction initBinaryTreeFromFile(string cheminFichier)
+
+AABRI aabri
+AABRINode aabriNode
+tableau bornes
+tableau valeurs
+tableau parametres // parametres[0] = bornes et parametres[1] = valeurs
+string ligneFichier
+
+début
+	
+	// Instruction Tq s'exécute l+1 fois
+	TantQue((ligneFichier = tampon.lireLigneFichier) != null) faire // lireLigneFichier s'exécute (l+1)*(c+1)
+		
+		parametres = ligne.split(";") // split parcourt tous les caractères de la ligne : l(c+1)
+		
+		bornes = parametres[0].split(":") // split parcourt tous les caractères d'une chaîne de taille 3 : 3*l
+		
+		aabriNode.setMin(bornes[0]) // Coût constant, exécuté 'l' fois : l
+		aabriNode.setMax(bornes[1]) // Coût constant, exécuté 'l' fois : l
+		
+		valeurs = parametres[1].split(":") // Parcourt d'une chaine de taille c-4 : (c-4)*l
+		
+		pour chaque valeur de valeurs faire
+			aabriNode.insérer(valeur) // Insertion faite en q récursions au pire : q*l
+		finPour
+		
+		aabri.insérer(aabriNode) // Insertion faite en p récursions au pire : p*l
+	finTantQue
+fin

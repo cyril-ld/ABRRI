@@ -16,6 +16,7 @@ import ihm.controler.ToABRButtonListener;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Window;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -440,9 +441,11 @@ public class MainFrame extends JFrame {
 	 */
 	public void saveToFile(String pathToFile) {
 		if (this.aabri != null) {
-			TreeUtils.saveToFile(pathToFile, this.aabri);
-		} else {
-			TreeUtils.saveToFile(pathToFile, new AABRI());
+			try {
+				TreeUtils.saveToFile(pathToFile, this.aabri);
+			} catch (IOException e) {
+				this.showModal(this, e.getMessage(), JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 
