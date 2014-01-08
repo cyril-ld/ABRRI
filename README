@@ -21,3 +21,9 @@ Exemple de fichier :
 Le parcours de l'arbre est préfixe.
 
 Algorithmes de traitement des noeuds de l'arbre (CRUD).
+
+
+Pour compiler le projet, créer les dossiers ABBRI/ws/ et ABBRI/class/.
+
+Se placer dans ABBRI/ws/ et lancer la commande suivante :
+javac -d ../class/ -cp ../class/:../resources/ ../src/interfaces/*.java ../src/exceptions/*.java ../src/datastrture/*.java ../src/util/TreeUtils.java ../src/ihm/*/*.java ../src/launcher/Launcher.java 

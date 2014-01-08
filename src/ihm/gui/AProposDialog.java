@@ -64,7 +64,7 @@ public class AProposDialog extends JDialog {
 
 		// Ajout des différents composants dans les panels
 		this.panelImage = new JPanel(new BorderLayout());
-		this.panelImage.add(new SplashPicture("resources/logo_miage-nantes.jpg"));
+		this.panelImage.add(new SplashPicture("/resources/splash.png"));
 
 		this.panelTexteBas = new JPanel(new BorderLayout());
 		this.panelTexteHaut = new JPanel(new BorderLayout());

@@ -29,12 +29,31 @@ public class SplashPicture extends JPanel {
 
 	public SplashPicture(String pathToFile) {
 
+		BufferedImage bimg = null;
 		try {
-			BufferedImage bimg = ImageIO.read(new File(pathToFile));
+			bimg = ImageIO.read(new File(pathToFile));
 			img = new ImageIcon(bimg).getImage();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		if (img == null || bimg == null) {
+			try {
+				bimg = ImageIO.read(new File("/splash.png"));
+				img = new ImageIcon(bimg).getImage();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (img == null || bimg == null) {
+			try {
+				img = new ImageIcon(getClass().getResource("/splash.png")).getImage();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		repaint();
 	}
 

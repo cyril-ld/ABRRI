@@ -47,7 +47,7 @@ public class Splash extends JWindow {
 		JPanel panelImage = new JPanel();
 		panelImage.setLayout(new BorderLayout());
 		panelImage.setBackground(Color.WHITE);
-		panelImage.add(new SplashPicture("resources/logo_miage-nantes.jpg"));
+		panelImage.add(new SplashPicture("resources/splash.png"));
 
 		JPanel panelText = new JPanel();
 		JLabel texte = new JLabel("Tous aux AABRIs !!!");
