@@ -3,6 +3,7 @@
  */
 package ihm.gui;
 
+import ihm.controler.AProposButtonListener;
 import ihm.controler.CheckButtonListener;
 import ihm.controler.DeleteValueButtonListener;
 import ihm.controler.InsertValueButtonListener;
@@ -133,6 +134,11 @@ public class MainFrame extends JFrame {
 	private JTextArea aeraAABRI;
 
 	/**
+	 * Fenêtre "à propos"
+	 */
+	private AProposDialog aProposDialog;
+
+	/**
 	 * Construction de la fenêtre
 	 * 
 	 * @param title - Le titre à donner à la fenêtre
@@ -220,6 +226,7 @@ public class MainFrame extends JFrame {
 		this.checkButton.addActionListener(new CheckButtonListener(this));
 		this.toAABRIButton.addActionListener(new ToAABRIButtonListener(this));
 		this.toABRButon.addActionListener(new ToABRButtonListener(this));
+		this.aProposItem.addActionListener(new AProposButtonListener(this));
 	}
 
 	/**
@@ -666,6 +673,14 @@ public class MainFrame extends JFrame {
 				}
 				this.repaint();
 			}
+		}
+	}
+
+	public void showAProposFrame() {
+		if (this.aProposDialog == null) {
+			this.aProposDialog = new AProposDialog(this);
+		} else {
+			this.aProposDialog.setVisible(true);
 		}
 	}
 }
