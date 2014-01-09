@@ -815,17 +815,13 @@ public class AABRINode extends Node {
 			if (i != tailleIntervallesEntiere) {
 				if (j == this.min) {
 					bornes.add(j);
-					System.out.println("============\n" + j);
 				} else if (j == this.max && bornes.get(j - 1) != j) {
 					bornes.add(j);
-					System.out.println(j);
 				}
 				i++;
 			} else {
 				bornes.add(j);
 				bornes.add(j + 1);
-				System.out.println("Borne ajoutée : " + j);
-				System.out.println("Borne ajoutée : " + (j + 1));
 				i = 1;
 				if (j + 1 == this.max) {
 					break;

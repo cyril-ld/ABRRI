@@ -286,7 +286,11 @@ public class TreeUtils {
 
 		// Génération du nombre de valeurs que l'on va ajouter dans le noeud
 		// On cherche à obtenir un nombre entre 0 et valeurMax - valeurMin
-		int nbreValeurs = (int) Math.round((Math.random() * (valeurMax - valeurMin + 1)));
+		int nbreValeurs = 0;
+
+		do {
+			nbreValeurs = (int) Math.round((Math.random() * (valeurMax - valeurMin + 1)));
+		} while (nbreValeurs == 0);
 
 		// Liste contenant les valeurs
 		List<Integer> valeurs = new ArrayList<Integer>(nbreValeurs);
