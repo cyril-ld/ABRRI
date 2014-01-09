@@ -573,6 +573,9 @@ public class AABRI {
 	 */
 	public AABRINode toABR() throws NumberFormatException, ValeurDejaPresenteException {
 
+		// Valeurs min et max de l'ABR
+		int min, max, valeurCourante;
+
 		// Retour de la méthode
 		AABRINode ret = new AABRINode(TypeABR.ARBRE_BINAIRE_RECHERCHE);
 
@@ -585,13 +588,48 @@ public class AABRI {
 		// Objet de parcours de la représentation de l'abre binaire
 		StringTokenizer st = new StringTokenizer(AABRI, ":");
 
+		List<Integer> valeurs = new ArrayList<Integer>();
+
+		min = 0;
+		max = 0;
+
 		// Variable de parcours
 		String tmp;
 
+		// Premier passage pour initialiser les min et max
+		// if (st.hasMoreTokens()) {
+		// tmp = st.nextToken();
+		// tmp = tmp.trim();
+		// valeurCourante = Integer.parseInt(tmp);
+		// min = valeurCourante;
+		// max = valeurCourante;
+		// ret.insert(valeurCourante);
+		// }
+
+		ret.setMin(Integer.MAX_VALUE);
+		ret.setMax(Integer.MIN_VALUE);
+
 		while (st.hasMoreTokens()) {
+
 			tmp = st.nextToken();
 			tmp = tmp.trim();
-			ret.insert(Integer.parseInt(tmp));
+			valeurCourante = Integer.parseInt(tmp);
+
+			if (valeurCourante < ret.getMin()) {
+				ret.setMin(valeurCourante);
+			}
+			if (valeurCourante > max) {
+				ret.setMax(valeurCourante);
+			}
+			ret.insert(valeurCourante);
+		}
+
+		for (int valeur : valeurs) {
+			if (valeur == min) {
+			} else if (valeur == max) {
+			} else {
+
+			}
 		}
 
 		return ret;

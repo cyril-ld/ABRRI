@@ -1,8 +1,9 @@
 
 // l = nombre de lignes dans le fichier
-// c = nombre de caractères dans la ligne courante du fichier
-// p = profondeur de l'AABRI
+// v = nombre de valeurs d'ABRI dans la ligne courante (situées après le ';')
+// c = nombre de caractère dans la ligne courante
 // q = profondeur de l'ABRI
+// p = profondeur de l'AABRI
 fonction initBinaryTreeFromFile(string cheminFichier)
 
 AABRI aabri
@@ -27,7 +28,7 @@ début
 		valeurs = parametres[1].split(":") // Parcourt d'une chaine de taille c-4 : (c-4)*l
 		
 		pour chaque valeur de valeurs faire
-			aabriNode.insérer(valeur) // Insertion faite en q récursions au pire : q*l
+			aabriNode.insérer(valeur) // q*l
 		finPour
 		
 		aabri.insérer(aabriNode) // Insertion faite en p récursions au pire : p*l

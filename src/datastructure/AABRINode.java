@@ -8,10 +8,9 @@ import interfaces.Node;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import exceptions.IntervalleChevauchantException;
+import exceptions.IntervalleInexistantException;
 import exceptions.SimpleNodeMalPositionne;
 import exceptions.ValeurDejaPresenteException;
 import exceptions.ValeurNonRepresenteeDansABRI;
@@ -758,8 +757,11 @@ public class AABRINode extends Node {
 	 * @param nbreIntervalles - le nombre d'intervalles (ie le nombre de noeuds dans l'AABRI créé)
 	 * @return l'AABRI créé
 	 * @throws ValeurDejaPresenteException Si la valeur à insérer est déjà présente dans l'arbre.
+	 * @throws IntervalleChevauchantException si un intervalle possède une partie commune avec un autre
+	 * @throws IntervalleInexistantException si l'intervalle n'existe pas
 	 */
-	public AABRI toAABRI(int nbreIntervalles) throws RuntimeException, ValeurDejaPresenteException {
+	public AABRI toAABRI(int nbreIntervalles) throws RuntimeException, ValeurDejaPresenteException, IntervalleChevauchantException,
+	        IntervalleInexistantException {
 
 		// Abre binaire retourné par la méthode
 		AABRI ret = new AABRI();
@@ -770,104 +772,97 @@ public class AABRINode extends Node {
 		// Tableau contenant les noeuds sous forme de cdc
 		String[] noeudsAsString;
 
-		// Set permettant de trier les valeurs afin qu'il n'y ait pas de chevauchement
-		Set<Integer> noeudsAsInteger;
+		// Liste de stockage de toutes les valeurs de l'ABR
+		List<Integer> valeursABR = new ArrayList<Integer>();
 
-		// Liste des noeuds (noeuds sous représentation de listes)
-		List<List<Integer>> noeuds = new ArrayList<List<Integer>>();
+		// Collection des bornes
+		List<Integer> bornes = new ArrayList<Integer>();
 
-		// Liste de stockage temporaire d'un noeud [Min; Max]
-		List<Integer> valeursNoeud = new ArrayList<Integer>();
+		// Liste utilisée pour mélanger les intervalles afin de ne pas créer un arbre filiforme
+		List<int[]> intervallesRandom = new ArrayList<int[]>();
 
 		// Rang de parcours dans l'affectation des valeurs de noeuds
 		int i = 0;
 
-		// Véritable nombre de noeuds (noeudsAsString étant initialisé par String.split, sa taille est de 1 même s'il ne contient aucune valeur de
-		// noeud)
-		int nbreNoeuds;
+		int[] tmp;
 
 		int tailleIntervallesEntiere;
-
-		float tailleIntervallesReelle;
 
 		// Récupération des valeurs de l'arbre par un parcours préfixe
 		noeudsAsString = this.getInfos(this.root).split(":");
 
-		if (noeudsAsString.length == 1 && noeudsAsString[0].equals("")) {
-			nbreNoeuds = 0;
-		} else {
-			nbreNoeuds = noeudsAsString.length;
-		}
-
-		if (nbreNoeuds < nbreIntervalles * 2) {
-			throw new RuntimeException("Le nombre de valeurs dans l'arbre binaire courant (" + nbreNoeuds
+		if ((this.max - this.min + 1) < nbreIntervalles * 2) {
+			throw new RuntimeException("Le nombre de valeurs dans l'arbre binaire courant (" + (this.max - this.min + 1)
 			        + ") ne permet pas de construire un AABRI avec "
 			        + nbreIntervalles + " noeuds !");
 		}
 
 		// Ajout des valeurs dans un tableau de type ordered set
-		noeudsAsInteger = new TreeSet<Integer>();
+		valeursABR = new ArrayList<Integer>();
 
 		for (String noeud : noeudsAsString) {
-			noeudsAsInteger.add(Integer.parseInt(noeud));
+			valeursABR.add(Integer.parseInt(noeud));
 		}
 
-		tailleIntervallesEntiere = noeudsAsString.length / nbreIntervalles;
-		tailleIntervallesReelle = (float) noeudsAsString.length / nbreIntervalles;
+		tailleIntervallesEntiere = (this.getMax() - this.getMin() + 1) / nbreIntervalles;
 
-		if (tailleIntervallesReelle - tailleIntervallesEntiere > 0.5) {
-			tailleIntervallesEntiere++;
-		}
+		// Compteur permettant de connaitre le nombre de valeur parcourues depuis le dernier ajout dans les bornes
+		i = 0;
 
-		// On découpe ce set en "nbreIntervalles" sous tableaux correspondant aux noeuds
-		for (Integer valeur : noeudsAsInteger) {
+		// Remplissage de l'AABRI avec des noeuds contenants seulement les
+		for (int j = this.min; j <= this.max - 1; j++) {
 
-			// Si le noeud courant possède le nombre maximal de valeurs possibles
-			if (valeursNoeud.size() == tailleIntervallesEntiere) {
-				noeuds.add(valeursNoeud);
-				valeursNoeud = new ArrayList<Integer>();
-				valeursNoeud.add(valeur);
-			} else if (i + 1 == noeudsAsInteger.size()) { // Si noeud est incomplet (dernier noeud)
-				valeursNoeud.add(valeur);
-				noeuds.add(valeursNoeud);
+			if (i != tailleIntervallesEntiere) {
+				if (j == this.min) {
+					bornes.add(j);
+					System.out.println("============\n" + j);
+				} else if (j == this.max && bornes.get(j - 1) != j) {
+					bornes.add(j);
+					System.out.println(j);
+				}
+				i++;
 			} else {
-				valeursNoeud.add(valeur);
-			}
-
-			i++;
-		}
-
-		// Dans chaque tableau, on enlève (on ne prend pas en compte) la première
-		// et la dernière valeur (Min et Max) afin de les affecter aux bornes min et max
-		for (List<Integer> noeud : noeuds) {
-
-			i = 0;
-
-			tempNode = new AABRINode();
-
-			// Pour éviter l'arbre filiforme, il faut re mélanger la collection après avoir récupérer le premier et le dernier élément
-			tempNode.setMin(noeud.get(0));
-			tempNode.setMax(noeud.get(noeud.size() - 1));
-
-			Collections.shuffle(noeud);
-
-			for (Integer valeur : noeud) {
-
-				// Partant du principe qu'il ne peut y avoir deux fois la même valeur dans l'arbre
-				if (valeur != tempNode.getMin() && valeur != tempNode.getMax()) {
-					tempNode.insert(valeur);
+				bornes.add(j);
+				bornes.add(j + 1);
+				System.out.println("Borne ajoutée : " + j);
+				System.out.println("Borne ajoutée : " + (j + 1));
+				i = 1;
+				if (j + 1 == this.max) {
+					break;
 				}
 			}
-
-			// Insertion du noeud dans l'arbre d'arbres
-			try {
-				ret.insert(tempNode);
-			} catch (IntervalleChevauchantException e) {
-				System.out.println(e.getMessage());
-			}
 		}
 
-		// Bingo c'est fini (naïf^^)
+		if (bornes.size() % 2 == 1) {
+			bornes.set(bornes.size() - 2, this.max);
+			bornes.remove(bornes.size() - 1);
+		}
+
+		for (int j = 0; j < bornes.size() - 1; j = j + 2) {
+
+			tmp = new int[2];
+			tmp[0] = bornes.get(j);
+			tmp[1] = bornes.get(j + 1);
+
+			intervallesRandom.add(tmp);
+		}
+
+		Collections.shuffle(intervallesRandom);
+
+		// Parcours des intervalles et ajout de noeuds dans l'AABRI
+		for (int j = 0; j < intervallesRandom.size(); j++) {
+			tmp = intervallesRandom.get(j);
+
+			tempNode = new AABRINode();
+			tempNode.setMin(tmp[0]);
+			tempNode.setMax(tmp[1]);
+			ret.insert(tempNode);
+		}
+
+		// Envisager d'ajouter les noeuds dans une liste et mélanger la liste pour éviter l'arbre filiforme
+		for (int valeur : valeursABR) {
+			ret.addSimpleNode(valeur);
+		}
 		return ret;
 	}
 }
