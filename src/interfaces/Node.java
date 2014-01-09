@@ -56,4 +56,27 @@ public abstract class Node {
 	public void setFather(Node father) {
 		this.father = father;
 	}
+
+	/**
+	 * Permet de savoir si l'arbre est filiforme ou non
+	 * 
+	 * @param node - Le noeud représentant la racine de l'arbre dans lequel chercher
+	 * @return true si filiforme, false sinon
+	 */
+	public boolean estFiliforme(Node node) {
+
+		boolean ret = true;
+
+		if (node != null) {
+
+			if (node.getRightSon() != null && node.getRightSon() != null) {
+				ret = false;
+			} else {
+				ret = ret && this.estFiliforme(node.getLeftSon());
+				ret = ret && this.estFiliforme(node.getRightSon());
+			}
+		}
+
+		return ret;
+	}
 }

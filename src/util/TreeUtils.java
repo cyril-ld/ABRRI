@@ -186,12 +186,12 @@ public class TreeUtils {
 	 * des ABRI générés n'est vide.
 	 * 
 	 * @param nbreNoeuds - Le nombre de noeuds dans l'AABRI
-	 * @param valeurMaxABRI - Nombre maximal de noeuds dans les ABRI
+	 * @param valeurMaxAABRI - Nombre maximal de noeuds dans les ABRI
 	 * @return l'AABRI construit
 	 */
-	public static AABRI randomAABRI(int nbreNoeuds, int valeurMaxABRI) {
+	public static AABRI randomAABRI(int nbreNoeuds, int valeurMaxAABRI) {
 
-		if (valeurMaxABRI < 2 * nbreNoeuds) {
+		if (valeurMaxAABRI < 2 * nbreNoeuds) {
 			throw new RuntimeException("valeurMaxABRI doit être >= 2 * NbreNoeuds + 1 pour pouvoir générer des intervalles non chevauchants!");
 		}
 
@@ -204,11 +204,8 @@ public class TreeUtils {
 		// AABRI retour de la fonction
 		AABRI ret = new AABRI();
 
-		// Variable stockant l'ABRI que l'on ajoute dans la boucle suivante
-		int rangTableauValeurs;
-
 		// Récupération d'un tableau de bornes constituant toutes les bornes des noeuds de l'AABRI
-		Integer[] bornes = TreeUtils.getRandomIntegers(nbreNoeuds, valeurMaxABRI);
+		Integer[] bornes = TreeUtils.getRandomIntervals(nbreNoeuds, valeurMaxAABRI);
 
 		// Liste contenant les bornes (les tableaux contenus sont donc de taille 2)
 		List<Integer[]> bornesRandom = new ArrayList<Integer[]>(bornes.length / 2);
@@ -235,18 +232,15 @@ public class TreeUtils {
 			treeNode = new AABRINode((int) tab[0], (int) tab[1], null, TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE);
 
 			// Récupération d'un tableau contenant les valeurs du noeud
-			valeurs = TreeUtils.getIntegers((int) tab[0], (int) tab[1]);
-
-			rangTableauValeurs = 0;
+			valeurs = TreeUtils.getRandomIntegers((int) tab[0], (int) tab[1]);
 
 			// Ajout des noeuds simples dans l'ABRI
 			for (int j = 0; j < valeurs.length; j++) {
 				try {
-					treeNode.insert(valeurs[rangTableauValeurs]);
+					treeNode.insert(valeurs[j]);
 				} catch (ValeurDejaPresenteException e) {
 					e.printStackTrace();
 				}
-				rangTableauValeurs++;
 			}
 			try {
 				ret.insert(treeNode);
@@ -260,17 +254,17 @@ public class TreeUtils {
 	/**
 	 * Génère une collection d'intervalles permettant de construire un arbre de manière totalement aléatoire.
 	 * 
-	 * @param nbreNoeuds - Le nombre de noeuds de l'arb
+	 * @param nbreNoeudsAABRI - Le nombre de noeuds de l'arbre
 	 * @param borneMax - La valeur majorant le set de retour. ie Set[length-1] <= borneMax
 	 * @return une collection de bornes, triées dans l'ordre croissant, permettant d'assurer que les intervalles ne se chevauchent pas.
 	 */
-	private static Integer[] getRandomIntegers(int nbreNoeuds, int borneMax) {
+	private static Integer[] getRandomIntervals(int nbreNoeudsAABRI, int borneMax) {
 
 		Set<Integer> bornes = new TreeSet<Integer>();
 		int borne;
 		boolean estAjoute = false;
 
-		for (int i = 1; i <= nbreNoeuds * 2; i++) {
+		for (int i = 1; i <= nbreNoeudsAABRI * 2; i++) {
 			estAjoute = false;
 			while (!estAjoute) {
 				borne = (int) (Math.random() * (borneMax)) + 1;
@@ -288,7 +282,7 @@ public class TreeUtils {
 	 * @param valeurMax - La valeur maximale à obtenir.
 	 * @return un tableau contenant les entiers
 	 */
-	private static Integer[] getIntegers(int valeurMin, int valeurMax) {
+	private static Integer[] getRandomIntegers(int valeurMin, int valeurMax) {
 
 		// Génération du nombre de valeurs que l'on va ajouter dans le noeud
 		// On cherche à obtenir un nombre entre 0 et valeurMax - valeurMin

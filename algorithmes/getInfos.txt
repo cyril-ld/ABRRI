@@ -1,0 +1,22 @@
+// p = nombre de noeuds dans l'AABRI
+// q = nombre de noeuds de l'ABRI
+fonction getInfos(AABRINode node) : string
+
+string infosNode, resultat
+
+début
+	
+	si(node != vide) alors
+		
+		// On récupère une ligne de type 5:10;6:8:5
+		// Complexité en q (on parcourt tous les noeuds de l'ABRI contenu)
+		infosNode = node.min + ":" + node.max + ";" + node.getInfos(node.getRoot())
+		resultat += infosNode
+		
+		// Descente dans les noeuds fils par récursivité
+		resultat += getInfos(node.sag)
+		resultat += getInfos(node.sad)
+	finsi
+	
+	getInfos = resultat
+fin
