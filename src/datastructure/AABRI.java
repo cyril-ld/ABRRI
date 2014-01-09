@@ -618,20 +618,11 @@ public class AABRI {
 			if (valeurCourante < ret.getMin()) {
 				ret.setMin(valeurCourante);
 			}
-			if (valeurCourante > max) {
+			if (valeurCourante > ret.getMax()) {
 				ret.setMax(valeurCourante);
 			}
 			ret.insert(valeurCourante);
 		}
-
-		for (int valeur : valeurs) {
-			if (valeur == min) {
-			} else if (valeur == max) {
-			} else {
-
-			}
-		}
-
 		return ret;
 	}
 }
