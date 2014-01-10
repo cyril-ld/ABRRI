@@ -226,13 +226,13 @@ public class TreeUtils {
 
 		// On place les bornes dans une liste permettant de les récupérer.
 		// Création des TreeNodes contenant les ABRI et ajout dans l'AABRI
-		for (Object[] tab : bornesRandom) {
+		for (Integer[] tab : bornesRandom) {
 
 			// Création d'un noeud d'AABRI avec les deux bornes
-			treeNode = new AABRINode((int) tab[0], (int) tab[1], null, TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE);
+			treeNode = new AABRINode(tab[0], tab[1], null, TypeABR.ARBRE_BINAIRE_RECHERCHE_INVERSE);
 
 			// Récupération d'un tableau contenant les valeurs du noeud
-			valeurs = TreeUtils.getRandomIntegers((int) tab[0], (int) tab[1]);
+			valeurs = TreeUtils.getRandomIntegers(tab[0], tab[1]);
 
 			// Ajout des noeuds simples dans l'ABRI
 			for (int j = 0; j < valeurs.length; j++) {
