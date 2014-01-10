@@ -809,7 +809,7 @@ public class AABRINode extends Node {
 		// Compteur permettant de connaitre le nombre de valeur parcourues depuis le dernier ajout dans les bornes
 		i = 0;
 
-		// Remplissage de l'AABRI avec des noeuds contenants seulement les
+		// Création des bornes
 		for (int j = this.min; j <= this.max - 1; j++) {
 
 			if (i != tailleIntervallesEntiere) {

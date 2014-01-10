@@ -1,52 +1,52 @@
 
-	// p : nombre de noeuds dans l'AABRI
-	// q : nombre de valeurs dans l'ABRI
-	// r : profondeur de l'AABRI
-	// s : profondeur de l'ABRI
-	// i : rang du noeud de l'AABRI
-	fonction randomAABRI(entier nbreNoeudsAABRI, valeurMaxAABRI)
+// p : nombre de noeuds dans l'AABRI
+// q : nombre de valeurs dans l'ABRI
+// r : profondeur de l'AABRI
+// s : profondeur de l'ABRI
+// i : rang du noeud de l'AABRI
+fonction randomAABRI(entier nbreNoeudsAABRI, valeurMaxAABRI)
+
+tableau d'entiers bornesTriees, intervalles, intervalles, valeurs, tmp
+AABRI aabri
+AABRINode aabriNode
+
+début
 	
-	tableau d'entiers bornesTriees, intervalles, intervalles, valeurs, tmp
-	AABRI aabri
-	AABRINode aabriNode
+	// On génère 2*nbreNoeudsAABRI bornes, qui seront tous <= valeurMaxAABRI
+	// et ajoutées dans la collection sans doublon, de manière triée.
+	// (Utilisation de la classe TreeSet de Java, complexité en log p pour l'insertion)
+	// Complexité globale : p fois la somme des log qi pour i allant de 1 à p
+	bornesTriees = generateRandomSortedBornes(nbreNoeudsAABRI, valeurMaxAABRI)
 	
-	début
-		
-		// On génère 2*nbreNoeudsAABRI bornes, qui seront tous <= valeurMaxAABRI
-		// et ajoutées dans la collection sans doublon, de manière triée.
-		// (Utilisation de la classe TreeSet de Java, complexité en log p pour l'insertion)
-		// Complexité globale : p fois la somme des log qi pour i allant de 1 à p
-		bornesTriees = generateRandomSortedBornes(nbreNoeudsAABRI, valeurMaxAABRI)
-		
-		// Regroupement des bornes 2 à 2 afin d'avoir des intervalles non chevauchants
-		// Complexité : (p) + 1
-		pour i de 0 à bornesTriees.taille - 1 faire // (p) + 1
-			tmp = new tab[entiers]
-			tmp[0] = bornesTriees[i]
-			tmp[1] = bornesTriees[i+1]
-			intervalles.ajouter(tmp)
-			i = i + 2
-		finPour
-		
-		// Mélange des intervalles de manière aléatoire (Collections.shuffle, complexité en O(n))
-		intervalles.mélanger()
-		
-		pour chaque intervalle de intervalles faire // p
-			
-			// Le nombre de valeurs générées est au plus de intervalle[1] - intervalle[0] + 1 = qi
-			valeurs = generateRandomValues()
-			aabriNode.min = intervalle[0]
-			aabriNode.max = intervalle[1]
-			
+	// Regroupement des bornes 2 à 2 afin d'avoir des intervalles non chevauchants
+	// Complexité : (p) + 1
+	pour i de 0 à bornesTriees.taille - 1 faire // (p) + 1
+		tmp = new tab[entiers]
+		tmp[0] = bornesTriees[i]
+		tmp[1] = bornesTriees[i+1]
+		intervalles.ajouter(tmp)
+		i = i + 2
+	finPour
 	
-			// complexité = p*qi + 1
-			pour chaque valeur de valeurs faire
-			
-				// l'insertion est en O(s)
-				aabriNode.ajouter(valeur)
-			finpour
-			
-			// Insertion en O(r)
-			aabri.insérer(aabriNode)
+	// Mélange des intervalles de manière aléatoire (Collections.shuffle, complexité en O(n))
+	intervalles.mélanger()
+	
+	pour chaque intervalle de intervalles faire // p
+		
+		// Le nombre de valeurs générées est au plus de intervalle[1] - intervalle[0] + 1 = qi
+		valeurs = generateRandomValues()
+		aabriNode.min = intervalle[0]
+		aabriNode.max = intervalle[1]
+		
+
+		// complexité = p*qi + 1
+		pour chaque valeur de valeurs faire
+		
+			// l'insertion est en O(s)
+			aabriNode.ajouter(valeur)
 		finpour
-	fin
+		
+		// Insertion en O(r)
+		aabri.insérer(aabriNode)
+	finpour
+fin

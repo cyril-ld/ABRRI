@@ -1,0 +1,72 @@
+// n : nombre de noeuds dans l'AABRI
+// m : nombre de noeuds dans l'ABRI
+// o : nombre de noeuds dans l'ABRI temporaire
+fonction toAABRI(entier nbreIntervalles) : AABRI
+
+AABRI ret
+AABRINode temp
+tableau valeursAbreCourant, bornes
+entier i, tailleIntervalles
+liste<tableau d'entiers> intervalles
+
+début
+	
+	// Récupération des valeurs par parcours préfixe
+	valeursAbreCourant = noeudCourant.parcoursPréfixe // O(m)
+	
+	// Définition de la taille des intervalles
+	tailleIntervalles = (noeudCourant.max - noeudCourant.min + 1) / nbreIntervalles
+	
+	// Initialisation de la variable permettant de marquer le comptage des tailles d'intervalles
+	i = 0;
+	
+	// Création des bornes
+	pour j de noeudCourant.min jusqu'à noeudCourant.max faire
+		
+		si (i != tailleIntervalles) alors
+			si(i == noeudCourant.min) alors
+				bornes.ajouter(j)
+			finsi
+		sinon
+			bornes.ajouter(j)
+			bornes.ajouter(j+1)
+			i = 1
+			si(j+1 == noeudCourant.max)
+				sortirBoucle
+			finsi
+		finsi
+		j++
+	finpour
+	
+	// Si la taille du tableau de bornes est impair, c'est que le dernier intervalle ne peut pas
+	// avoir la taille voulue, et donc on le pousse jusqu'à la valeur maximale possible
+	si(bornes.taille % 2 == 1)
+		bornes[bornes.taille - 2] = noeudCourant.max
+		bornes[bornes.taille - 1] = vide
+	finsi
+	
+	pour j de 0 à bornes.taille - 1 faire
+		intervalles.ajouter ({bornes[j], bornes[j+1])
+		j++
+	finpour
+	
+	// Mélange des intervalles pour ne pas avoir d'arbre filiforme lors de l'insertion
+	intervalles.mélanger
+	
+	// Insertions successives des noeuds de l'AABRI
+	pour j de 0 à intervalles.taille - 1 faire
+		temp = nouveauAABRINoeud
+		temp.min = (intervalles[j])[0]
+		temp.max = (intervalles[j+1])[1]
+		ret.insérer(temp)
+		j++
+	finpour
+	
+	// Insertions successives des valeurs des ABRIs
+	pour j de 0 à valeursAbreCourant.taille - 1 faire
+		ret.insérerValeur(valeursAbreCourant[j])
+		j++
+	finpour
+	
+	toAABRI = ret
+fin
