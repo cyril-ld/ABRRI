@@ -348,6 +348,7 @@ public class MainFrame extends JFrame {
 		this.toAABRIButton.setEnabled(false);
 		this.toABRButon.setEnabled(true);
 		this.repaint();
+		System.gc();
 	}
 
 	/**
@@ -475,6 +476,7 @@ public class MainFrame extends JFrame {
 		this.toAABRIButton.setEnabled(false);
 		this.toABRButon.setEnabled(true);
 		this.repaint();
+		System.gc();
 	}
 
 	/**
@@ -644,6 +646,7 @@ public class MainFrame extends JFrame {
 				}
 			}
 		}
+		System.gc();
 	}
 
 	/**
@@ -677,6 +680,7 @@ public class MainFrame extends JFrame {
 				this.repaint();
 			}
 		}
+		System.gc();
 	}
 
 	public void showAProposFrame() {
