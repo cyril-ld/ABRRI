@@ -792,7 +792,7 @@ public class AABRINode extends Node {
 		noeudsAsString = this.getInfos(this.root).split(":");
 
 		if ((this.max - this.min + 1) < nbreIntervalles * 2) {
-			throw new RuntimeException("Le nombre de valeurs dans l'arbre binaire courant (" + (this.max - this.min + 1)
+			throw new RuntimeException("L'amplitude de valeurs dans l'arbre binaire courant (" + (this.max - this.min + 1)
 			        + ") ne permet pas de construire un AABRI avec "
 			        + nbreIntervalles + " noeuds !");
 		}
@@ -827,6 +827,10 @@ public class AABRINode extends Node {
 					break;
 				}
 			}
+		}
+
+		if (bornes.size() == 1) {
+			bornes.add(this.max);
 		}
 
 		if (bornes.size() % 2 == 1) {
