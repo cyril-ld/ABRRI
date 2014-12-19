@@ -286,9 +286,8 @@ public class TreeUtils {
     /**
      * Génère une collection d'entiers aléatoires.
      *
-     * @param nbreValeurs - Le nombre de valeurs que l'on souhaite obtenir.
-     * @param valeurMin   - La valeur minimale à obtenir.
-     * @param valeurMax   - La valeur maximale à obtenir.
+     * @param valeurMin - La valeur minimale à obtenir.
+     * @param valeurMax - La valeur maximale à obtenir.
      *
      * @return un tableau contenant les entiers
      */

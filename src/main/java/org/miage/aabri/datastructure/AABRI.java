@@ -37,7 +37,6 @@ public class AABRI {
      *
      * @throws IntervalleChevauchantException lors de l'ajout d'un noeud dont l'intervalle chevauche un intervalle
      *                                        existant
-     * @see insert(TreeNode node)
      */
     public void insert(int min, int max, SimpleNode rootNode, TypeABR typeNode) throws IntervalleChevauchantException {
         AABRINode node = new AABRINode(min, max, rootNode, typeNode);
@@ -566,8 +565,8 @@ public class AABRI {
      * Vérifie que la structure de l'arbre dont le noeud passé est la racine est correcte.
      *
      * <pre>
-     * Tous les éléments contenus dans les noeuds du sag de node sont < à node sur node.getMin()
-     * --------------------------------------------- sad ------------ > ------------------------
+     * Tous les éléments contenus dans les noeuds du sag de node sont inférieurs à node sur node.getMin()
+     * --------------------------------------------- sad ------------ suppérieurs ----------------------
      * </pre>
      *
      * @param node - Racine de l'abre à vérifier

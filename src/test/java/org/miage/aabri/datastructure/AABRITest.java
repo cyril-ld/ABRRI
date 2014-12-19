@@ -49,8 +49,6 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#insert(int, int, datastructure.SimpleNode)}.
-     *
      * On part du principe que l'ajout d'une valeur n'est réalisable que si un noeud contient un intervalle incluant la
      * valeur.
      *
@@ -66,8 +64,6 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#insert(int, int, datastructure.SimpleNode)}.
-     *
      * Ajout d'un entier (noeud simple) dans l'AABRI.
      *
      * @throws org.miage.aabri.exceptions.IntervalleInexistantException
@@ -88,8 +84,7 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#insert(datastructure.AABRINode)}. On cherche à récupérer le noeud que
-     * l'on vient d'ajouter. Si on
+     * On cherche à récupérer le noeud que l'on vient d'ajouter. Si on
      * récupère correctement le noeud c'est qu'il a été correctement inséré dans l'arbre.
      */
     @Test
@@ -105,7 +100,6 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#findTreeNode(datastructure.AABRINode, int, int)}.
      *
      * On essaie de récupérer un noeud de l'AABRI et on vérifie ses différentes valeurs.
      */
@@ -121,7 +115,6 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#findTreeNodeFromValue(datastructure.AABRINode, int)}.
      *
      * La méthode testée retourne a noeud d'AABRI. On teste donc ce noeud afin de savoir s'il correspond vraiment au
      * noeud que l'on recherche.
@@ -141,7 +134,6 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#delete(int, int)}.
      *
      * Supprime un noeud d'AABRI. Le test supprime donc un noeud de l'AABRI et essaie de le retrouver. Si on le trouve
      * dans l'AABRI c'est que la
@@ -161,7 +153,6 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#addSimpleNode(datastructure.SimpleNode)}.
      */
     @Test
     public void testAddSimpleNodeSimpleNode() {
@@ -187,7 +178,6 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#addSimpleNode(int)}.
      */
     @Test
     public void testAddSimpleNodeInt() {
@@ -214,7 +204,6 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#removeSimpleNode(int)}.
      */
     @Test
     public void testRemoveSimpleNode() {
@@ -236,7 +225,6 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#AABRItoABR()}.
      */
     @Test
     public void testAABRItoABR() {
@@ -249,7 +237,6 @@ public class AABRITest {
     }
 
     /**
-     * Test method for {@link datastructure.AABRI#getRootNode()}.
      */
     @Test
     public void testGetRootNode() {

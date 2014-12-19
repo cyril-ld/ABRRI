@@ -29,7 +29,6 @@ public class TreeUtilsTest {
     }
 
     /**
-     * Test method for {@link util.TreeUtils#initBinaryTreeFromFile(java.lang.String)}.
      */
     @Ignore
     public void testInitBinaryTreeFromFile() {
@@ -37,7 +36,6 @@ public class TreeUtilsTest {
     }
 
     /**
-     * Test method for {@link util.TreeUtils#saveToFile(java.lang.String, datastructure.BinaryTree)}.
      */
     @Ignore
     public void testSaveToFile() {

@@ -769,7 +769,7 @@ public class AABRINode extends Node {
      * <pre>
      * 	Soit A un ABR dont les éléments sont compris entre Min et Max et soit un entier k. La méthode découpe l'intervalle
      * 	[Min; Max] en k intervalles de sensiblement la même taille [a1; b1], [a2; b2] ... [an; bn].
-     * 	Ces intervalles sont tq : a1 = Min et b1 = Max pour 1 <= i <= k-1.
+     * 	Ces intervalles sont tq : a1 = Min et b1 = Max pour 1 &lt;= i &lt;= k-1.
      * 	Chaque noeud de l'AABRI sera tq a(i+1) = b(i) + 1.
      * </pre>
      *

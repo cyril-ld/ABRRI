@@ -464,7 +464,7 @@ public class MainFrame extends JFrame {
     /**
      * Charge un arbre binaire depuis un fichier
      *
-     * @param absolutePath - le chemin complet vers le fichier, nom du fichier inclus
+     * @param pathToFile - le chemin complet vers le fichier, nom du fichier inclus
      */
     public void loadFromFile(String pathToFile) {
         this.aabri = TreeUtils.initBinaryTreeFromFile(pathToFile);
@@ -473,7 +473,6 @@ public class MainFrame extends JFrame {
         this.toAABRIButton.setEnabled(false);
         this.toABRButon.setEnabled(true);
         this.repaint();
-        System.gc();
     }
 
     /**

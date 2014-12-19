@@ -43,8 +43,6 @@ public class AABRINodeTest {
      * droit. On attend que la méthode
      * isWellFormed nous retourne une exception puisque l'arbre n'est plus bien formé.
      *
-     * Test method for {@link datastructure.AABRINode#isWellFormed(datastructure.SimpleNode)}.
-     *
      * @throws org.miage.aabri.exceptions.SimpleNodeMalPositionne
      */
     @Test(expected = SimpleNodeMalPositionne.class)
@@ -64,8 +62,6 @@ public class AABRINodeTest {
 
     /**
      * Ici la méthode doit renvoyer true (partant du principe que la méthode d'insertion fait correctement son boulot).
-     *
-     * Test method for {@link datastructure.AABRINode#isWellFormed(datastructure.SimpleNode)}.
      */
     @Test
     public void testIsWellFormedOK() {
